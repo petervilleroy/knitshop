@@ -29,8 +29,11 @@ for more details.
 // If I put this here, is it a global variable?
 var KnitShopXPosition=0;
 var KnitShopYPosition=0;
-var KnitShopStitchHeight=30;
+//var KnitShopStitchHeight=23;
+//var KnitShopStitchWidth=38;
+var KnitShopStitchHeight=18;
 var KnitShopStitchWidth=30;
+
 var ksr,ksg,ksb;
 
 //The following should no longer be necessary. Go ahead and remove it.
@@ -83,6 +86,9 @@ newRow = function() {
     outnode.value += "\n";
     KnitShopYPosition += KnitShopStitchHeight;
     KnitShopXPosition = 0;
+	var canvas = document.getElementById("canvas");
+	var node = document.createElement("div");
+	canvas.appendChild(node);
 }
 
 stitchColor = function(str) {
@@ -127,10 +133,21 @@ function stitchRGB(r,g,b) {
 }
 
 function draw() {
-    var ctx=document.getElementById("canvas").getContext('2d'); 
-    ctx.fillStyle = 'rgba('+ksr+','+ksg+','+ksb+',1)';
-    ctx.fillRect(KnitShopXPosition,KnitShopYPosition,KnitShopStitchWidth,KnitShopStitchHeight);
+    //var ctx=document.getElementById("canvas").getContext('2d'); 
+    //ctx.fillStyle = 'rgba('+ksr+','+ksg+','+ksb+',1)';
+    //ctx.fillRect(KnitShopXPosition,KnitShopYPosition,KnitShopStitchWidth,KnitShopStitchHeight);
     //window.requestAnimationFrame(draw);
+	
+	var easel = document.getElementById("canvas").lastChild;
+	//at this point, easel is the last div under canvas.
+	var stitchnode = document.createElement("img");
+	stitchnode.setAttribute("src", "stitch_semitrans.png");
+	stitchnode.setAttribute("style", "vertical-align:top; width:"+KnitShopStitchWidth+"px; height:"+KnitShopStitchHeight+"px; background-color:rgb("+ksr+","+ksg+","+ksb+")");
+	//stitchnode.setAttribute("height", "23");
+	//stitchnode.setAttribute("width","38");
+	easel.appendChild(stitchnode);
+	
+	//desired resulting node: <img src="stitch.jpg" height="40" width="40" />
 }
 
 dummywait = function() {
@@ -152,8 +169,10 @@ KSWait = function(KnitShopms){
 
 //TODO: define the size of the canvas, or query it, and add as numbers below
 clearCanvas = function() {
-    var ctx=document.getElementById("canvas").getContext('2d');
-    ctx.clearRect(0,0,500,700);
+    //var ctx=document.getElementById("canvas").getContext('2d');
+    //ctx.clearRect(0,0,500,700);
+	var canvas = document.getElementById("canvas");
+	canvas.innerHTML = "<div></div>";
 }
 
 JSrun = function() {
@@ -289,8 +308,10 @@ stitchColor("blue");
 </textarea>
 </td>
 <td width="30%" style="padding:1px">
-<canvas id="canvas" width="500" height="700">
-</canvas>
+<div id="canvas" width="500" height="700">
+  <div>
+  </div>
+</div>
 </td>
 <td width="20%" style="padding:1px">
 <textarea id="JSoutput" style="height:7in; width:99%; font-family: monospace; font-size: 16; font-weight: bold;">
