@@ -26,6 +26,19 @@ General Public License (at http://www.gnu.org/copyleft/gpl.html)
 for more details.
 */
 
+// If I put this here, is it a global variable?
+var KnitShopXPosition=0;
+var KnitShopYPosition=0;
+var KnitShopStitchHeight=30;
+var KnitShopStitchWidth=30;
+var ksr,ksg,ksb;
+
+//The following should no longer be necessary. Go ahead and remove it.
+/*var requestAnimationFrame = window.requestAnimationFrame || 
+                            window.mozRequestAnimationFrame || 
+                            window.webkitRequestAnimationFrame || 
+                            window.msRequestAnimationFrame; */
+
 JSoutput = function(a) {
     var str = "["
     if (typeof(a)=="object" && a.length) {
@@ -65,31 +78,103 @@ stitch = function(str) {
 }
 
 newRow = function() {
+    if (!KnitShopYPosition) KnitShopYPosition=0;
     var outnode = document.getElementById("JSoutput");
     outnode.value += "\n";
+    KnitShopYPosition += KnitShopStitchHeight;
+    KnitShopXPosition = 0;
 }
 
 stitchColor = function(str) {
-    if (!str) str="black";
+    //KSWait(500);
+    if(!str) str="black";
+    switch (str) {
+	case "black":
+	   stitchRGB(0,0,0);
+	   break;
+	case "white":
+	   stitchRGB(255,255,255);
+	   break;    
+	case "red":
+	   stitchRGB(255,0,0);
+	   break;
+	case "green":
+	   stitchRGB(0,255,0);
+	   break;
+	case "blue":
+	   stitchRGB(0,0,255);
+	   break;
+	default:
+	   stitchRGB(0,0,0);
+    }
+}
+function stitchRGB(r,g,b) {
+    if (!KnitShopXPosition) KnitShopXPosition=0;
+    if (!KnitShopYPosition) KnitShopYPosition=0;
+    ksr=r;
+    ksg=g;
+    ksb=b;
+    //var ctx=document.getElementById("canvas").getContext('2d'); 
+    //ctx.fillStyle = 'rgba('+ksr+','+ksg+','+ksb+',1)';
+    //ctx.fillRect(KnitShopXPosition,KnitShopYPosition,KnitShopStitchWidth,KnitShopStitchHeight);
+    //requestAnimationFrame(draw);
+    //setTimeout(function(){draw() }, 250);
+    //KSWait(250);
+    draw();
+    KnitShopXPosition += KnitShopStitchWidth;
+    
+    return true;
+}
+
+function draw() {
     var ctx=document.getElementById("canvas").getContext('2d'); 
-    ctx.fillStyle = 'rgba(125,125,125,0.5)';
-    ctx.fillRect(0,0,50,50);
+    ctx.fillStyle = 'rgba('+ksr+','+ksg+','+ksb+',1)';
+    ctx.fillRect(KnitShopXPosition,KnitShopYPosition,KnitShopStitchWidth,KnitShopStitchHeight);
+    //window.requestAnimationFrame(draw);
+}
+
+dummywait = function() {
+  //do nothing.
+  
+}
+
+//This function unfortunately didn't allow for a repaint between actions, so it's not useful
+KSWait = function(KnitShopms){
+//TODO: make KnitShopms variable depending on a configurable parameter.
+    if(!KnitShopms || KnitShopms>10000) KnitShopms=250;
+    var start = new Date().getTime();
+    var current = new Date().getTime();
+    var end = start+KnitShopms;
+    while(current < end) {
+       current = new Date().getTime();
+    }
 }
 
 //TODO: define the size of the canvas, or query it, and add as numbers below
 clearCanvas = function() {
-    var ctx=$('#canvas')[0].getContext('2d');
-    ctx.clearRect(0,0,500,500);
+    var ctx=document.getElementById("canvas").getContext('2d');
+    ctx.clearRect(0,0,500,700);
 }
 
 JSrun = function() {
     var str;
+    KnitShopXPosition = 0;
+    KnitShopYPosition = 0;
+    ksr=0;ksg=0;ksb=0;
+    clearCanvas();
+    //Begin the animation loop now, then start executing custom code.
+//    window.requestAnimationFrame(function render(){
+//	draw();
+//	window.requestAnimationFrame(render);
+//    });
     var outnode = document.getElementById("JSoutput");
     outnode.value = "";
     d = new Date().getTime();
     try {
         with (Math) {
+	    
             str = JSoutput(eval(document.getElementById("JSprogram").value));
+	    
         }
     } catch(e) {
         str = e.name+" at line "+(e.lineNumber-56)+": "+e.message;
@@ -97,6 +182,8 @@ JSrun = function() {
     var tnode = document.getElementById("JStiming");
     tnode.innerHTML = ""+(new Date().getTime()-d)/1000;
     if (str != undefined) {outnode.value += str;}
+    //TODO: capture an ID in the above animation loop launch, and cancel it here.
+    //CancelAnimationFrameLoop();
 }
 
 JSselect = function() {
@@ -142,6 +229,14 @@ fibonacci = function(n) {
     }
     return a;
 }
+/*
+//General TODO's
+- Look up the pixel width on an ipad in portrait mode and make the <tr> containing the code and output
+  add up to that width. No messing with percentages, make this explicit.
+- must implement game flow and level logic.
+- come up with at least 12 levels of incremental difficulty.
+- find some way to animate the knitting instead of immediately showing the result.
+*/
 </script>
 <style>td {background:white; vertical-align:top; border:1px solid black; padding:2px 10px}
 pre {margin:0}
@@ -158,7 +253,10 @@ button to see the result.  To <b>save your work</b>, select the text
 and copy it to an editor or email it to yourself.
 <table width="100%">
 <tr><td><b>Type JavaScript</b> &nbsp; &nbsp; Examples: <select id="JSexamples" onchange="JSselect()">
-<option value="knitcheckers" selected>Knit Checkers</option>
+<option value="knitthree" selected>Knit Three</option>
+<option value="knitcheckers">Knit Checkers</option>
+<option value="knitdiagonal">Knit Diagonal</option>
+<option value="knitstripes">Knit Stripes</option>
 <option value="maximum">Maximum element</option>
 <option value="randomlist">Random list</option>
 <option value="linear">Linear search</option>
@@ -179,31 +277,23 @@ and copy it to an editor or email it to yourself.
 <b>Output</b> &nbsp; &nbsp; 
 Timing: <span id="JStiming"></span> s
 </td></tr>
-<tr><td width="50%" style="padding:1px">
-<textarea id="JSprogram" style="height:5in; width:100%; font-family: monospace; font-size: 16; font-weight: bold;" onkeyup="keyUp(event)">
-// Knit a checkered pattern of X's and O's
+<tr><td width="50%" style="padding:0px">
+<textarea id="JSprogram" style="height:7in; width:99%; font-family: monospace; font-size: 16; font-weight: bold;" onkeyup="keyUp(event)">
+// Knit three stitches in different colors
 
-for(a=0;a<10;a++) {
-  for(b=0;b<10;b++) {
-    stitch("X");
-    stitch("O");
-  }
-  newRow();
-  for(b=0;b<10;b++) {
-    stitch("O");
-    stitch("X");
-  }
-  newRow();
-}
+stitchColor("red");
+stitchColor("green");
+stitchColor("blue");
+
 
 </textarea>
 </td>
 <td width="30%" style="padding:1px">
-<canvas id="canvas">
+<canvas id="canvas" width="500" height="700">
 </canvas>
 </td>
 <td width="20%" style="padding:1px">
-<textarea id="JSoutput" style="height:5in; width:100%; font-family: monospace; font-size: 16; font-weight: bold;">
+<textarea id="JSoutput" style="height:7in; width:99%; font-family: monospace; font-size: 16; font-weight: bold;">
 </textarea></td>
 </tr>
 </table>
@@ -311,22 +401,64 @@ You can save your own local copy of this page (using <b>Save As...</b>),
 and use it even when you are not connected to the internet.
 </p>
 
-<textarea id="knitcheckers" style="display:none">
-// Knit a checkered pattern of X's and O's
+<textarea id="knitthree" style="display:none">
+// Knit three stitches in different colors
 
-for(a=0;a<10;a++) {
-  for(b=0;b<10;b++) {
-    stitch("X");
-    stitch("O");
+stitchColor("red");
+stitchColor("green");
+stitchColor("blue");
+
+</textarea>
+
+<textarea id="knitcheckers" style="display:none">
+// Knit a checkered pattern
+
+for(a=0;a<11;a++) {
+  for(b=0;b<5;b++) {
+    stitchColor("green");
+    stitchColor("red");
   }
   newRow();
-  for(b=0;b<10;b++) {
-    stitch("O");
-    stitch("X");
+  for(b=0;b<5;b++) {
+    stitchColor("red");
+    stitchColor("green");
   }
   newRow();
 }
 
+</textarea>
+
+<textarea id="knitdiagonal" style="display:none">
+// Knit a diagonal pattern
+
+var i=0;
+for(a=0;a<22;a++) {
+  for(b=0;b<11;b++) {
+    if(b<(i/2))
+     stitchColor("green");
+    else
+     stitchColor("red");
+  }
+  newRow();
+  i++;
+}
+</textarea>
+
+<textarea id="knitstripes" style="display:none">
+// Use a function to knit stripes
+
+knitWholeLine = function(color) {
+  for(a=0;a<10;a++) {
+    stitchColor(color);
+  }
+  newRow();
+}
+
+for(i=0;i<7;i++){
+knitWholeLine("blue");
+knitWholeLine("red");
+knitWholeLine("white");
+}
 </textarea>
 
 <textarea id="maximum" style="display:none">
