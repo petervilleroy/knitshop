@@ -33,7 +33,8 @@ var KnitShopYPosition=0;
 //var KnitShopStitchWidth=38;
 var KnitShopStitchHeight=18;
 var KnitShopStitchWidth=30;
-
+var stitches = [];
+var alreadyDrawing;
 var ksr,ksg,ksb;
 
 //The following should no longer be necessary. Go ahead and remove it.
@@ -81,14 +82,16 @@ stitch = function(str) {
 }
 
 newRow = function() {
-    if (!KnitShopYPosition) KnitShopYPosition=0;
+    /*if (!KnitShopYPosition) KnitShopYPosition=0;
     var outnode = document.getElementById("JSoutput");
     outnode.value += "\n";
     KnitShopYPosition += KnitShopStitchHeight;
     KnitShopXPosition = 0;
 	var canvas = document.getElementById("canvas");
 	var node = document.createElement("div");
-	canvas.appendChild(node);
+	canvas.appendChild(node); */
+	stitches.push("newrow");
+	drawQueue();
 }
 
 stitchColor = function(str) {
@@ -114,25 +117,53 @@ stitchColor = function(str) {
 	   stitchRGB(0,0,0);
     }
 }
+
 function stitchRGB(r,g,b) {
     if (!KnitShopXPosition) KnitShopXPosition=0;
     if (!KnitShopYPosition) KnitShopYPosition=0;
-    ksr=r;
-    ksg=g;
-    ksb=b;
+    //ksr=r;
+    //ksg=g;
+    //ksb=b;
     //var ctx=document.getElementById("canvas").getContext('2d'); 
     //ctx.fillStyle = 'rgba('+ksr+','+ksg+','+ksb+',1)';
     //ctx.fillRect(KnitShopXPosition,KnitShopYPosition,KnitShopStitchWidth,KnitShopStitchHeight);
     //requestAnimationFrame(draw);
+	//*** setTimeout just doesn't work because it's asynchronous
     //setTimeout(function(){draw() }, 250);
     //KSWait(250);
-    draw();
+	
+	// the stitches array will hold all the stitches as RGB strings, in descending chron order.
+    stitches.push(""+r+","+g+","+b+"");
+	
+	drawQueue();
     KnitShopXPosition += KnitShopStitchWidth;
     
     return true;
 }
 
-function draw() {
+function drawQueue() {
+	if(alreadyDrawing) {
+		return;
+	}
+	alreadyDrawing = true;
+	
+	setTimeout(function drawStitches() {
+		var drawColor = stitches.shift();
+		if(!drawColor) {
+			alreadyDrawing = false;
+			return;
+		}
+		if(drawColor == "newrow") {
+			drawNewRow();
+		}
+		else {
+			draw(drawColor);
+		}
+		setTimeout(drawStitches, 200);
+	},200); //end of first setTimeout call
+}
+
+function draw(rgb) {
     //var ctx=document.getElementById("canvas").getContext('2d'); 
     //ctx.fillStyle = 'rgba('+ksr+','+ksg+','+ksb+',1)';
     //ctx.fillRect(KnitShopXPosition,KnitShopYPosition,KnitShopStitchWidth,KnitShopStitchHeight);
@@ -142,12 +173,17 @@ function draw() {
 	//at this point, easel is the last div under canvas.
 	var stitchnode = document.createElement("img");
 	stitchnode.setAttribute("src", "stitch_semitrans.png");
-	stitchnode.setAttribute("style", "vertical-align:top; width:"+KnitShopStitchWidth+"px; height:"+KnitShopStitchHeight+"px; background-color:rgb("+ksr+","+ksg+","+ksb+")");
+	stitchnode.setAttribute("style", "vertical-align:top; width:"+KnitShopStitchWidth+"px; height:"+KnitShopStitchHeight+"px; background-color:rgb("+rgb+")");
 	//stitchnode.setAttribute("height", "23");
 	//stitchnode.setAttribute("width","38");
 	easel.appendChild(stitchnode);
 	
 	//desired resulting node: <img src="stitch.jpg" height="40" width="40" />
+}
+function drawNewRow() {
+	var canvas = document.getElementById("canvas");
+	var node = document.createElement("div");
+	canvas.appendChild(node);
 }
 
 dummywait = function() {
@@ -177,6 +213,7 @@ clearCanvas = function() {
 
 JSrun = function() {
     var str;
+	alreadyDrawing = false;
     KnitShopXPosition = 0;
     KnitShopYPosition = 0;
     ksr=0;ksg=0;ksb=0;
@@ -453,9 +490,9 @@ for(a=0;a<11;a++) {
 // Knit a diagonal pattern
 
 var i=0;
-for(a=0;a<22;a++) {
-  for(b=0;b<11;b++) {
-    if(b<(i/2))
+for(a=0;a<35;a++) {
+  for(b=0;b<12;b++) {
+    if(b<(i/3))
      stitchColor("green");
     else
      stitchColor("red");
