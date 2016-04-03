@@ -1,2 +1,572 @@
-<h1>hello world</h1>
-<p>Put CodeStitch here</p>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>KnitShop, a game for learning to code</title>
+<link rel="stylesheet" href="jquery-ui-1.11.4.full/jquery-ui.theme.css">
+  <script src="jquery-ui-1.11.4.full/jquery-1.12.2.js"></script>
+  <script src="jquery-ui-1.11.4.full/jquery-ui.js"></script>
+<script>
+/*
+<Add a description of the game here>
+
+The code in this game is built upon a javascript interpreter by 
+Peter Jipsen - referenced here by way of thanks.
+Version of Jan 3, 2013, (c) Peter Jipsen http://www.chapman.edu/~jipsen
+Latest version at http://www.chapman.edu/~jipsen/js
+If you use it on a webpage, please send the URL to jipsen@chapman.edu
+
+Mr. Jipsen's interpreter and this game are both 
+free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or (at
+your option) any later version.
+
+This program is distributed in the hope that it will be useful, 
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License (at http://www.gnu.org/copyleft/gpl.html) 
+for more details.
+*/
+
+// If I put this here, is it a global variable?
+var KnitShopXPosition=0;
+var KnitShopYPosition=0;
+//var KnitShopStitchHeight=23;
+//var KnitShopStitchWidth=38;
+var KnitShopStitchHeight=18;
+var KnitShopStitchWidth=30;
+var stitches = [];
+var alreadyDrawing;
+var ksr,ksg,ksb;
+var knitspeed = 200;
+
+
+
+
+JSoutput = function(a) {
+    var str = "["
+    if (typeof(a)=="object" && a.length) {
+        for (var i=0; i < a.length; i++) 
+            if (typeof(a[i])=="object" && a[i].length) {
+                str += (i==0?"":" ")+"["
+                for (var j=0; j<a[i].length; j++) 
+                    str += a[i][j]+(j==a[i].length-1?
+                            "]"+(i==a.length-1?"]":",")+"\n":", ");
+            } else str += a[i]+(i==a.length-1?"]":", ");
+    } else str = a;
+    return str;
+}
+
+/*write = function(str) {
+    var outnode = document.getElementById("JSoutput");
+    outnode.value += JSoutput(str);
+}
+
+writeln = function(str) {
+    if (!str) str="";
+    var outnode = document.getElementById("JSoutput");
+    outnode.value += JSoutput(str)+"\n";
+}*/
+
+///////////////////////////////////////////
+//  The Stitch Function                  //
+//  argument: a color                    //
+//  output: a single stitch on the       //
+//     canvas in the given color.        //
+///////////////////////////////////////////
+
+/*stitch = function(str) {
+    if (!str) str="white";
+    var outnode = document.getElementById("JSoutput");
+    outnode.value += JSoutput(str);
+}*/
+
+newRow = function() {
+    /*if (!KnitShopYPosition) KnitShopYPosition=0;
+    var outnode = document.getElementById("JSoutput");
+    outnode.value += "\n";
+    KnitShopYPosition += KnitShopStitchHeight;
+    KnitShopXPosition = 0;
+	var canvas = document.getElementById("canvas");
+	var node = document.createElement("div");
+	canvas.appendChild(node); */
+	stitches.push("newrow");
+	drawQueue();
+}
+
+stitchColor = function(str) {
+    //KSWait(500);
+    if(!str) str="black";
+    switch (str) {
+	case "black":
+	   stitchRGB(0,0,0);
+	   break;
+	case "white":
+	   stitchRGB(255,255,255);
+	   break;    
+	case "red":
+	   stitchRGB(255,0,0);
+	   break;
+	case "green":
+	   stitchRGB(0,255,0);
+	   break;
+	case "blue":
+	   stitchRGB(0,0,255);
+	   break;
+	default:
+	   stitchRGB(0,0,0);
+    }
+}
+
+function stitchRGB(r,g,b) {
+    if (!KnitShopXPosition) KnitShopXPosition=0;
+    if (!KnitShopYPosition) KnitShopYPosition=0;
+    //ksr=r;
+    //ksg=g;
+    //ksb=b;
+    //var ctx=document.getElementById("canvas").getContext('2d'); 
+    //ctx.fillStyle = 'rgba('+ksr+','+ksg+','+ksb+',1)';
+    //ctx.fillRect(KnitShopXPosition,KnitShopYPosition,KnitShopStitchWidth,KnitShopStitchHeight);
+    //requestAnimationFrame(draw);
+	//*** setTimeout just doesn't work because it's asynchronous
+    //setTimeout(function(){draw() }, 250);
+    //KSWait(250);
+	
+	// the stitches array will hold all the stitches as RGB strings, in descending chron order.
+    stitches.push(""+r+","+g+","+b+"");
+	
+	drawQueue();
+    KnitShopXPosition += KnitShopStitchWidth;
+    
+    return true;
+}
+
+function drawQueue() {
+	if(alreadyDrawing) {
+		return;
+	}
+	alreadyDrawing = true;
+	
+	setTimeout(function drawStitches() {
+		var drawColor = stitches.shift();
+		if(!drawColor) {
+			alreadyDrawing = false;
+			return;
+		}
+		if(drawColor == "newrow") {
+			drawNewRow();
+		}
+		else {
+			draw(drawColor);
+		}
+		setTimeout(drawStitches, knitspeed);
+	},knitspeed); //end of first setTimeout call
+}
+
+function draw(rgb) {
+    //var ctx=document.getElementById("canvas").getContext('2d'); 
+    //ctx.fillStyle = 'rgba('+ksr+','+ksg+','+ksb+',1)';
+    //ctx.fillRect(KnitShopXPosition,KnitShopYPosition,KnitShopStitchWidth,KnitShopStitchHeight);
+    //window.requestAnimationFrame(draw);
+	
+	var easel = document.getElementById("canvas").lastChild;
+	//at this point, easel is the last div under canvas.
+	var stitchnode = document.createElement("img");
+	stitchnode.setAttribute("src", "stitch_semitrans.png");
+	stitchnode.setAttribute("style", "vertical-align:top; width:"+KnitShopStitchWidth+"px; height:"+KnitShopStitchHeight+"px; background-color:rgb("+rgb+")");
+	//stitchnode.setAttribute("height", "23");
+	//stitchnode.setAttribute("width","38");
+	easel.appendChild(stitchnode);
+	
+	//desired resulting node: <img src="stitch.jpg" height="40" width="40" />
+}
+function drawNewRow() {
+	var canvas = document.getElementById("canvas");
+	var node = document.createElement("div");
+	canvas.appendChild(node);
+}
+
+dummywait = function() {
+  //do nothing.
+  
+}
+
+//This function unfortunately didn't allow for a repaint between actions, so it's not useful
+KSWait = function(KnitShopms){
+//TODO: make KnitShopms variable depending on a configurable parameter.
+    if(!KnitShopms || KnitShopms>10000) KnitShopms=250;
+    var start = new Date().getTime();
+    var current = new Date().getTime();
+    var end = start+KnitShopms;
+    while(current < end) {
+       current = new Date().getTime();
+    }
+}
+
+//TODO: define the size of the canvas, or query it, and add as numbers below
+clearCanvas = function() {
+    //var ctx=document.getElementById("canvas").getContext('2d');
+    //ctx.clearRect(0,0,500,700);
+	var canvas = document.getElementById("canvas");
+	canvas.innerHTML = "<div></div>";
+}
+
+JSrun = function() {
+    var str;
+	alreadyDrawing = false;
+    KnitShopXPosition = 0;
+    KnitShopYPosition = 0;
+    ksr=0;ksg=0;ksb=0;
+    clearCanvas();
+
+    var outnode = document.getElementById("JSoutput");
+    outnode.value = "";
+    d = new Date().getTime();
+    try {
+        with (Math) {
+	    
+            str = JSoutput(eval(document.getElementById("JSprogram").value));
+	    
+        }
+    } catch(e) {
+        str = e.name+" at line "+(e.lineNumber-56)+": "+e.message;
+    }
+    var tnode = document.getElementById("JStiming");
+    tnode.innerHTML = ""+(new Date().getTime()-d)/1000;
+    if (str != undefined) {outnode.value += str;}
+
+}
+
+JSselect = function() {
+    var id = document.getElementById("JSexamples").value;
+    var str = document.getElementById(id).value;
+    document.getElementById("JSprogram").value = str;
+    JSrun();
+}
+
+keyUp = function(event){
+  if (event.which==77 && event.ctrlKey) JSrun();
+}
+
+random_list = function(n, r, s) {
+    var a = [];
+    for (var i = 0; i < n; i++) {
+	a[i] = Math.floor(Math.random()*(s-r+1)) + r;
+    }
+    return a;
+}
+
+random_matrix = function(m, n, r, s) {
+    var A = [];
+    for (var i = 0; i < m; i++) {
+        A[i] = [];
+        for (var j = 0; j < n; j++)
+            A[i][j] = Math.floor(Math.random()*(s-r+1)) + r;
+    }
+    return A;
+}
+
+factorial = function(n) { // simple version
+    if (n <= 0) return 1;
+    else return n*factorial(n-1);
+}
+
+fibonacci = function(n) {
+    var a = 0;
+    var b = 1;
+    for (var i=0; i<n; i++) {
+        b = a+b;
+        a = b-a;
+    }
+    return a;
+}
+/*
+//General TODO's
+- Look up the pixel width on an ipad in portrait mode and make the <tr> containing the code and output
+  add up to that width. No messing with percentages, make this explicit.
+- must implement game flow and level logic.
+- come up with at least 12 levels of incremental difficulty.
+- find some way to animate the knitting instead of immediately showing the result.
+*/
+</script>
+<script>
+  //The following is JQuery UI scripting for User Interface effects
+  $(function() {
+    $( "#dialog" ).dialog({
+      autoOpen: false,
+      show: {
+        effect: "blind",
+        duration: 1000
+      },
+      hide: {
+        effect: "explode",
+        duration: 1000
+      }
+    });
+ 
+    $( "#opener" ).click(function() {
+      $( "#dialog" ).dialog( "open" );
+    });
+  });
+  </script>
+<style>td {background:white; vertical-align:top; border:1px solid black; padding:2px 10px}
+pre {margin:0}
+table {border-collapse:collapse; table-layout:fixed}
+body {background:lightblue; font-family:Arial}
+textarea {font-family:Lucida console}
+</style>
+</head>
+<body onload="JSrun()"><!-- onpaste="return false;"-->
+<h1>CodeStitch</h1>
+<div id="dialog" title="Level 1: Open for Business!">
+  <p>This is an animated dialog which we will use to introduce each level.</p>
+  <img src="stitch_semitrans.png" style="background-color:red;" />
+  <p>The dialog window can be moved, resized and closed with the 'close' button.</p>
+</div>
+ 
+
+<table width="100%" align="center">
+
+<tr>
+<td rowspan=3 style="width:15%; background:lightblue;">Level Selection
+<br/>
+<button id="opener">Level 1</button>
+</td>
+<td><b>Type JavaScript</b> &nbsp; &nbsp; Examples: <select id="JSexamples" onchange="JSselect()">
+<option value="knitthree" selected>Knit Three</option>
+<option value="knitcheckers">Knit Checkers</option>
+<option value="knitdiagonal">Knit Diagonal</option>
+<option value="knitstripes">Knit Stripes</option>
+
+</select>
+<br/>
+<label>Slow: <input type="radio" name="trans" value="200" checked /></label>
+<label>Med: <input type="radio" name="trans" value="100"  /></label>
+<label>Fast: <input type="radio" name="trans" value="50" /></label>
+<label>Instant: <input type="radio" name="trans" value="10" /></label>
+
+</td>
+
+        
+
+<script type="text/javascript">
+// Allow me a little script here to give action to my radio buttons.
+// wrapped as a function to remove from global namespace
+(function() {
+    
+    // onclick vs. onchange
+    var radiobutton = document.getElementsByName("trans");
+
+    for (var i=0, len=radiobutton.length; i<len; i++) {
+        
+        radiobutton[i].onchange = function() {
+            knitspeed = this.value;
+        };
+    }
+    
+}());
+</script>
+
+<td>
+<input type="button" value="Run (Ctrl-m)" onclick="JSrun()"/> &nbsp; &nbsp;
+<b>Output</b> &nbsp; &nbsp; 
+Timing: <span id="JStiming"></span> s
+</td>
+<td rowspan=3 style="width:15%; background:lightblue;">Hints</td>
+</tr>
+<tr><td width="50%" style="padding:0px">
+<textarea id="JSprogram" style="height:4in; width:99%; font-family: monospace; font-size: 16; font-weight: bold;" onkeyup="keyUp(event)">
+// Knit three stitches in different colors
+
+stitchColor("red");
+stitchColor("green");
+stitchColor("blue");
+
+
+</textarea>
+</td>
+<td rowspan=2 style="height:4in; width:50%; padding:1px">
+<div id="canvas" width="500" height="700">
+  <div>
+  </div>
+</div>
+</td>
+</tr>
+<tr><td width="100%" style="padding:0px">
+<textarea id="JSoutput" value="Output will appear here in case of errors." style="height:1.5in; width:99%; font-family: monospace; font-size: 16;">
+</textarea>
+</td>
+</tr>
+</table>
+
+<b>Note that this is dynamic code running locally on your machine.  If
+you leave this page before copying and saving your work, it may
+disappear.
+</b>
+
+<p>
+<b>Quick reference to basic JavaScript commands</b>. Search online
+for <a href="http://www.google.com/search?q=javascript+tutorial">tutorials</a>
+<table>
+<tr>
+<td><b>Comment</b></td>
+<td><pre>// this is a one-line comment
+/* this comment could contain linebreaks */
+</pre></td>
+</tr>
+<tr>
+<td><b>Constant</b></td>
+<td><tt><b>numbers</b> 12.3 <b>and strings</b> "hi", "hi".charAt(0) <b>is</b> "h"</tt></td>
+</tr>
+<tr>
+<td><b>Variable</b></td>
+<td><tt><b>start with a letter, then use letters, digits or _ (declared with</b> var<b>)</b></tt></td>
+</tr>
+<tr>
+<td><b>Expression</b></td>
+<td><tt><b>built from</b> +, -, *, /, pow(x,y), sqrt(), PI, E, log(), floor(), ceil(),</br>
+random(), sin(), cos(), tan(), atan() <b>and constants, variables, functions</b></tt></td>
+</tr>
+<tr>
+<td><b>Assignment</b></td>
+<td><pre>v = expression;</pre></td>
+</tr>
+<tr>
+<td><b>Block</b></td>
+<td><pre>{   statement 1;
+    ...
+    statement n;
+}</pre></td>
+</tr>
+<tr>
+<td><b>Condition</b></td>
+<td><tt>expression == expression <b>or</b> <=, <, >, >=, !=...<br>
+<b>or</b> !cond, cond1 && cond2, cond1 || cond2</tt></td>
+</tr>
+<tr>
+<td><b>if - else</b></td>
+<td><pre>if (condition) block 1
+else block 2                   // optional
+</pre></td>
+</tr>
+<tr>
+<td><b>for-loop</b></td>
+<td><pre>for (var i=start; endcondition; i++)
+    block
+</pre></td>
+</tr>
+<tr>
+<td><b>while-loop</b></td>
+<td><pre>while (condition) 
+    block
+</pre></td>
+</tr>
+<tr>
+<td><b>Function</b></td>
+<td><pre>f = function(v1, ..., vn) {
+    statement 1;
+    ...
+    return expression;
+}
+</pre></td>
+</tr>
+<tr>
+<td><b>List</b> (array)</td>
+<td><pre>a = [1,2,"hi"]
+a[0] is 1, a.length is 3, a+[4] is [1,2,"hi",4]</pre></td>
+</tr>
+<tr>
+<td><b>Object</b><br/>(hash tables)</td>
+<td><pre>object = {attribute:expression, method:function}
+a = {x:2, y:3, s:function(){return this.x+this.y}}
+a.x is 3, a["x"] is 3, a.s() is 5
+</pre></td>
+</tr>
+<tr>
+<td><b>Output</b></td>
+<td><pre>write("Hello"); writeln(" world");
+</pre></td>
+</tr>
+</table>
+</p>
+
+<p>
+This page is useful for experimenting with basic JavaScript and simple
+algorithms (e.g. those covered in a discrete mathematics course). It
+should work in any browser that has JavaScript enabled (including
+smartphone browsers).
+</p>
+
+
+<textarea id="knitthree" style="display:none">
+// Knit three stitches in different colors
+
+stitchColor("red");
+stitchColor("green");
+stitchColor("blue");
+
+</textarea>
+
+<textarea id="knitcheckers" style="display:none">
+// Knit a checkered pattern
+
+for(a=0;a<11;a++) {
+  for(b=0;b<5;b++) {
+    stitchColor("green");
+    stitchColor("red");
+  }
+  newRow();
+  for(b=0;b<5;b++) {
+    stitchColor("red");
+    stitchColor("green");
+  }
+  newRow();
+}
+
+</textarea>
+
+<textarea id="knitdiagonal" style="display:none">
+// Knit a diagonal pattern
+
+var i=0;
+for(a=0;a<35;a++) {
+  for(b=0;b<12;b++) {
+    if(b<(i/3))
+     stitchColor("green");
+    else
+     stitchColor("red");
+  }
+  newRow();
+  i++;
+}
+</textarea>
+
+<textarea id="knitstripes" style="display:none">
+// Use a function to knit stripes
+
+knitWholeLine = function(color) {
+  for(a=0;a<10;a++) {
+    stitchColor(color);
+  }
+  newRow();
+}
+
+for(i=0;i<7;i++){
+knitWholeLine("blue");
+knitWholeLine("red");
+knitWholeLine("white");
+}
+</textarea>
+
+
+<hr/>
+
+<div align="center">
+<a href="http://playcodestitch.com">Marleen Villeroy</a>, 
+April, 2016,
+<a href="http://tc.columbia.edu/">Teachers College, Columbia University</a>
+</div>
+
+</body>
+</html>
