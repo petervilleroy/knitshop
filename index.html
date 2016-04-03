@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <title>KnitShop, a game for learning to code</title>
+<link rel="stylesheet" href="jquery-ui-1.11.4.full/jquery-ui.theme.css">
+  <script src="jquery-ui-1.11.4.full/jquery-1.12.2.js"></script>
+  <script src="jquery-ui-1.11.4.full/jquery-ui.js"></script>
 <script>
 /*
 <Add a description of the game here>
@@ -287,6 +290,26 @@ fibonacci = function(n) {
 - find some way to animate the knitting instead of immediately showing the result.
 */
 </script>
+<script>
+  //The following is JQuery UI scripting for User Interface effects
+  $(function() {
+    $( "#dialog" ).dialog({
+      autoOpen: false,
+      show: {
+        effect: "blind",
+        duration: 1000
+      },
+      hide: {
+        effect: "explode",
+        duration: 1000
+      }
+    });
+ 
+    $( "#opener" ).click(function() {
+      $( "#dialog" ).dialog( "open" );
+    });
+  });
+  </script>
 <style>td {background:white; vertical-align:top; border:1px solid black; padding:2px 10px}
 pre {margin:0}
 table {border-collapse:collapse; table-layout:fixed}
@@ -295,23 +318,33 @@ textarea {font-family:Lucida console}
 </style>
 </head>
 <body onload="JSrun()"><!-- onpaste="return false;"-->
-<b><u>Online JavaScript Interpreter:</u> Programming anywhere, nothing to install, works in any browser
-</b><br/>
-Type your JavaScript program into the box below. Then click the <b>Run</b>
-button to see the result.  To <b>save your work</b>, select the text
-and copy it to an editor or email it to yourself.
-<table width="100%">
-<tr><td><b>Type JavaScript</b> &nbsp; &nbsp; Examples: <select id="JSexamples" onchange="JSselect()">
+<h1>CodeStitch</h1>
+<div id="dialog" title="Level 1: Open for Business!">
+  <p>This is an animated dialog which we will use to introduce each level.</p>
+  <img src="stitch_semitrans.png" style="background-color:red;" />
+  <p>The dialog window can be moved, resized and closed with the 'close' button.</p>
+</div>
+ 
+
+<table width="100%" align="center">
+
+<tr>
+<td rowspan=3 style="width:15%; background:lightblue;">Level Selection
+<br/>
+<button id="opener">Level 1</button>
+</td>
+<td><b>Type JavaScript</b> &nbsp; &nbsp; Examples: <select id="JSexamples" onchange="JSselect()">
 <option value="knitthree" selected>Knit Three</option>
 <option value="knitcheckers">Knit Checkers</option>
 <option value="knitdiagonal">Knit Diagonal</option>
 <option value="knitstripes">Knit Stripes</option>
 
 </select>
-            <label>Slow: <input type="radio" name="trans" value="200" checked /></label>
-            <label>Med: <input type="radio" name="trans" value="100"  /></label>
-            <label>Fast: <input type="radio" name="trans" value="50" /></label>
-            <label>Instant: <input type="radio" name="trans" value="10" /></label>
+<br/>
+<label>Slow: <input type="radio" name="trans" value="200" checked /></label>
+<label>Med: <input type="radio" name="trans" value="100"  /></label>
+<label>Fast: <input type="radio" name="trans" value="50" /></label>
+<label>Instant: <input type="radio" name="trans" value="10" /></label>
 
 </td>
 
@@ -339,9 +372,11 @@ and copy it to an editor or email it to yourself.
 <input type="button" value="Run (Ctrl-m)" onclick="JSrun()"/> &nbsp; &nbsp;
 <b>Output</b> &nbsp; &nbsp; 
 Timing: <span id="JStiming"></span> s
-</td></tr>
+</td>
+<td rowspan=3 style="width:15%; background:lightblue;">Hints</td>
+</tr>
 <tr><td width="50%" style="padding:0px">
-<textarea id="JSprogram" style="height:7in; width:99%; font-family: monospace; font-size: 16; font-weight: bold;" onkeyup="keyUp(event)">
+<textarea id="JSprogram" style="height:4in; width:99%; font-family: monospace; font-size: 16; font-weight: bold;" onkeyup="keyUp(event)">
 // Knit three stitches in different colors
 
 stitchColor("red");
@@ -351,7 +386,7 @@ stitchColor("blue");
 
 </textarea>
 </td>
-<td width="50%" style="padding:1px">
+<td rowspan=2 style="height:4in; width:50%; padding:1px">
 <div id="canvas" width="500" height="700">
   <div>
   </div>
@@ -359,7 +394,8 @@ stitchColor("blue");
 </td>
 </tr>
 <tr><td width="100%" style="padding:0px">
-<textarea id="JSoutput" style="height:100%; width:99%; font-family: monospace; font-size: 16;"></textarea>
+<textarea id="JSoutput" value="Output will appear here in case of errors." style="height:1.5in; width:99%; font-family: monospace; font-size: 16;">
+</textarea>
 </td>
 </tr>
 </table>
@@ -527,7 +563,7 @@ knitWholeLine("white");
 <hr/>
 
 <div align="center">
-<a href="http://www.thefloodgate.com/CodeStitch">Marleen Villeroy</a>, 
+<a href="http://playcodestitch.com">Marleen Villeroy</a>, 
 April, 2016,
 <a href="http://tc.columbia.edu/">Teachers College, Columbia University</a>
 </div>
