@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <title>KnitShop, a game for learning to code</title>
 <link rel="stylesheet" href="jquery-ui-1.11.4.full/jquery-ui.theme.css">
-  <script src="jquery-ui-1.11.4.full/jquery-1.12.2.js"></script>
-  <script src="jquery-ui-1.11.4.full/jquery-ui.js"></script>
+<script src="//assets/javascripts/jquery-ui-1.11.4.full/jquery-1.12.2.js"></script>
+<script src="//assets/javascripts/jquery-ui-1.11.4.full/jquery-ui.js"></script>
 <script>
 /*
 <Add a description of the game here>
@@ -173,7 +173,7 @@ function draw(rgb) {
 	var easel = document.getElementById("canvas").lastChild;
 	//at this point, easel is the last div under canvas.
 	var stitchnode = document.createElement("img");
-	stitchnode.setAttribute("src", "stitch_semitrans.png");
+	stitchnode.setAttribute("src", "//assets/images/stitch_semitrans.png");
 	stitchnode.setAttribute("style", "vertical-align:top; width:"+KnitShopStitchWidth+"px; height:"+KnitShopStitchHeight+"px; background-color:rgb("+rgb+")");
 	//stitchnode.setAttribute("height", "23");
 	//stitchnode.setAttribute("width","38");
@@ -318,10 +318,10 @@ textarea {font-family:Lucida console}
 </style>
 </head>
 <body onload="JSrun()"><!-- onpaste="return false;"-->
-<h1>CodeStitch</h1>
+<h1><a href="http://playcodestitch.com">CodeStitch</a></h1>
 <div id="dialog" title="Level 1: Open for Business!">
   <p>This is an animated dialog which we will use to introduce each level.</p>
-  <img src="stitch_semitrans.png" style="background-color:red;" />
+  <img src="//assets/images/stitch_semitrans.png" style="background-color:red;" />
   <p>The dialog window can be moved, resized and closed with the 'close' button.</p>
 </div>
  
