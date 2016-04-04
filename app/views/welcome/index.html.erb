@@ -3,9 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <title>KnitShop, a game for learning to code</title>
-<link rel="stylesheet" href="jquery-ui-1.11.4.full/jquery-ui.theme.css">
-<script src="//assets/javascripts/jquery-ui-1.11.4.full/jquery-1.12.2.js"></script>
-<script src="//assets/javascripts/jquery-ui-1.11.4.full/jquery-ui.js"></script>
 <script>
 /*
 <Add a description of the game here>
@@ -173,7 +170,9 @@ function draw(rgb) {
 	var easel = document.getElementById("canvas").lastChild;
 	//at this point, easel is the last div under canvas.
 	var stitchnode = document.createElement("img");
-	stitchnode.setAttribute("src", "//public/images/stitch_semitrans.png");
+	//stitchnode.setAttribute("src", "//public/images/stitch_semitrans.png");
+        stitchnode.setAttribute("src", " <%= asset_path('stitch_semitrans.png')  %> "); //$(canvas).data("data-url");
+//stitchnode.setAttribute("class","stitch");
 	stitchnode.setAttribute("style", "vertical-align:top; width:"+KnitShopStitchWidth+"px; height:"+KnitShopStitchHeight+"px; background-color:rgb("+rgb+")");
 	//stitchnode.setAttribute("height", "23");
 	//stitchnode.setAttribute("width","38");
@@ -387,7 +386,7 @@ stitchColor("blue");
 </textarea>
 </td>
 <td rowspan=2 style="height:4in; width:50%; padding:1px">
-<div id="canvas" width="500" height="700">
+<div id="canvas" width="500" height="700" data-url="<%= asset_path('stitch_semitrans.png') %>">
   <div>
   </div>
 </div>
