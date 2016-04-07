@@ -278,7 +278,7 @@ csTestLevelCompleted = function() {
    switch (csCurrentLevel) {
 	case 0:
 	   var csRows = $(".csRow").length;
-	   var csRowLength = 0
+	   var csRowLength = 0;
 	   $(".csRow").each(function(index) {csRowLength = this.children.length;});
 
 	   if ( csRows == 1 && csRowLength == 1) {
@@ -287,15 +287,22 @@ csTestLevelCompleted = function() {
 	   break;
 	case 1:
 	   var csRows = $(".csRow").length;
-           var csRowLength = 0
+           var csRowLength = 0;
            $(".csRow").each(function(index) {csRowLength = this.children.length;});
-
            if ( csRows == 1 && csRowLength == 3) {
                 //TODO: don't forget to check the color value!!!
 		return true;
            }
-
 	   break;
+	case 2:
+	   var csRows = $(".csRow").length;
+	   var csRowLength = 0;
+	   $(".csRow").each(function(index) {csRowLength = this.children.length;});
+	   if ( csRows == 1 && csRowLength == 8) {
+		//TODO: don't forget to check the color value!!!
+		return true;
+	   }
+	break;
    }
    return false;
 }
@@ -312,12 +319,14 @@ csAdvanceLevel = function() {
 	   break;
 	case 1:
 	   $("#opener12").prop('disabled', false);
+	   $("#opener12").click();
 	   break;
 	case 2:
 	   //congratulate user on winning the game?
+	   $( "#dialogEND" ).dialog( "open" );
 	   break;
    }
-   csCurrentLevel += 1;
+   //csCurrentLevel += 1;
    
 }
 
@@ -358,14 +367,16 @@ keyUp = function(event){
  
     $( "#opener10" ).click(function() {
       csCurrentLevel = 0;
-      $( "#csLevelGoal").html("<p>Make a single stitch in any color</p><p class='csCode'>stitchColor(\"red\");</p>");
+      $( "#csLevelGoal").html("<p>Make a single stitch in any color</p>Hint:<br/><div class='csCode'>stitchColor(\"red\");</div><br/>");
       $( "#dialog10" ).dialog( "open" );
     });
     $( "#opener11" ).click(function() {
       csCurrentLevel = 1;
+      $( "#csLevelGoal").html("<p>Make three stitches: Red, Green, then Blue.</p>Hint:<br/><div class='csCode'>stitchColor(\"red\");</div><br/>");
       $( "#dialog11" ).dialog( "open" );
     });
     $( "#opener12" ).click(function() {
+      $( "#csLevelGoal").html("<p>Make a single stitch in any color</p>Hint:<br/><div class='csCode'>for(i=0;i<8;i++) { <br/>//something to do 8 times<br/>}</div><br/>");
       csCurrentLevel = 2;
       $( "#dialog12" ).dialog( "open" );
     });
@@ -400,7 +411,9 @@ textarea {font-family:Lucida console}
   <img src="<%= asset_path('level1.2_goal.png') %>"  />
   <p>The dialog window can be moved, resized and closed with the 'close' button.</p>
 </div>
-
+<div class="csDialog" id="dialogEND" title="CONGRATULATIONS!">
+  <p>You have completed all levels, you little genius.</p>
+</div>
 
 <table width="100%" align="center">
 
