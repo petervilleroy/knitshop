@@ -45,7 +45,8 @@ var csLevels = [1.0,1.1];
 var csSnarkyRemarks = ["This is nice, but it's not what I ordered.",
 	"Yuck, that looks like a baby knitted it, and then a dog ate it!",
 	"This would be fine, if I had asked for something completely different.",
-	"Lol, you're just getting started, aren't you?"
+	"Lol, you're just getting started, aren't you?",
+	"This isn't from the same PLANET as the scarf I ordered!"
 ];
 var csCongrats = [
 	"Oh, how lovely - thank you!!!",
@@ -274,17 +275,50 @@ csTestLevelCompleted = function() {
 
    console.log("CSDEBUG: There are currently "+ $( ".csRow" ).length + " rows.");
    $( ".csRow").each(function(index) { console.log("CSDEBUG:    Row "+index+" has "+this.children.length+" children.");});
+   switch (csCurrentLevel) {
+	case 0:
+	   var csRows = $(".csRow").length;
+	   var csRowLength = 0
+	   $(".csRow").each(function(index) {csRowLength = this.children.length;});
 
+	   if ( csRows == 1 && csRowLength == 1) {
+		return true;
+	   }
+	   break;
+	case 1:
+	   var csRows = $(".csRow").length;
+           var csRowLength = 0
+           $(".csRow").each(function(index) {csRowLength = this.children.length;});
+
+           if ( csRows == 1 && csRowLength == 3) {
+                //TODO: don't forget to check the color value!!!
+		return true;
+           }
+
+	   break;
+   }
    return false;
 }
 
 csAdvanceLevel = function() {
-   //TODO: move current level to the next one given a list of all levels
+   // move current level to the next one given a list of all levels
    csLevelsCompleted[csLevelsCompleted.length] = csLevels[csCurrentLevel];
+   $(" #csComments ").html("");
    //TODO: update the button for this level to display completed colors
-
+   switch (csCurrentLevel) {
+	case 0:
+	   $("#opener11").prop('disabled', false);
+	   $("#opener11").click();
+	   break;
+	case 1:
+	   $("#opener12").prop('disabled', false);
+	   break;
+	case 2:
+	   //congratulate user on winning the game?
+	   break;
+   }
    csCurrentLevel += 1;
-   //TODO: unlock button for the new current level
+   
 }
 
 JSselect = function() {
@@ -323,15 +357,23 @@ keyUp = function(event){
     });
  
     $( "#opener10" ).click(function() {
+      csCurrentLevel = 0;
+      $( "#csLevelGoal").html("<p>Make a single stitch in any color</p><p class='csCode'>stitchColor(\"red\");</p>");
       $( "#dialog10" ).dialog( "open" );
     });
     $( "#opener11" ).click(function() {
+      csCurrentLevel = 1;
       $( "#dialog11" ).dialog( "open" );
     });
     $( "#opener12" ).click(function() {
+      csCurrentLevel = 2;
       $( "#dialog12" ).dialog( "open" );
     });
+    
 
+    if(csCurrentLevel == 0) {
+	$("#opener10").click();
+    }
   });
   </script>
 <style>td {background:white; vertical-align:top; border:1px solid black; padding:2px 10px}
@@ -343,18 +385,19 @@ textarea {font-family:Lucida console}
 </head>
 <body onload="JSrun()"><!-- onpaste="return false;"-->
 <h1><a href="http://playcodestitch.com">CodeStitch</a></h1>
-<div class="csDialog" id="dialog10" title="Level 1.0: Open for Business!" style="width:40">
-  <p>This is an animated dialog which we will use to introduce each level.</p>
+<div class="csDialog" id="dialog10" title="Level 1.0: Open for Business!" style="width:400">
+  <p>Introduction to level 1.0 ... Prompt user to make a single stitch in any color</p>
   <img src="<%= asset_path('stitch_semitrans.png') %>"  />
-  <p>The dialog window can be moved, resized and closed with the 'close' button.</p>
+  <p>Displayed picture helps clarify goal.</p>
 </div>
 <div class="csDialog" id="dialog11" title="Level 1.1: Stitching in Colors">
-  <p>This is an animated dialog which we will use to introduce each level.</p>
+  <p>Introduction to level 1.1 ... Prompt user to make 3 stitches in Red Green Blue</p>
+  <img src="<%= asset_path('level1.1_goal.png') %>" />
   <p>The dialog window can be moved, resized and closed with the 'close' button.</p>
 </div>
 <div class="csDialog" id="dialog12" title="Level 1.2: Stitch a whole line">
-  <p>This is an animated dialog which we will use to introduce each level.</p>
-  <img src="<%= asset_path('stitch_semitrans.png') %>"  />
+  <p>Level 1.2 ... Prompt user to stitch a row of 8 Red stitches.</p>
+  <img src="<%= asset_path('level1.2_goal.png') %>"  />
   <p>The dialog window can be moved, resized and closed with the 'close' button.</p>
 </div>
 
@@ -365,8 +408,8 @@ textarea {font-family:Lucida console}
 <td rowspan=3 style="width:15%; background:lightblue;">Level Selection
 <br/>
 <button class="csDiaBtn" id="opener10">Level 1.0</button>
-<button class="csDiaBtn" id="opener11">Level 1.1</button>
-<button class="csDiaBtn" id="opener12">Level 1.2</button>
+<button class="csDiaBtn" id="opener11" disabled="true">Level 1.1</button>
+<button class="csDiaBtn" id="opener12" disabled="true">Level 1.2</button>
 </td>
 <td><b>Type JavaScript</b> &nbsp; &nbsp; Examples: <select id="JSexamples" onchange="JSselect()">
 <option value="knitthree" selected>Knit Three</option>
@@ -404,7 +447,7 @@ textarea {font-family:Lucida console}
 </script>
 
 <td>
-<input type="button" value="Run (Ctrl-m)" onclick="JSrun()"/> &nbsp; &nbsp;
+<input type="button" value="KNIT NOW (Ctrl-m)" onclick="JSrun()"/> &nbsp; &nbsp;
 <b>Output</b> &nbsp; &nbsp; 
 Timing: <span id="JStiming"></span> s
 </td>
@@ -417,11 +460,8 @@ Timing: <span id="JStiming"></span> s
 </tr>
 <tr><td width="50%" style="padding:0px">
 <textarea id="JSprogram" style="height:4in; width:99%; font-family: monospace; font-size: 16; font-weight: bold;" onkeyup="keyUp(event)">
-// Knit three stitches in different colors
+// Knit a single stitch in your favorite color
 
-stitchColor("red");
-stitchColor("green");
-stitchColor("blue");
 
 
 </textarea>
