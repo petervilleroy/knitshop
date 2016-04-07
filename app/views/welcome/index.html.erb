@@ -170,7 +170,9 @@ function drawQueue() {
 		        }
 		        if(!lvlCompleted) {
 		           //TODO: output something in the hint field
-			   $( "#csHints" ).value = csSnarkyRemarks[1];
+			   var ran = Math.random();
+			   ran = Math.floor(ran*100 % csSnarkyRemarks.length);
+			   $( "#csComments" ).html(csSnarkyRemarks[ran]);
 		        }
                         
 			return;
@@ -407,8 +409,10 @@ textarea {font-family:Lucida console}
 Timing: <span id="JStiming"></span> s
 </td>
 <td rowspan=3 style="width:15%; background:lightblue;">
- Hints
- <div id="csHints"></div>
+ Goal
+ <div id="csLevelGoal"></div>
+ Customer Comments 
+ <div id="csComments"></div>
 </td>
 </tr>
 <tr><td width="50%" style="padding:0px">
