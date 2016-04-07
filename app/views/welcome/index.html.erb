@@ -38,8 +38,21 @@ var alreadyDrawing;
 var ksr,ksg,ksb;
 var knitspeed = 200;
 
+var csCurrentLevel = 0;
+var csLevelsCompleted = [];
+var csLevels = [1.0,1.1];
 
-
+var csSnarkyRemarks = ["This is nice, but it's not what I ordered.",
+	"Yuck, that looks like a baby knitted it, and then a dog ate it!",
+	"This would be fine, if I had asked for something completely different.",
+	"Lol, you're just getting started, aren't you?",
+	"This isn't from the same PLANET as the scarf I ordered!"
+];
+var csCongrats = [
+	"Oh, how lovely - thank you!!!",
+	"I knew I came to the right place, this is wonderful!",
+	"It's even prettier than I imagined!"
+];
 
 JSoutput = function(a) {
     var str = "["
@@ -149,8 +162,23 @@ function drawQueue() {
 		var drawColor = stitches.shift();
 		if(!drawColor) {
 			alreadyDrawing = false;
+			//we've completed drawing the whole queue, now test for level completion
+                        var lvlCompleted = csTestLevelCompleted();
+		        if(lvlCompleted) {
+		           //TODO: Congratulate user in an alert, then show the dialog for next level
+           
+		           csAdvanceLevel();
+		        }
+		        if(!lvlCompleted) {
+		           //TODO: output something in the hint field
+			   var ran = Math.random();
+			   ran = Math.floor(ran*100 % csSnarkyRemarks.length);
+			   $( "#csComments" ).html(csSnarkyRemarks[ran]);
+		        }
+                        
 			return;
 		}
+		//If the previous if didn't catch, then we're still drawing the queue elements
 		if(drawColor == "newrow") {
 			drawNewRow();
 		}
@@ -172,7 +200,7 @@ function draw(rgb) {
 	var stitchnode = document.createElement("img");
 	//stitchnode.setAttribute("src", "//public/images/stitch_semitrans.png");
         stitchnode.setAttribute("src", " <%= asset_path('stitch_semitrans.png')  %> "); //$(canvas).data("data-url");
-//stitchnode.setAttribute("class","stitch");
+	stitchnode.setAttribute("class","csStitch");
 	stitchnode.setAttribute("style", "vertical-align:top; width:"+KnitShopStitchWidth+"px; height:"+KnitShopStitchHeight+"px; background-color:rgb("+rgb+")");
 	//stitchnode.setAttribute("height", "23");
 	//stitchnode.setAttribute("width","38");
@@ -183,6 +211,7 @@ function draw(rgb) {
 function drawNewRow() {
 	var canvas = document.getElementById("canvas");
 	var node = document.createElement("div");
+	node.setAttribute("class","csRow");
 	canvas.appendChild(node);
 }
 
@@ -208,7 +237,7 @@ clearCanvas = function() {
     //var ctx=document.getElementById("canvas").getContext('2d');
     //ctx.clearRect(0,0,500,700);
 	var canvas = document.getElementById("canvas");
-	canvas.innerHTML = "<div></div>";
+	canvas.innerHTML = "<div class='csRow'></div>";
 }
 
 JSrun = function() {
@@ -226,7 +255,6 @@ JSrun = function() {
         with (Math) {
 	    
             str = JSoutput(eval(document.getElementById("JSprogram").value));
-	    
         }
     } catch(e) {
         str = e.name+" at line "+(e.lineNumber-56)+": "+e.message;
@@ -235,6 +263,71 @@ JSrun = function() {
     tnode.innerHTML = ""+(new Date().getTime()-d)/1000;
     if (str != undefined) {outnode.value += str;}
 
+}
+
+csTestLevelCompleted = function() {
+   //TODO: think of a clever, visual-based test for level completion.
+   /*
+   Begin brainstorming rant. each row is a div class=csRow, so counting
+   rows is a good start. $(".csRow").length will count them up, and
+   $( ".csRow").each(function(index) { console.log("Row "+index+" has "+this.children().length+" children.");});
+   */
+
+   console.log("CSDEBUG: There are currently "+ $( ".csRow" ).length + " rows.");
+   $( ".csRow").each(function(index) { console.log("CSDEBUG:    Row "+index+" has "+this.children.length+" children.");});
+   switch (csCurrentLevel) {
+	case 0:
+	   var csRows = $(".csRow").length;
+	   var csRowLength = 0;
+	   $(".csRow").each(function(index) {csRowLength = this.children.length;});
+
+	   if ( csRows == 1 && csRowLength == 1) {
+		return true;
+	   }
+	   break;
+	case 1:
+	   var csRows = $(".csRow").length;
+           var csRowLength = 0;
+           $(".csRow").each(function(index) {csRowLength = this.children.length;});
+           if ( csRows == 1 && csRowLength == 3) {
+                //TODO: don't forget to check the color value!!!
+		return true;
+           }
+	   break;
+	case 2:
+	   var csRows = $(".csRow").length;
+	   var csRowLength = 0;
+	   $(".csRow").each(function(index) {csRowLength = this.children.length;});
+	   if ( csRows == 1 && csRowLength == 8) {
+		//TODO: don't forget to check the color value!!!
+		return true;
+	   }
+	break;
+   }
+   return false;
+}
+
+csAdvanceLevel = function() {
+   // move current level to the next one given a list of all levels
+   csLevelsCompleted[csLevelsCompleted.length] = csLevels[csCurrentLevel];
+   $(" #csComments ").html("");
+   //TODO: update the button for this level to display completed colors
+   switch (csCurrentLevel) {
+	case 0:
+	   $("#opener11").prop('disabled', false);
+	   $("#opener11").click();
+	   break;
+	case 1:
+	   $("#opener12").prop('disabled', false);
+	   $("#opener12").click();
+	   break;
+	case 2:
+	   //congratulate user on winning the game?
+	   $( "#dialogEND" ).dialog( "open" );
+	   break;
+   }
+   //csCurrentLevel += 1;
+   
 }
 
 JSselect = function() {
@@ -248,38 +341,6 @@ keyUp = function(event){
   if (event.which==77 && event.ctrlKey) JSrun();
 }
 
-random_list = function(n, r, s) {
-    var a = [];
-    for (var i = 0; i < n; i++) {
-	a[i] = Math.floor(Math.random()*(s-r+1)) + r;
-    }
-    return a;
-}
-
-random_matrix = function(m, n, r, s) {
-    var A = [];
-    for (var i = 0; i < m; i++) {
-        A[i] = [];
-        for (var j = 0; j < n; j++)
-            A[i][j] = Math.floor(Math.random()*(s-r+1)) + r;
-    }
-    return A;
-}
-
-factorial = function(n) { // simple version
-    if (n <= 0) return 1;
-    else return n*factorial(n-1);
-}
-
-fibonacci = function(n) {
-    var a = 0;
-    var b = 1;
-    for (var i=0; i<n; i++) {
-        b = a+b;
-        a = b-a;
-    }
-    return a;
-}
 /*
 //General TODO's
 - Look up the pixel width on an ipad in portrait mode and make the <tr> containing the code and output
@@ -292,7 +353,7 @@ fibonacci = function(n) {
 <script>
   //The following is JQuery UI scripting for User Interface effects
   $(function() {
-    $( "#dialog" ).dialog({
+    $( ".csDialog" ).dialog({
       autoOpen: false,
       show: {
         effect: "blind",
@@ -304,9 +365,26 @@ fibonacci = function(n) {
       }
     });
  
-    $( "#opener" ).click(function() {
-      $( "#dialog" ).dialog( "open" );
+    $( "#opener10" ).click(function() {
+      csCurrentLevel = 0;
+      $( "#csLevelGoal").html("<p>Make a single stitch in any color</p>Hint:<br/><div class='csCode'>stitchColor(\"red\");</div><br/>");
+      $( "#dialog10" ).dialog( "open" );
     });
+    $( "#opener11" ).click(function() {
+      csCurrentLevel = 1;
+      $( "#csLevelGoal").html("<p>Make three stitches: Red, Green, then Blue.</p>Hint:<br/><div class='csCode'>stitchColor(\"red\");</div><br/>");
+      $( "#dialog11" ).dialog( "open" );
+    });
+    $( "#opener12" ).click(function() {
+      $( "#csLevelGoal").html("<p>Make a single stitch in any color</p>Hint:<br/><div class='csCode'>for(i=0;i<8;i++) { <br/>//something to do 8 times<br/>}</div><br/>");
+      csCurrentLevel = 2;
+      $( "#dialog12" ).dialog( "open" );
+    });
+    
+
+    if(csCurrentLevel == 0) {
+	$("#opener10").click();
+    }
   });
   </script>
 <style>td {background:white; vertical-align:top; border:1px solid black; padding:2px 10px}
@@ -318,19 +396,33 @@ textarea {font-family:Lucida console}
 </head>
 <body onload="JSrun()"><!-- onpaste="return false;"-->
 <h1><a href="http://playcodestitch.com">CodeStitch</a></h1>
-<div id="dialog" title="Level 1: Open for Business!">
-  <p>This is an animated dialog which we will use to introduce each level.</p>
+<div class="csDialog" id="dialog10" title="Level 1.0: Open for Business!" style="width:400">
+  <p>Introduction to level 1.0 ... Prompt user to make a single stitch in any color</p>
   <img src="<%= asset_path('stitch_semitrans.png') %>"  />
+  <p>Displayed picture helps clarify goal.</p>
+</div>
+<div class="csDialog" id="dialog11" title="Level 1.1: Stitching in Colors">
+  <p>Introduction to level 1.1 ... Prompt user to make 3 stitches in Red Green Blue</p>
+  <img src="<%= asset_path('level1.1_goal.png') %>" />
   <p>The dialog window can be moved, resized and closed with the 'close' button.</p>
 </div>
- 
+<div class="csDialog" id="dialog12" title="Level 1.2: Stitch a whole line">
+  <p>Level 1.2 ... Prompt user to stitch a row of 8 Red stitches.</p>
+  <img src="<%= asset_path('level1.2_goal.png') %>"  />
+  <p>The dialog window can be moved, resized and closed with the 'close' button.</p>
+</div>
+<div class="csDialog" id="dialogEND" title="CONGRATULATIONS!">
+  <p>You have completed all levels, you little genius.</p>
+</div>
 
 <table width="100%" align="center">
 
 <tr>
 <td rowspan=3 style="width:15%; background:lightblue;">Level Selection
 <br/>
-<button id="opener">Level 1</button>
+<button class="csDiaBtn" id="opener10">Level 1.0</button>
+<button class="csDiaBtn" id="opener11" disabled="true">Level 1.1</button>
+<button class="csDiaBtn" id="opener12" disabled="true">Level 1.2</button>
 </td>
 <td><b>Type JavaScript</b> &nbsp; &nbsp; Examples: <select id="JSexamples" onchange="JSselect()">
 <option value="knitthree" selected>Knit Three</option>
@@ -368,26 +460,28 @@ textarea {font-family:Lucida console}
 </script>
 
 <td>
-<input type="button" value="Run (Ctrl-m)" onclick="JSrun()"/> &nbsp; &nbsp;
+<input type="button" value="KNIT NOW (Ctrl-m)" onclick="JSrun()"/> &nbsp; &nbsp;
 <b>Output</b> &nbsp; &nbsp; 
 Timing: <span id="JStiming"></span> s
 </td>
-<td rowspan=3 style="width:15%; background:lightblue;">Hints</td>
+<td rowspan=3 style="width:15%; background:lightblue;">
+ Goal
+ <div id="csLevelGoal"></div>
+ Customer Comments 
+ <div id="csComments"></div>
+</td>
 </tr>
 <tr><td width="50%" style="padding:0px">
 <textarea id="JSprogram" style="height:4in; width:99%; font-family: monospace; font-size: 16; font-weight: bold;" onkeyup="keyUp(event)">
-// Knit three stitches in different colors
+// Knit a single stitch in your favorite color
 
-stitchColor("red");
-stitchColor("green");
-stitchColor("blue");
 
 
 </textarea>
 </td>
 <td rowspan=2 style="height:4in; width:50%; padding:1px">
 <div id="canvas" width="500" height="700" data-url="<%= asset_path('stitch_semitrans.png') %>">
-  <div>
+  <div class="csRow">
   </div>
 </div>
 </td>
