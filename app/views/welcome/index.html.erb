@@ -242,10 +242,10 @@ clearCanvas = function() {
 
 JSrun = function() {
     var str;
-	alreadyDrawing = false;
+    alreadyDrawing = false;
     KnitShopXPosition = 0;
     KnitShopYPosition = 0;
-    ksr=0;ksg=0;ksb=0;
+    //ksr=0;ksg=0;ksb=0;
     clearCanvas();
 
     var outnode = document.getElementById("JSoutput");
@@ -389,7 +389,7 @@ keyUp = function(event){
       $( "#dialog11" ).dialog( "open" );
     });
     $( "#opener12" ).click(function() {
-      $( "#csLevelGoal").html("<p>Make a single stitch in any color</p>Hint:<br/><div class='csCode'>for(i=0;i<8;i++) { <br/>//something to do 8 times<br/>}</div><br/>");
+      $( "#csLevelGoal").html("<p>Stitch a line of 8 red stitches</p>Hint:<br/><div class='csCode'>for(i=0;i<8;i++) { <br/>//something to do 8 times<br/>}</div><br/>");
       csCurrentLevel = 2;
       $( "#dialog12" ).dialog( "open" );
     });
@@ -437,7 +437,7 @@ textarea {font-family:Lucida console}
 <button class="csDiaBtn" id="opener11" disabled="true">Level 1.1</button>
 <button class="csDiaBtn" id="opener12" disabled="true">Level 1.2</button>
 </td>
-<td><b>Type JavaScript</b> &nbsp; &nbsp; Examples: <select id="JSexamples" onchange="JSselect()">
+<td><b>Choose knitting speed</b> &nbsp; &nbsp; Cheats: <select id="JSexamples" onchange="JSselect()">
 <option value="cheats" selected>Cheats </option>
 <option value ="knitone">Knit One</option>
 <option value ="knitthree" >Knit Three</option>
