@@ -438,7 +438,10 @@ textarea {font-family:Lucida console}
 <button class="csDiaBtn" id="opener12" disabled="true">Level 1.2</button>
 </td>
 <td><b>Type JavaScript</b> &nbsp; &nbsp; Examples: <select id="JSexamples" onchange="JSselect()">
-<option value="knitthree" selected>Knit Three</option>
+<option value="cheats" selected>Cheats </option>
+<option value ="knitone">Knit One</option>
+<option value ="knitthree" >Knit Three</option>
+<option value="knitredline">Knit Red Line</option>
 <option value="knitcheckers">Knit Checkers</option>
 <option value="knitdiagonal">Knit Diagonal</option>
 <option value="knitstripes">Knit Stripes</option>
@@ -486,7 +489,7 @@ Timing: <span id="JStiming"></span> s
 </tr>
 <tr><td width="50%" style="padding:0px">
 <textarea id="JSprogram" style="height:4in; width:99%; font-family: monospace; font-size: 16; font-weight: bold;" onkeyup="keyUp(event)">
-// Knit a single stitch in your favorite color
+// Lines starting with two slashes are comments
 
 
 
@@ -506,15 +509,8 @@ Timing: <span id="JStiming"></span> s
 </tr>
 </table>
 
-<b>Note that this is dynamic code running locally on your machine.  If
-you leave this page before copying and saving your work, it may
-disappear.
-</b>
 
-<p>
-<b>Quick reference to basic JavaScript commands</b>. Search online
-for <a href="http://www.google.com/search?q=javascript+tutorial">tutorials</a>
-<table>
+<table hidden="true">
 <tr>
 <td><b>Comment</b></td>
 <td><pre>// this is a one-line comment
@@ -597,13 +593,12 @@ a.x is 3, a["x"] is 3, a.s() is 5
 </table>
 </p>
 
-<p>
-This page is useful for experimenting with basic JavaScript and simple
-algorithms (e.g. those covered in a discrete mathematics course). It
-should work in any browser that has JavaScript enabled (including
-smartphone browsers).
-</p>
+<textarea id="knitone" style="display:none">
+// Knit a single red stitch
 
+stitchColor("red");
+
+</textarea>
 
 <textarea id="knitthree" style="display:none">
 // Knit three stitches in different colors
@@ -611,6 +606,15 @@ smartphone browsers).
 stitchColor("red");
 stitchColor("green");
 stitchColor("blue");
+
+</textarea>
+
+<textarea id="knitredline" style="display:none">
+// Knit a line of 8 red stitches
+
+for(i=0;i<8;i++){
+stitchColor("red");
+}
 
 </textarea>
 
@@ -669,8 +673,8 @@ knitWholeLine("white");
 <hr/>
 
 <div align="center">
-<a href="http://playcodestitch.com">Marleen Villeroy</a>, 
-April, 2016,
+<a href="http://playcodestitch.com">CodeStitch </a> - Designed by Marleen Villeroy, 
+April 2016, at 
 <a href="http://tc.columbia.edu/">Teachers College, Columbia University</a>
 </div>
 
