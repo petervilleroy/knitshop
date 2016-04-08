@@ -291,7 +291,15 @@ csTestLevelCompleted = function() {
            $(".csRow").each(function(index) {csRowLength = this.children.length;});
            if ( csRows == 1 && csRowLength == 3) {
                 //TODO: don't forget to check the color value!!!
-		return true;
+		var csColorArray = "";
+		$(".csStitch").each(function(index) {
+			console.log(index+": "+this.style["background-color"]);
+		   	csColorArray += this.style["background-color"];
+			csColorArray +="-";
+		});
+		if (csColorArray == "rgb(255, 0, 0)-rgb(0, 255, 0)-rgb(0, 0, 255)-") {
+		   return true;
+		}
            }
 	   break;
 	case 2:
@@ -300,7 +308,12 @@ csTestLevelCompleted = function() {
 	   $(".csRow").each(function(index) {csRowLength = this.children.length;});
 	   if ( csRows == 1 && csRowLength == 8) {
 		//TODO: don't forget to check the color value!!!
-		return true;
+		var returnval = true;
+		$(".csStitch").each(function(index) {
+		   if (this.style["background-color"] != "rgb(255, 0, 0)") returnval= false;
+		   
+		});
+		return returnval;
 	   }
 	break;
    }
