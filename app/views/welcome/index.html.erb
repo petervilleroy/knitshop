@@ -105,6 +105,65 @@ newRow = function() {
 	drawQueue();
 }
 
+setColor = function(r,g,b) {
+   ksr = r;
+   ksg = g;
+   ksb = b;
+ 
+   if(r != null && g == null && b == null) {
+      //assume at this point that a string was given as first argument
+     switch (r) {
+        case "purple":
+	   ksr=160;
+	   ksg=32;
+	   ksb=240;
+	   break;
+	case "black":
+           ksr=0;
+	   ksg=0;
+	   ksb=0;
+           break;
+        case "white":
+           ksr=255;
+	   ksg=255;
+	   ksb=255;
+           break;    
+        case "red":
+           ksr=255;
+	   ksg=0;
+	   ksb=0;
+           break;
+        case "green":
+           ksr=0;
+	   ksg=255;
+	   ksb=0;
+           break;
+        case "blue":
+           ksr=0;
+	   ksg=0;
+	   ksb=255;
+           break;
+        case "yellow":
+	   ksr=255;
+	   ksg=255;
+	   ksb=0;
+	   break;
+	default:
+           stitchRGB(0,0,0);
+     }
+   }
+}
+
+stitch = function(x) {
+   if(x == null) x=1;
+   if(ksr == null) {ksr=0;ksg=0;ksb=0;}
+   for(i = 0; i<x; i++){
+	stitches.push(""+ksr+","+ksg+","+ksb);
+   }
+   drawQueue();
+}
+
+//TODO: remove the stitchColor function
 stitchColor = function(str) {
     //KSWait(500);
     if(!str) str="black";
@@ -129,6 +188,7 @@ stitchColor = function(str) {
     }
 }
 
+//TODO: remove stitchRGB function, and global variables KnitShopX*, KnitShopY*
 function stitchRGB(r,g,b) {
     if (!KnitShopXPosition) KnitShopXPosition=0;
     if (!KnitShopYPosition) KnitShopYPosition=0;
@@ -310,7 +370,7 @@ csTestLevelCompleted = function() {
 		//TODO: don't forget to check the color value!!!
 		var returnval = true;
 		$(".csStitch").each(function(index) {
-		   if (this.style["background-color"] != "rgb(255, 0, 0)") returnval= false;
+		   if (this.style["background-color"] != "rgb(160, 32, 240)") returnval= false;
 		   
 		});
 		return returnval;
@@ -380,16 +440,16 @@ keyUp = function(event){
  
     $( "#opener10" ).click(function() {
       csCurrentLevel = 0;
-      $( "#csLevelGoal").html("<p>Make a single stitch in any color</p>Hint:<br/><div class='csCode'>stitchColor(\"red\");</div><br/>");
+      $( "#csLevelGoal").html("<p>Make a single stitch in any color</p>Hint:<br/><div class='csCode'>setColor(\"purple\");<br/>stitch();</div><br/>");
       $( "#dialog10" ).dialog( "open" );
     });
     $( "#opener11" ).click(function() {
       csCurrentLevel = 1;
-      $( "#csLevelGoal").html("<p>Make three stitches: Red, Green, then Blue.</p>Hint:<br/><div class='csCode'>stitchColor(\"red\");</div><br/>");
+      $( "#csLevelGoal").html("<p>Make three stitches: Red, Green, then Blue.</p>Hint:<br/><div class='csCode'>setColor(\"red\");<br/>stitch();<br/>setColor(\"green\");<br/>stitch();</div><br/>");
       $( "#dialog11" ).dialog( "open" );
     });
     $( "#opener12" ).click(function() {
-      $( "#csLevelGoal").html("<p>Stitch a line of 8 red stitches</p>Hint:<br/><div class='csCode'>for(i=0;i<8;i++) { <br/>//something to do 8 times<br/>}</div><br/>");
+      $( "#csLevelGoal").html("<p>Stitch a line of 8 purple stitches</p>Hint:<br/><div class='csCode'>setColor(\"purple\");<br/>stitch(8);</div><br/>");
       csCurrentLevel = 2;
       $( "#dialog12" ).dialog( "open" );
     });
@@ -594,27 +654,31 @@ a.x is 3, a["x"] is 3, a.s() is 5
 </p>
 
 <textarea id="knitone" style="display:none">
-// Knit a single red stitch
+// Knit a single purple stitch
 
-stitchColor("red");
+setColor(160,32,240);
+stitch();
 
 </textarea>
 
 <textarea id="knitthree" style="display:none">
 // Knit three stitches in different colors
 
-stitchColor("red");
-stitchColor("green");
-stitchColor("blue");
+setColor(255,0,0);
+stitch();
+setColor(0,255,0);
+stitch();
+setColor(0,0,255);
+stitch();
+
 
 </textarea>
 
 <textarea id="knitredline" style="display:none">
-// Knit a line of 8 red stitches
+// Knit a line of 8 purple stitches
 
-for(i=0;i<8;i++){
-stitchColor("red");
-}
+setColor("purple");
+stitch(8);
 
 </textarea>
 
@@ -623,13 +687,17 @@ stitchColor("red");
 
 for(a=0;a<11;a++) {
   for(b=0;b<5;b++) {
-    stitchColor("green");
-    stitchColor("red");
+    setColor(0,255,0);
+    stitch();
+    setColor(255,0,0);
+    stitch();
   }
   newRow();
   for(b=0;b<5;b++) {
-    stitchColor("red");
-    stitchColor("green");
+    setColor(255,0,0);
+    stitch();
+    setColor(0,255,0);
+    stitch();
   }
   newRow();
 }
@@ -641,12 +709,10 @@ for(a=0;a<11;a++) {
 
 var i=0;
 for(a=0;a<35;a++) {
-  for(b=0;b<12;b++) {
-    if(b<(i/3))
-     stitchColor("green");
-    else
-     stitchColor("red");
-  }
+  setColor(0,255,0);
+  stitch(i/3);
+  setColor(255,0,0);
+  stitch(12-i/3);
   newRow();
   i++;
 }
@@ -656,9 +722,9 @@ for(a=0;a<35;a++) {
 // Use a function to knit stripes
 
 knitWholeLine = function(color) {
-  for(a=0;a<10;a++) {
-    stitchColor(color);
-  }
+  
+  setColor(color);
+  stitch(10);
   newRow();
 }
 
