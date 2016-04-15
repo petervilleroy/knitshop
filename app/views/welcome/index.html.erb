@@ -287,7 +287,7 @@ JSrun = function() {
     clearCanvas();
     var outnode = document.getElementById("JSoutput");
     outnode.value = "";
-    d = new Date().getTime();
+    //d = new Date().getTime();
     try {
         with (Math) {
 	    
@@ -296,8 +296,8 @@ JSrun = function() {
     } catch(e) {
         str = e.name+" at line "+(e.lineNumber-56)+": "+e.message;
     }
-    var tnode = document.getElementById("JStiming");
-    tnode.innerHTML = ""+(new Date().getTime()-d)/1000;
+    //var tnode = document.getElementById("JStiming");
+    //tnode.innerHTML = ""+(new Date().getTime()-d)/1000;
     if (str != undefined) {outnode.value += str;}
 }
 csTestLevelCompleted = function() {
@@ -359,11 +359,13 @@ csAdvanceLevel = function() {
    //TODO: update the button for this level to display completed colors
    switch (csCurrentLevel) {
 	case 0:
-	   $("#opener11").prop('disabled', false);
+	   //$("#opener11").prop('disabled', false);
+	   $("#opener11").button("enable");
 	   $("#opener11").click();
 	   break;
 	case 1:
-	   $("#opener12").prop('disabled', false);
+	   //$("#opener12").prop('disabled', false);
+	   $("#opener12").button("enable");
 	   $("#opener12").click();
 	   break;
 	case 2:
@@ -406,7 +408,9 @@ keyUp = function(event){
         duration: 1000
       }
     });
- 
+    $( ".csDiaBtn" ).button();
+    $( "#radioset" ).buttonset();
+    $( "#knitnowbutton" ).button();
     $( "#opener10" ).click(function() {
       csCurrentLevel = 0;
       $( "#csLevelGoal").html("<p>Make a single stitch in any color</p>Hint:<br/><div class='csCode'>setColor(\"purple\");<br/>stitch();</div><br/>");
@@ -431,12 +435,14 @@ keyUp = function(event){
 <style>td {background:white; vertical-align:top; border:1px solid black; padding:2px 10px}
 pre {margin:0}
 table {border-collapse:collapse; table-layout:fixed}
-body {background:lightblue; font-family:Arial}
+body {background: #f5daa4; font-family:Arial}
 textarea {font-family:Lucida console}
 </style>
 </head>
 <body onload="JSrun()"><!-- onpaste="return false;"-->
-<h1><a href="http://playcodestitch.com">CodeStitch</a></h1>
+<h1>
+  <a href="http://playcodestitch.com">CodeStitch</a>
+</h1>
 <div class="csDialog" id="dialog10" title="Level 1.0: Open for Business!" style="width:400">
   <p>Introduction to level 1.0 ... Prompt user to make a single stitch in any color</p>
   <img src="<%= asset_path('stitch_semitrans.png') %>"  />
@@ -459,13 +465,44 @@ textarea {font-family:Lucida console}
 <table width="100%" align="center">
 
 <tr>
-<td rowspan=3 style="width:15%; background:lightblue;">Level Selection
+<td rowspan=3 style="width:10%; background:none;">Level Selection
 <br/>
-<button class="csDiaBtn" id="opener10">Level 1.0</button>
-<button class="csDiaBtn" id="opener11" disabled="true">Level 1.1</button>
-<button class="csDiaBtn" id="opener12" disabled="true">Level 1.2</button>
+<button class="csDiaBtn" id="opener10">1.0</button>
+<button class="csDiaBtn" id="opener11" disabled="true">1.1</button>
+<button class="csDiaBtn" id="opener12" disabled="true">1.2</button>
 </td>
-<td><b>Choose knitting speed</b> &nbsp; &nbsp; Cheats: <select id="JSexamples" onchange="JSselect()">
+
+<td rowspan=3 style="height:4in; width:50%; padding:1px">
+<div id="canvas" width="500" height="700" data-url="<%= asset_path('stitch_semitrans.png') %>">
+  <div class="csRow">
+  </div>
+</div>
+</td>
+
+<td rowspan=1 width="50%" style="padding:0px">
+<textarea id="JSprogram" style="height:4in; width:99%; font-family: monospace; font-size: 16; font-weight: bold;" onkeyup="keyUp(event)">
+// Lines starting with two slashes are comments
+
+
+
+</textarea>
+</td>
+
+<td rowspan=1 style="width:20%; background:white;">
+ Tabs with saved patterns
+</td>
+<td rowspan=1 style="width:15%; background:none;">
+ Goal
+ <div id="csLevelGoal"></div>
+ Customer Comments 
+ <div id="csComments"></div>
+</td>
+</tr>
+
+<tr>
+<td colspan=3>
+<input type="button" id="knitnowbutton" value="KNIT NOW (Ctrl-m)" onclick="JSrun()"/>
+Cheats: <select id="JSexamples" onchange="JSselect()">
 <option value="cheats" selected>Cheats </option>
 <option value ="knitone">Knit One</option>
 <option value ="knitthree" >Knit Three</option>
@@ -476,15 +513,13 @@ textarea {font-family:Lucida console}
 
 </select>
 <br/>
-<label>Slow: <input type="radio" name="trans" value="200" checked /></label>
-<label>Med: <input type="radio" name="trans" value="100"  /></label>
-<label>Fast: <input type="radio" name="trans" value="50" /></label>
-<label>Instant: <input type="radio" name="trans" value="10" /></label>
-
+<form ><div id=radioset>
+ <input type="radio" id="radio1" name="trans" value="200" checked ><label for="radio1">Slow</label>
+ <input type="radio" id="radio2" name="trans" value="100"  ><label for="radio2">Medium</label>
+ <input type="radio" id="radio3" name="trans" value="50" ><label for="radio3">Fast</label>
+ <input type="radio" id="radio4" name="trans" value="10" ><label for="radio4">Instant</label>
+</div></form>
 </td>
-
-        
-
 <script type="text/javascript">
 // Allow me a little script here to give action to my radio buttons.
 // wrapped as a function to remove from global namespace
@@ -502,34 +537,9 @@ textarea {font-family:Lucida console}
 }());
 </script>
 
-<td>
-<input type="button" value="KNIT NOW (Ctrl-m)" onclick="JSrun()"/> &nbsp; &nbsp;
-<b>Output</b> &nbsp; &nbsp; 
-Timing: <span id="JStiming"></span> s
-</td>
-<td rowspan=3 style="width:15%; background:lightblue;">
- Goal
- <div id="csLevelGoal"></div>
- Customer Comments 
- <div id="csComments"></div>
-</td>
 </tr>
-<tr><td width="50%" style="padding:0px">
-<textarea id="JSprogram" style="height:4in; width:99%; font-family: monospace; font-size: 16; font-weight: bold;" onkeyup="keyUp(event)">
-// Lines starting with two slashes are comments
-
-
-
-</textarea>
-</td>
-<td rowspan=2 style="height:4in; width:50%; padding:1px">
-<div id="canvas" width="500" height="700" data-url="<%= asset_path('stitch_semitrans.png') %>">
-  <div class="csRow">
-  </div>
-</div>
-</td>
-</tr>
-<tr><td width="100%" style="padding:0px">
+<tr>
+<td colspan=3 width="100%" style="padding:0px">
 <textarea id="JSoutput" value="Output will appear here in case of errors." style="height:1.5in; width:99%; font-family: monospace; font-size: 16;">
 </textarea>
 </td>
