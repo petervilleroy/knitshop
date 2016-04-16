@@ -473,6 +473,12 @@ textarea {font-family:Lucida console}
 </td>
 
 <td rowspan=3 style="height:4in; width:50%; padding:1px">
+Goal
+ <div id="csLevelGoal"></div>
+ Customer Comments
+ <div id="csComments"></div>
+<br/>
+<hr/>
 <div id="canvas" width="500" height="700" data-url="<%= asset_path('stitch_semitrans.png') %>">
   <div class="csRow">
   </div>
@@ -491,17 +497,21 @@ textarea {font-family:Lucida console}
 <td rowspan=1 style="width:20%; background:white;">
  Tabs with saved patterns
 </td>
-<td rowspan=1 style="width:15%; background:none;">
- Goal
- <div id="csLevelGoal"></div>
- Customer Comments 
- <div id="csComments"></div>
-</td>
 </tr>
 
 <tr>
 <td colspan=3>
+
+<form>
 <input type="button" id="knitnowbutton" value="KNIT NOW (Ctrl-m)" onclick="JSrun()"/>
+<div id=radioset>
+ <input type="radio" id="radio1" name="trans" value="200" checked ><label for="radio1">Slow</label>
+ <input type="radio" id="radio2" name="trans" value="100"  ><label for="radio2">Medium</label>
+ <input type="radio" id="radio3" name="trans" value="50" ><label for="radio3">Fast</label>
+ <input type="radio" id="radio4" name="trans" value="10" ><label for="radio4">Instant</label>
+</div>
+</form>
+
 Cheats: <select id="JSexamples" onchange="JSselect()">
 <option value="cheats" selected>Cheats </option>
 <option value ="knitone">Knit One</option>
@@ -510,15 +520,8 @@ Cheats: <select id="JSexamples" onchange="JSselect()">
 <option value="knitcheckers">Knit Checkers</option>
 <option value="knitdiagonal">Knit Diagonal</option>
 <option value="knitstripes">Knit Stripes</option>
-
 </select>
-<br/>
-<form ><div id=radioset>
- <input type="radio" id="radio1" name="trans" value="200" checked ><label for="radio1">Slow</label>
- <input type="radio" id="radio2" name="trans" value="100"  ><label for="radio2">Medium</label>
- <input type="radio" id="radio3" name="trans" value="50" ><label for="radio3">Fast</label>
- <input type="radio" id="radio4" name="trans" value="10" ><label for="radio4">Instant</label>
-</div></form>
+
 </td>
 <script type="text/javascript">
 // Allow me a little script here to give action to my radio buttons.
