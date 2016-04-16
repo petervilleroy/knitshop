@@ -1,4 +1,32 @@
 <div style:"width:100%">
-  <img src="<%= asset_path('splash.png') %>" width="100%"/>
+  <img id="splashpng" src="<%= asset_path('splash.png') %>" width="100%"/>
+  
+  <form class="center" id="splashform">
+    <div id="genderbuttonset">
+      <input type="radio" class="goplayinput" id="radio1" name="gender" value="f"><label for="radio1">Female</label>
+      <input type="radio" class="goplayinput" id="radio2" name="gender" value="m"><label for="radio2">Male</label>
+    </div>
+    <div id="agebuttonset">
+      <input type="radio" class="goplayinput" id="radio3" name="age" value="0"><label for="radio3">Under 10</label>
+      <input type="radio" class="goplayinput" id="radio4" name="age" value="1"><label for="radio4">10-13</label>
+      <input type="radio" class="goplayinput" id="radio5" name="age" value="2"><label for="radio5">14-18</label>
+      <input type="radio" class="goplayinput" id="radio6" name="age" value="3"><label for="radio6">Over 18</label>
+    </div>
+  </form>
+  <%= button_to "Play Now", "/cs", :method => :get, :class => "goplaybtn", :disabled => "true" %>
 </div>
-<%= link_to "Play Now", "/cs" %>
+
+<script>
+  $(function() {
+	//TODO: the above button is set to 'get', but consider using 'post' in order to save form values.
+	$( "#genderbuttonset" ).buttonset();
+	$( "#agebuttonset" ).buttonset();
+	$( ".goplaybtn" ).button();
+	$( ".goplayinput" ).click(function() {
+  	  var genderChecked = ($('input[name=gender]:checked').size() > 0);
+  	  var ageChecked = ($('input[name=age]:checked').size() > 0);
+  	  if( genderChecked && ageChecked) $( ".goplaybtn").button("enable");
+        } );
+});
+
+</script>

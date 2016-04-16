@@ -1,3 +1,28 @@
 // Place all the styles related to the splash controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+.goplaybtn {
+	position: absolute;
+	left: 70%;
+	top: 70%;
+	z-index: 5;
+}
+
+.goplayinput {
+	z-index: 5;
+}
+
+.center {
+	position: absolute;
+	left: 60%;
+	top: 50%;
+	width: 40%;
+	text-align: left;
+}
+
+#splashpng {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	z-index: -1;
+}
