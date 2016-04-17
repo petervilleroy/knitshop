@@ -371,6 +371,27 @@ csTestLevelCompleted = function() {
            return returnval;
 
 	   break;
+	case 4:
+	   var csRows = $(".csRow").length;
+           var csRowLength = 0;
+           var returnval = true;
+           // Check that the result is 2x8
+           $(".csRow").each(function(index) {
+                if(this.children.length != 8 && index < 2) returnval=false;
+           });
+           // Check for alternating stitch colors 
+           var colorA, colorB;
+           $(".csStitch").each(function(index) {
+	      var currentStitchColor = this.style["background-color"];
+	      if (index == 0) colorA = currentStitchColor;
+	      if (index < 4 && currentStitchColor != colorA) returnval = false;
+	      if (index > 11 && currentStitchColor != colorA) returnval = false;
+	      if (index == 4) colorB = currentStitchColor;
+	      if (index > 4 && index <= 11 && currentStitchColor != colorB) returnval = false;
+              if (colorA == colorB) returnval = false;
+           });
+           return returnval;
+           break;
    }
    return false;
 }
@@ -394,7 +415,11 @@ csAdvanceLevel = function() {
 	   $("#opener13").button("enable");
 	   $("#opener13").click();
 	   break;
-	case 3:
+        case 3:
+           $("#opener14").button("enable");
+           $("#opener14").click();
+           break;
+	case 4:
 	   //congratulate user on winning the game?
 	   $( "#dialogEND" ).dialog( "open" );
 	   break;
@@ -458,6 +483,12 @@ keyUp = function(event){
       csCurrentLevel = 3;
       $( "#dialog13" ).dialog( "open" );
     });
+    $( "#opener14" ).click(function() {
+      $( "#csLevelGoal").html("<p>Knit two, one with 4 white stitches then 4 red stitches, the second with 4 red stitches then 4 white stitches.</p>Hint:<br/><div class='csCode'>setColor(\"red\");<br/>stitch(4);<br/>//Switch Color and stitch 4 more<br/>...<br/>newRow();<br/>stitch(4);<br/>//Switch colors again and stitch 4 more<br/>...</div><br/>");
+      csCurrentLevel = 4;
+      $( "#dialog14" ).dialog( "open" );
+    });
+
     $('#noIndColor').colorpicker({
 	displayIndicator: false,
 	defaultPalette: 'web',
@@ -506,6 +537,12 @@ textarea {font-family:Lucida console}
   <img src="<%= asset_path('level1.3_goal.png') %>"  />
   <p>Notice that in programming, there are often many ways to successfully achieve a goal. You could write <span class="csCode">stitch();</span> 8 times in a row, or write <span class="csCode">stitch(8);</span> just once, and the result would be the same. The difference is a little bit an expression of yourself and a little bit a chance to save you time when writing code. We'll come back to talk about different ways to solve a problem later.</p>  
 </div>
+<div class="csDialog" id="dialog14" title="Level 1.4: Let's make a pattern">
+  <p>Remember that you can switch colors anytime by adding <span class="csCode">setColor(...);</span> into your program. Let's use that ability to make a pattern.</p>
+  <p>Knit two lines, the first row with 4 white stitches then 4 red ones, and the second row with 4 red stitches then 4 white ones. On second thought, free your mind and use any two colors you like, just make sure the pattern comes out 4-and-4 on each line, alternating which color comes first. The result should look like this:</p>
+  <img src="<%= asset_path('level1.4_goal.png') %>"  />
+  <p>You may have noticed that the robot only recognizes a handful of colors, and it uses black whenever it's not sure. In the next level, we're going to show you how to use any color you want!</p>
+</div>
 <div class="csDialog" id="dialogEND" title="CONGRATULATIONS!">
   <p>You have completed all levels, you little genius.</p>
 </div>
@@ -519,6 +556,7 @@ textarea {font-family:Lucida console}
 <button class="csDiaBtn" id="opener11" disabled="true">1.1</button>
 <button class="csDiaBtn" id="opener12" disabled="true">1.2</button>
 <button class="csDiaBtn" id="opener13" disabled="true">1.3</button>
+<button class="csDiaBtn" id="opener14" disabled="true">1.4</button>
 </td>
 
 <td rowspan=3 style="height:4in; width:50%; padding:1px">
