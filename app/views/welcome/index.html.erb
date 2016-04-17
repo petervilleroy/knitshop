@@ -135,6 +135,11 @@ setColor = function(r,g,b) {
 	   ksg=255;
 	   ksb=0;
 	   break;
+	case "orange":
+	   ksr=255;
+	   ksg=165;
+	   ksb=0;
+	   break;
 	default:
            stitchRGB(0,0,0);
      }
@@ -348,7 +353,24 @@ csTestLevelCompleted = function() {
 		});
 		return returnval;
 	   }
-	break;
+	   break;
+	case 3:
+	   var csRows = $(".csRow").length;
+	   var csRowLength = 0;
+	   var returnval = true;
+	   // Check that the result is 2x8
+	   $(".csRow").each(function(index) {
+		if(this.children.length != 8 && index < 2) returnval=false;
+	   });
+	   // Check for red stitches only
+                
+           $(".csStitch").each(function(index) {
+              if (this.style["background-color"] != "rgb(255, 0, 0)") returnval= false;
+                  
+           });
+           return returnval;
+
+	   break;
    }
    return false;
 }
@@ -369,6 +391,10 @@ csAdvanceLevel = function() {
 	   $("#opener12").click();
 	   break;
 	case 2:
+	   $("#opener13").button("enable");
+	   $("#opener13").click();
+	   break;
+	case 3:
 	   //congratulate user on winning the game?
 	   $( "#dialogEND" ).dialog( "open" );
 	   break;
@@ -406,7 +432,8 @@ keyUp = function(event){
       hide: {
         effect: "explode",
         duration: 1000
-      }
+      },
+      width: 500,
     });
     $( ".csDiaBtn" ).button();
     $( "#radioset" ).buttonset();
@@ -426,7 +453,17 @@ keyUp = function(event){
       csCurrentLevel = 2;
       $( "#dialog12" ).dialog( "open" );
     });
-    
+    $( "#opener13" ).click(function() {
+      $( "#csLevelGoal").html("<p>Knit two red lines, each 8 stitches long.</p>Hint:<br/><div class='csCode'>setColor(\"red\");<br/>stitch(8);<br/>newRow();<br/>stitch(8);</div><br/>");
+      csCurrentLevel = 3;
+      $( "#dialog13" ).dialog( "open" );
+    });
+    $('#noIndColor').colorpicker({
+	displayIndicator: false,
+	defaultPalette: 'web',
+	color: '#17b13a'
+    });
+ 
     if(csCurrentLevel == 0) {
 	$("#opener10").click();
     }
@@ -443,20 +480,31 @@ textarea {font-family:Lucida console}
 <h1>
   <a href="http://playcodestitch.com">CodeStitch</a>
 </h1>
-<div class="csDialog" id="dialog10" title="Level 1.0: Open for Business!" style="width:400">
-  <p>Introduction to level 1.0 ... Prompt user to make a single stitch in any color</p>
+<div class="csDialog" id="dialog10" title="Level 1.0: Getting to Know Your Robot" style="width:400">
+  <p>We'll start with the basics, and before you know it your knitting shop will be open for business. First 
+     things first, let's learn how to make a single stitch in a color of your choice. The way codeStitch works is that you type in commands and hit the go button, then the robot will create a product given the commands you provide. Each knit stitch will look something like this:</p>
   <img src="<%= asset_path('stitch_semitrans.png') %>"  />
-  <p>Displayed picture helps clarify goal.</p>
+  <p>You can make the robot do this by using two simple commands. The first one is <span class="csCode">setColor();</span> You can put the name
+     of a color in between the '()' and the robot will get ready to knit in that color, like this: <span class="csCode">setColor("red");</span></p>
+  <p>After you've chosen a color, you need to tell the robot to make a stitch. Later, we'll combine lots of stitches to make scarves in elaborate colors and patterns, but for now let's just start with one stitch. The command is easy to remember: <span class="csCode">stitch();</span> Go ahead and try it out, and don't forget to end each line with a semi-colon (it looks like this- ; )
 </div>
-<div class="csDialog" id="dialog11" title="Level 1.1: Stitching in Colors">
-  <p>Introduction to level 1.1 ... Prompt user to make 3 stitches in Red Green Blue</p>
+<div class="csDialog" id="dialog11" title="Level 1.1: Stitching in Multi-Color">
+  <p>Great Job!</p><p>Now that you've made one stitch, let's build on that and tell the robot to make three stitches, each one in a different color. To complete the level, make a Red, a Green, and a Blue stitch, like this:</p>
   <img src="<%= asset_path('level1.1_goal.png') %>" />
-  <p>The dialog window can be moved, resized and closed with the 'close' button.</p>
+  <p>To accomplish it, you'll just do the same thing as before, but three times. Set a different color before making each stitch.</p>
+  <p>Notice that after you finish each level, your work from the previous level stays on the notepad. You can erase it, or build on top of that work to accomplish the next level. There are also reminders and hints to the left of the notepad to help you reach your goal.</p>
 </div>
 <div class="csDialog" id="dialog12" title="Level 1.2: Stitch a whole line">
-  <p>Level 1.2 ... Prompt user to stitch a row of 8 Red stitches.</p>
+  <p>This is easy, right? And it's about to get even easier, because coding is all about reducing mundane repetition and making the robot work for you, instead of the other way around. Now, once we've set a color, we can make the robot knit many stitches at once by adding an 'argument' to the stitch command, like this: <span class="csCode">stitch(3);</span> which will knit three stitches instead of just one.</p>
+  <p>Now you try it. To complete this level, knit 8 red stitches in a line, like this:</p>
   <img src="<%= asset_path('level1.2_goal.png') %>"  />
-  <p>The dialog window can be moved, resized and closed with the 'close' button.</p>
+ 
+</div>
+<div class="csDialog" id="dialog13" title="Level 1.3: Getting Two Dimensional">
+  <p>I know what you're thinking: "This single-line knitting is uninspired." Well, it's time to spice it up then, and introduce a new command: <span class="csCode">newRow();</span> </p>
+  <p>This will make the robot jump to the next line, so you can knit something a little bigger. Use this new function to knit two rows of red stitches. Each row should be 8 stitches long, like this:</p>
+  <img src="<%= asset_path('level1.3_goal.png') %>"  />
+  <p>Notice that in programming, there are often many ways to successfully achieve a goal. You could write <span class="csCode">stitch();</span> 8 times in a row, or write <span class="csCode">stitch(8);</span> just once, and the result would be the same. The difference is a little bit an expression of yourself and a little bit a chance to save you time when writing code. We'll come back to talk about different ways to solve a problem later.</p>  
 </div>
 <div class="csDialog" id="dialogEND" title="CONGRATULATIONS!">
   <p>You have completed all levels, you little genius.</p>
@@ -470,6 +518,7 @@ textarea {font-family:Lucida console}
 <button class="csDiaBtn" id="opener10">1.0</button>
 <button class="csDiaBtn" id="opener11" disabled="true">1.1</button>
 <button class="csDiaBtn" id="opener12" disabled="true">1.2</button>
+<button class="csDiaBtn" id="opener13" disabled="true">1.3</button>
 </td>
 
 <td rowspan=3 style="height:4in; width:50%; padding:1px">
@@ -503,12 +552,12 @@ Goal
 <td colspan=3>
 
 <form>
-<input type="button" id="knitnowbutton" value="KNIT NOW (Ctrl-m)" onclick="JSrun()"/>
+<input type="button" id="knitnowbutton" value=" GO " onclick="JSrun()"/>
 <div id=radioset>
- <input type="radio" id="radio1" name="trans" value="200" checked ><label for="radio1">Slow</label>
- <input type="radio" id="radio2" name="trans" value="100"  ><label for="radio2">Medium</label>
- <input type="radio" id="radio3" name="trans" value="50" ><label for="radio3">Fast</label>
- <input type="radio" id="radio4" name="trans" value="10" ><label for="radio4">Instant</label>
+ <input type="radio" id="radio1" name="trans" value="200" checked ><label class="csRadioLabel" for="radio1">Slow</label>
+ <input type="radio" id="radio2" name="trans" value="100"  ><label class="csRadioLabel" for="radio2">Medium</label>
+ <input type="radio" id="radio3" name="trans" value="50" ><label class="csRadioLabel" for="radio3">Fast</label>
+ <input type="radio" id="radio4" name="trans" value="10" ><label class="csRadioLabel" for="radio4">Instant</label>
 </div>
 </form>
 
@@ -549,6 +598,8 @@ Cheats: <select id="JSexamples" onchange="JSselect()">
 </tr>
 </table>
 
+
+<div>Super experimental color picker feature: </br><input id="noIndColor"></input></div>
 
 <table hidden="true">
 <tr>
