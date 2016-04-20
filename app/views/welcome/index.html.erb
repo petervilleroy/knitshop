@@ -295,7 +295,7 @@ clearCanvas = function() {
     //var ctx=document.getElementById("canvas").getContext('2d');
     //ctx.clearRect(0,0,500,700);
 	var canvas = document.getElementById("canvas");
-	canvas.innerHTML = "<div class='csRow'></div>";
+	canvas.innerHTML = "<img class='csKnittingNeedle' src='<%= asset_path('woodknitneedle.png') %>' style='width:100%'><div class='csRow'></div>";
 }
 JSrun = function() {
     var str;
@@ -626,13 +626,15 @@ Goal
 <br/>
 <hr/>
 <div id="canvas" width="500" height="700" data-url="<%= asset_path('stitch_semitrans.png') %>">
+  <img class="csKnittingNeedle" src="<%= asset_path('woodknitneedle.png') %>" style="width:100%">
   <div class="csRow">
   </div>
 </div>
 </td>
 
-<td rowspan=1 width="50%" style="padding:0px">
-<textarea id="JSprogram" style="height:4in; width:99%; font-family: monospace; font-size: 16; font-weight: bold;" onkeyup="keyUp(event)">
+<td rowspan=1 id="scratchpad" width="50%" style="padding:0px; background:url('<%= asset_path('spiralnotepad.png') %>'); background-size: 100% 100%; background-repeat: no-repeat">
+<div style="background-color:transparent"><br/><br/><br/><br/></div>
+<textarea id="JSprogram" style="height:4in; width:99%; background-color:transparent; font-family: monospace; font-size: 16; font-weight: bold;" onkeyup="keyUp(event)">
 // Lines starting with two slashes are comments
 
 
