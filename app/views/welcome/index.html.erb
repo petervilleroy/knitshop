@@ -32,6 +32,7 @@ var KnitShopStitchWidth=30;
 var stitches = [];
 var alreadyDrawing;
 var ksr,ksg,ksb;
+var ksColor;
 var knitspeed = 200;
 var csCurrentLevel = 0;
 var csLevelsCompleted = [];
@@ -99,60 +100,84 @@ setColor = function(r,g,b) {
  
    if(r != null && g == null && b == null) {
       //assume at this point that a string was given as first argument
+      //if the argument begins with #, it's a hex color, otherwise it's text
+     if(r.charAt(0) == '#') {
+	ksColor=r;
+	return;
+     }
      switch (r) {
         case "purple":
+	   ksColor="#A020F0";
 	   ksr=160;
 	   ksg=32;
 	   ksb=240;
 	   break;
 	case "black":
+	   ksColor="#000000";
            ksr=0;
 	   ksg=0;
 	   ksb=0;
            break;
         case "white":
+	   ksColor="#FFFFFF";
            ksr=255;
 	   ksg=255;
 	   ksb=255;
            break;    
         case "red":
+	   ksColor="#FF0000";
            ksr=255;
 	   ksg=0;
 	   ksb=0;
            break;
         case "green":
+	   ksColor="#00FF00";
            ksr=0;
 	   ksg=255;
 	   ksb=0;
            break;
         case "blue":
+	   ksColor="#0000FF";
            ksr=0;
 	   ksg=0;
 	   ksb=255;
            break;
         case "yellow":
+	   ksColor="#FFFF00";
 	   ksr=255;
 	   ksg=255;
 	   ksb=0;
 	   break;
 	case "orange":
+	   ksColor="#FFA500";
 	   ksr=255;
 	   ksg=165;
 	   ksb=0;
 	   break;
 	default:
-           stitchRGB(0,0,0);
+           ksColor="#ffffff";
+	   //stitchRGB(0,0,0);
      }
    }
 }
 stitch = function(x) {
    if(x == null) x=1;
-   if(ksr == null) {ksr=0;ksg=0;ksb=0;}
-   for(i = 0; i<x; i++){
-	stitches.push(""+ksr+","+ksg+","+ksb);
+   if(ksColor == null) ksColor="#000000";
+   for(stitchindex = 0; stitchindex<x; stitchindex++){
+	stitches.push(ksColor);
    }
    drawQueue();
 }
+
+blankStitch = function(x) {
+   if(x == null) x=1;
+   for(stitchindex = 0; stitchindex<x; stitchindex++){
+        stitches.push("blankstitch");
+   }
+   drawQueue();
+}
+
+
 //TODO: remove the stitchColor function
 stitchColor = function(str) {
     //KSWait(500);
@@ -213,12 +238,10 @@ function drawQueue() {
 			//we've completed drawing the whole queue, now test for level completion
                         var lvlCompleted = csTestLevelCompleted();
 		        if(lvlCompleted) {
-		           //TODO: Congratulate user in an alert, then show the dialog for next level
-           
 		           csAdvanceLevel();
 		        }
 		        if(!lvlCompleted) {
-		           //TODO: output something in the hint field
+		           // output something in the hint field
 			   var ran = Math.random();
 			   ran = Math.floor(ran*100 % csSnarkyRemarks.length);
 			   $( "#csComments" ).html(csSnarkyRemarks[ran]);
@@ -227,8 +250,9 @@ function drawQueue() {
 			return;
 		}
 		//If the previous if didn't catch, then we're still drawing the queue elements
-		if(drawColor == "newrow") {
-			drawNewRow();
+		if(drawColor == "newrow" || drawColor == "blankstitch") {
+			if(drawColor == "newrow") drawNewRow();
+			if(drawColor == "blankstitch") drawBlankStitch();
 		}
 		else {
 			draw(drawColor);
@@ -248,7 +272,7 @@ function draw(rgb) {
 	//stitchnode.setAttribute("src", "//public/images/stitch_semitrans.png");
         stitchnode.setAttribute("src", " <%= asset_path('stitch_semitrans.png')  %> "); //$(canvas).data("data-url");
 	stitchnode.setAttribute("class","csStitch");
-	stitchnode.setAttribute("style", "vertical-align:top; width:"+KnitShopStitchWidth+"px; height:"+KnitShopStitchHeight+"px; background-color:rgb("+rgb+")");
+	stitchnode.setAttribute("style", "vertical-align:top; width:"+KnitShopStitchWidth+"px; height:"+KnitShopStitchHeight+"px; background-color:"+rgb+";");
 	//stitchnode.setAttribute("height", "23");
 	//stitchnode.setAttribute("width","38");
 	easel.appendChild(stitchnode);
@@ -261,6 +285,14 @@ function drawNewRow() {
 	node.setAttribute("class","csRow");
 	canvas.appendChild(node);
 }
+function drawBlankStitch() {
+	var easel = document.getElementById("canvas").lastChild;
+	var stitchnode = document.createElement("img");
+	stitchnode.setAttribute("src", " <%= asset_path('stitch_blank.png')  %> ");
+	stitchnode.setAttribute("style", "vertical-align:top; width:"+KnitShopStitchWidth+"px; height:"+KnitShopStitchHeight+"px;");
+	easel.appendChild(stitchnode);
+}
+
 dummywait = function() {
   //do nothing.
   
@@ -281,9 +313,15 @@ clearCanvas = function() {
     //var ctx=document.getElementById("canvas").getContext('2d');
     //ctx.clearRect(0,0,500,700);
 	var canvas = document.getElementById("canvas");
-	canvas.innerHTML = "<div class='csRow'></div>";
+	canvas.innerHTML = "<img class='csKnittingNeedle' src='<%= asset_path('woodknitneedle.png') %>' style='width:100%'><div class='csRow'></div>";
 }
 JSrun = function() {
+    //Easter Egg
+    if(document.getElementById("JSprogram").value.trim() == "MEOW") {
+	document.getElementById("csCheats").style.display = "block";
+	return;
+    }
+
     var str;
     alreadyDrawing = false;
     KnitShopXPosition = 0;
@@ -371,6 +409,54 @@ csTestLevelCompleted = function() {
            return returnval;
 
 	   break;
+	case 4:
+	   var csRows = $(".csRow").length;
+           var csRowLength = 0;
+           var returnval = true;
+           // Check that the result is 2x8
+	   if(csRows < 2) return false;
+           $(".csRow").each(function(index) {
+                if(this.children.length != 8 && index < 2) returnval=false;
+           });
+           // Check for alternating stitch colors 
+           var colorA, colorB;
+           $(".csStitch").each(function(index) {
+	      var currentStitchColor = this.style["background-color"];
+	      if (index == 0) colorA = currentStitchColor;
+	      if (index < 4 && currentStitchColor != colorA) returnval = false;
+	      if (index > 11 && currentStitchColor != colorA) returnval = false;
+	      if (index == 4) colorB = currentStitchColor;
+	      if (index > 4 && index <= 11 && currentStitchColor != colorB) returnval = false;
+              if (colorA == colorB) returnval = false;
+           });
+           return returnval;
+           break;
+	case 5:
+           var csRows = $(".csRow").length;
+           var csRowLength = 0;
+           var returnval = true;
+           // Check that the result is 2x8
+	   if(csRows < 4) return false;
+           $(".csRow").each(function(index) {
+                if(this.children.length != 8 && index < 4) returnval=false;
+           });
+           // Check for alternating stitch colors 
+           var colorA, colorB, colorC, colorD;
+           $(".csStitch").each(function(index) {
+              var currentStitchColor = this.style["background-color"];
+              if (index == 0) colorA = currentStitchColor;
+              if (index < 8 && currentStitchColor != colorA) returnval = false;
+              if (index == 8) colorB = currentStitchColor;
+              if (index > 8 && index < 16 && currentStitchColor != colorB) returnval = false;
+              if (index == 16) colorC = currentStitchColor;
+              if (index > 16 && index < 24 && currentStitchColor != colorC) returnval = false;
+              if (index == 24) colorD = currentStitchColor;
+              if (index > 24 && currentStitchColor != colorD) returnval = false;
+	   });
+           if (colorA == colorB || colorA == colorC || colorA == colorD || colorB == colorC || colorB == colorD || colorC == colorD) returnval = false;
+
+           return returnval;
+           break;
    }
    return false;
 }
@@ -394,7 +480,15 @@ csAdvanceLevel = function() {
 	   $("#opener13").button("enable");
 	   $("#opener13").click();
 	   break;
-	case 3:
+        case 3:
+           $("#opener14").button("enable");
+           $("#opener14").click();
+           break;
+	case 4:
+	   $("#opener15").button("enable");
+	   $("#opener15").click();
+	   break;
+	case 5:
 	   //congratulate user on winning the game?
 	   $( "#dialogEND" ).dialog( "open" );
 	   break;
@@ -458,6 +552,18 @@ keyUp = function(event){
       csCurrentLevel = 3;
       $( "#dialog13" ).dialog( "open" );
     });
+    $( "#opener14" ).click(function() {
+      $( "#csLevelGoal").html("<p>Knit two lines, one with 4 white stitches then 4 red stitches, the second with 4 red stitches then 4 white stitches.</p>Hint:<br/><div class='csCode'>setColor(\"red\");<br/>stitch(4);<br/>//Switch Color and stitch 4 more<br/>...<br/>newRow();<br/>stitch(4);<br/>//Switch colors again and stitch 4 more<br/>...</div><br/>");
+      csCurrentLevel = 4;
+      $( "#dialog14" ).dialog( "open" );
+    });
+    $( "#opener15" ).click(function() {
+      $( "#csLevelGoal").html("<p>Knit four lines, 8 stitches each, in 4 different colors.</p>Hint:<br/><div class='csCode'>setColor(#1fbc23);<br/>...<br/>...<br/>...</div><br/>");
+      csCurrentLevel = 5;
+      $( "#dialog15" ).dialog( "open" );
+    });
+
+
     $('#noIndColor').colorpicker({
 	displayIndicator: false,
 	defaultPalette: 'web',
@@ -472,7 +578,7 @@ keyUp = function(event){
 <style>td {background:white; vertical-align:top; border:1px solid black; padding:2px 10px}
 pre {margin:0}
 table {border-collapse:collapse; table-layout:fixed}
-body {background: #f5daa4; font-family:Arial}
+body {background: #f5da35; font-family:Arial}
 textarea {font-family:Lucida console}
 </style>
 </head>
@@ -506,6 +612,19 @@ textarea {font-family:Lucida console}
   <img src="<%= asset_path('level1.3_goal.png') %>"  />
   <p>Notice that in programming, there are often many ways to successfully achieve a goal. You could write <span class="csCode">stitch();</span> 8 times in a row, or write <span class="csCode">stitch(8);</span> just once, and the result would be the same. The difference is a little bit an expression of yourself and a little bit a chance to save you time when writing code. We'll come back to talk about different ways to solve a problem later.</p>  
 </div>
+<div class="csDialog" id="dialog14" title="Level 1.4: Let's make a pattern">
+  <p>Remember that you can switch colors anytime by adding <span class="csCode">setColor(...);</span> into your program. Let's use that ability to make a pattern.</p>
+  <p>Knit two lines, the first row with 4 white stitches then 4 red ones, and the second row with 4 red stitches then 4 white ones. On second thought, free your mind and use any two colors you like, just make sure the pattern comes out 4-and-4 on each line, alternating which color comes first. The result should look like this:</p>
+  <img src="<%= asset_path('level1.4_goal.png') %>"  />
+  <p>You may have noticed that the robot only recognizes a handful of colors, and it uses white whenever it's not sure. In the next level, we're going to show you how to use any color you want!</p>
+</div>
+<div class="csDialog" id="dialog15" title="Level 1.5: Millions of Colors">
+  <p>Have you been feeling inhibited in your artistic expression by your robot's limited color range? Worry no more, because now it's time to learn how you can make your robot knit in any color you can imagine. Instead of giving a color name to the <span class="csCode">setColor();</span> command, you can use a so-called 'hexidecimal color code' (just 'hex' for short), like this: <span class="csCode">setColor(#D4AF37);</span></p>
+  <p>That one will make a nice Gold color :).</p>
+  <p>To complete this level, knit four lines of 8 stitches each, and use a different color for each line. The result should look something like this:</p>
+  <img src="<%= asset_path('level1.5_goal.png') %>"  />
+</div>
+
 <div class="csDialog" id="dialogEND" title="CONGRATULATIONS!">
   <p>You have completed all levels, you little genius.</p>
 </div>
@@ -519,6 +638,8 @@ textarea {font-family:Lucida console}
 <button class="csDiaBtn" id="opener11" disabled="true">1.1</button>
 <button class="csDiaBtn" id="opener12" disabled="true">1.2</button>
 <button class="csDiaBtn" id="opener13" disabled="true">1.3</button>
+<button class="csDiaBtn" id="opener14" disabled="true">1.4</button>
+<button class="csDiaBtn" id="opener15" disabled="true">1.5</button>
 </td>
 
 <td rowspan=3 style="height:4in; width:50%; padding:1px">
@@ -529,13 +650,15 @@ Goal
 <br/>
 <hr/>
 <div id="canvas" width="500" height="700" data-url="<%= asset_path('stitch_semitrans.png') %>">
+  <img class="csKnittingNeedle" src="<%= asset_path('woodknitneedle.png') %>" style="width:100%">
   <div class="csRow">
   </div>
 </div>
 </td>
 
-<td rowspan=1 width="50%" style="padding:0px">
-<textarea id="JSprogram" style="height:4in; width:99%; font-family: monospace; font-size: 16; font-weight: bold;" onkeyup="keyUp(event)">
+<td rowspan=1 id="scratchpad" width="50%" style="padding:0px; background:url('<%= asset_path('spiralnotepad.png') %>'); background-size: 100% 100%; background-repeat: no-repeat">
+<div style="background-color:transparent"><br/><br/><br/><br/></div>
+<textarea id="JSprogram" style="height:4in; width:99%; background-color:transparent; font-family: monospace; font-size: 16; font-weight: bold;" onkeyup="keyUp(event)">
 // Lines starting with two slashes are comments
 
 
@@ -544,7 +667,7 @@ Goal
 </td>
 
 <td rowspan=1 style="width:20%; background:white;">
- Tabs with saved patterns
+<img src="<%= asset_path('knitpatterns.png'); %>" id="csKnitPatterns" >
 </td>
 </tr>
 
@@ -561,16 +684,21 @@ Goal
 </div>
 </form>
 
-Cheats: <select id="JSexamples" onchange="JSselect()">
-<option value="cheats" selected>Cheats </option>
-<option value ="knitone">Knit One</option>
-<option value ="knitthree" >Knit Three</option>
-<option value="knitpurpleline">Knit Purple Line</option>
-<option value="knitcheckers">Knit Checkers</option>
-<option value="knitdiagonal">Knit Diagonal</option>
-<option value="knitstripes">Knit Stripes</option>
+<span id="csCheats">
+ Cheats: <select id="JSexamples" onchange="JSselect()">
+  <option value="cheats" selected>Cheats </option>
+  <option value ="knitone">Knit One</option>
+  <option value ="knitthree" >Knit Three</option>
+  <option value="knitpurpleline">Knit Purple Line</option>
+  <option value="knittworedlines">Knit Two Red Lines</option>
+  <option value="knit2x8pattern">Knit 2x8 Pattern</option>
+  <option value="knit4x8lines">Knit 4x8 Lines</option>
+  <option value="knitcheckers">Knit Checkers</option>
+  <option value="knitfunctioncheckers">Knit Function Checkers</option>
+  <option value="knitdiagonal">Knit Diagonal</option>
+  <option value="knitstripes">Knit Stripes</option>
 </select>
-
+</span>
 </td>
 <script type="text/javascript">
 // Allow me a little script here to give action to my radio buttons.
@@ -687,7 +815,7 @@ a.x is 3, a["x"] is 3, a.s() is 5
 <textarea id="knitone" style="display:none">
 // Knit a single purple stitch
 
-setColor(160,32,240);
+setColor("purple");
 stitch();
 
 </textarea>
@@ -695,11 +823,11 @@ stitch();
 <textarea id="knitthree" style="display:none">
 // Knit three stitches in different colors
 
-setColor(255,0,0);
+setColor("red");
 stitch();
-setColor(0,255,0);
+setColor("#00ff00");
 stitch();
-setColor(0,0,255);
+setColor("blue");
 stitch();
 
 
@@ -710,6 +838,48 @@ stitch();
 
 setColor("purple");
 stitch(8);
+
+</textarea>
+
+<textarea id="knittworedlines" style="display:none">
+// Knit two red lines of 8 stitches each.
+
+setColor("#ff0000");
+stitch(8);
+newRow();
+stitch(8);
+
+</textarea>
+
+<textarea id="knit2x8pattern" style="display:none">
+// Knit a pattern Ax4-Bx4/Bx4-Ax4
+
+setColor("blue");
+stitch(4);
+setColor("orange");
+stitch(4);
+newRow();
+stitch(4);
+setColor("blue");
+stitch(4);
+
+</textarea>
+
+<textarea id="knit4x8lines" style="display:none">
+//Knit a pattern 4x8 with each line differently colored
+
+setColor("#981ba2");
+stitch(8);
+newRow();
+setColor("#292d3f");
+stitch(8);
+newRow();
+setColor("#ec8484");
+stitch(8);
+newRow();
+setColor("#a8948b");
+stitch(8);
+newRow();
 
 </textarea>
 
@@ -731,6 +901,28 @@ for(a=0;a<11;a++) {
     stitch();
   }
   newRow();
+}
+
+</textarea>
+
+<textarea id="knitfunctioncheckers" style="display:none">
+// Knit a fancy checkered pattern
+
+function myLine(a,b) {
+  for(ind=0;ind<3;ind++) {
+    setColor(a);
+    stitch(2);
+    setColor(b);
+    stitch(2);
+  }
+  newRow();
+}
+for(a=0;a<5;a++) {
+  myLine('green', 'red');
+  myLine('green', 'red');
+  myLine('red', 'green');
+  myLine('red', 'green');
+
 }
 
 </textarea>

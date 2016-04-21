@@ -1,19 +1,20 @@
 <div style:"width:100%">
-  <img id="splashpng" src="<%= asset_path('splash.png') %>" width="100%"/>
+  <img id="splashpng" src="<%= asset_path('splash.png') %>" height="100%"/>
   
   <form class="center" id="splashform">
     <div id="genderbuttonset">
-      <input type="radio" class="goplayinput" id="radio1" name="gender" value="f"><label for="radio1">Female</label>
-      <input type="radio" class="goplayinput" id="radio2" name="gender" value="m"><label for="radio2">Male</label>
+      <input type="radio" class="goplayinput" id="radio1" name="gender" value="f"><label class="goplaylabel" for="radio1">Female</label>
+      <input type="radio" class="goplayinput" id="radio2" name="gender" value="m"><label class="goplaylabel" for="radio2">Male</label>
     </div>
     <div id="agebuttonset">
-      <input type="radio" class="goplayinput" id="radio3" name="age" value="0"><label for="radio3">Under 10</label>
-      <input type="radio" class="goplayinput" id="radio4" name="age" value="1"><label for="radio4">10-13</label>
-      <input type="radio" class="goplayinput" id="radio5" name="age" value="2"><label for="radio5">14-18</label>
-      <input type="radio" class="goplayinput" id="radio6" name="age" value="3"><label for="radio6">Over 18</label>
+      <input type="radio" class="goplayinput" id="radio3" name="age" value="0"><label class="goplaylabel" for="radio3">Under 10</label>
+      <input type="radio" class="goplayinput" id="radio4" name="age" value="1"><label class="goplaylabel" for="radio4">10-13</label>
+      <input type="radio" class="goplayinput" id="radio5" name="age" value="2"><label class="goplaylabel" for="radio5">14-18</label>
+      <input type="radio" class="goplayinput" id="radio6" name="age" value="3"><label class="goplaylabel" for="radio6">Over 18</label>
     </div>
   </form>
   <%= button_to "Play Now", "/cs", :method => :get, :class => "goplaybtn", :disabled => "true" %>
+  <%= link_to "I prefer not to say my gender or age", "/cs" %>
 </div>
 
 <script>
