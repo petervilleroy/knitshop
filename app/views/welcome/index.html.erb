@@ -534,31 +534,31 @@ keyUp = function(event){
     $( "#knitnowbutton" ).button();
     $( "#opener10" ).click(function() {
       csCurrentLevel = 0;
-      $( "#csLevelGoal").html("<p>Make a single stitch in any color</p>Hint:<br/><div class='csCode'>setColor(\"purple\");<br/>stitch();</div><br/>");
+      $( "#csLevelGoal").html("<p>Make a single stitch in any color</p>Hint:<br/><div class='csCode'>setColor(\"purple\");<br/>stitch();</div>");
       $( "#dialog10" ).dialog( "open" );
     });
     $( "#opener11" ).click(function() {
       csCurrentLevel = 1;
-      $( "#csLevelGoal").html("<p>Make three stitches: Red, Green, then Blue.</p>Hint:<br/><div class='csCode'>setColor(\"red\");<br/>stitch();<br/>setColor(\"green\");<br/>stitch();</div><br/>");
+      $( "#csLevelGoal").html("<p>Make three stitches: Red, Green, then Blue.</p>Hint:<br/><div class='csCode'>setColor(\"red\");<br/>stitch();<br/>setColor(\"green\");<br/>stitch();<br/>...</div>");
       $( "#dialog11" ).dialog( "open" );
     });
     $( "#opener12" ).click(function() {
-      $( "#csLevelGoal").html("<p>Stitch a line of 8 purple stitches</p>Hint:<br/><div class='csCode'>setColor(\"purple\");<br/>stitch(8);</div><br/>");
+      $( "#csLevelGoal").html("<p>Stitch a line of 8 purple stitches</p>Hint:<br/><div class='csCode'>setColor(\"purple\");<br/>stitch(8);</div>");
       csCurrentLevel = 2;
       $( "#dialog12" ).dialog( "open" );
     });
     $( "#opener13" ).click(function() {
-      $( "#csLevelGoal").html("<p>Knit two red lines, each 8 stitches long.</p>Hint:<br/><div class='csCode'>setColor(\"red\");<br/>stitch(8);<br/>newRow();<br/>stitch(8);</div><br/>");
+      $( "#csLevelGoal").html("<p>Knit two red lines, each 8 stitches long.</p>Hint:<br/><div class='csCode'>setColor(\"red\");<br/>stitch(8);<br/>newRow();<br/>stitch(8);</div>");
       csCurrentLevel = 3;
       $( "#dialog13" ).dialog( "open" );
     });
     $( "#opener14" ).click(function() {
-      $( "#csLevelGoal").html("<p>Knit two lines, one with 4 white stitches then 4 red stitches, the second with 4 red stitches then 4 white stitches.</p>Hint:<br/><div class='csCode'>setColor(\"red\");<br/>stitch(4);<br/>//Switch Color and stitch 4 more<br/>...<br/>newRow();<br/>stitch(4);<br/>//Switch colors again and stitch 4 more<br/>...</div><br/>");
+      $( "#csLevelGoal").html("<p>Knit two lines, one with 4 white stitches then 4 red stitches, the second with 4 red stitches then 4 white stitches.</p>Hint:<br/><div class='csCode'>setColor(\"red\");<br/>stitch(4);<br/>//Switch Color and stitch 4 more<br/>...<br/>newRow();<br/>stitch(4);<br/>//Switch colors again and stitch 4 more<br/>...</div>");
       csCurrentLevel = 4;
       $( "#dialog14" ).dialog( "open" );
     });
     $( "#opener15" ).click(function() {
-      $( "#csLevelGoal").html("<p>Knit four lines, 8 stitches each, in 4 different colors.</p>Hint:<br/><div class='csCode'>setColor(#1fbc23);<br/>...<br/>...<br/>...</div><br/>");
+      $( "#csLevelGoal").html("<p>Knit four lines, 8 stitches each, in 4 different colors.</p>Hint:<br/><div class='csCode'>setColor(#1fbc23);<br/>...<br/>...<br/>...</div>");
       csCurrentLevel = 5;
       $( "#dialog15" ).dialog( "open" );
     });
@@ -626,7 +626,7 @@ textarea {font-family:Lucida console}
 </div>
 
 <div class="csDialog" id="dialogEND" title="CONGRATULATIONS!">
-  <p>You have completed all levels, you little genius.</p>
+  <p>You have completed all levels!!!<br/> Continue free play in the sandbox level, and check back in soon because we add levels and new features all the time.</p>
 </div>
 
 <table width="100%" align="center">
@@ -645,7 +645,6 @@ textarea {font-family:Lucida console}
 <td rowspan=3 style="height:4in; width:50%; padding:1px">
 Goal
  <div id="csLevelGoal"></div>
- Customer Comments
  <div id="csComments"></div>
 <br/>
 <hr/>
