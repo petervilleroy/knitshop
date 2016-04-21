@@ -10,9 +10,20 @@
 	background: #17b13a;
 }
 .csDiaBtn {
-	background: #b0b1c5;
+	color: #ffffff;
+	background: #9123d5;
 }
 
 .csRadioLabel {
 	background: #b0b1c5;
+}
+
+#csCheats {
+	display: none;
+}
+
+#csKnitPatterns {
+	position: relative;
+	top: 50px;
+	width: 100%;
 }

@@ -155,20 +155,29 @@ setColor = function(r,g,b) {
 	   ksb=0;
 	   break;
 	default:
-           stitchRGB(0,0,0);
+           ksColor="#ffffff";
+	   //stitchRGB(0,0,0);
      }
    }
 }
 stitch = function(x) {
    if(x == null) x=1;
-   //if(ksr == null) {ksr=0;ksg=0;ksb=0;}
    if(ksColor == null) ksColor="#000000";
    for(stitchindex = 0; stitchindex<x; stitchindex++){
-	//stitches.push(""+ksr+","+ksg+","+ksb);
 	stitches.push(ksColor);
    }
    drawQueue();
 }
+
+blankStitch = function(x) {
+   if(x == null) x=1;
+   for(stitchindex = 0; stitchindex<x; stitchindex++){
+        stitches.push("blankstitch");
+   }
+   drawQueue();
+}
+
+
 //TODO: remove the stitchColor function
 stitchColor = function(str) {
     //KSWait(500);
@@ -241,8 +250,9 @@ function drawQueue() {
 			return;
 		}
 		//If the previous if didn't catch, then we're still drawing the queue elements
-		if(drawColor == "newrow") {
-			drawNewRow();
+		if(drawColor == "newrow" || drawColor == "blankstitch") {
+			if(drawColor == "newrow") drawNewRow();
+			if(drawColor == "blankstitch") drawBlankStitch();
 		}
 		else {
 			draw(drawColor);
@@ -275,6 +285,14 @@ function drawNewRow() {
 	node.setAttribute("class","csRow");
 	canvas.appendChild(node);
 }
+function drawBlankStitch() {
+	var easel = document.getElementById("canvas").lastChild;
+	var stitchnode = document.createElement("img");
+	stitchnode.setAttribute("src", " <%= asset_path('stitch_blank.png')  %> ");
+	stitchnode.setAttribute("style", "vertical-align:top; width:"+KnitShopStitchWidth+"px; height:"+KnitShopStitchHeight+"px;");
+	easel.appendChild(stitchnode);
+}
+
 dummywait = function() {
   //do nothing.
   
@@ -298,6 +316,12 @@ clearCanvas = function() {
 	canvas.innerHTML = "<img class='csKnittingNeedle' src='<%= asset_path('woodknitneedle.png') %>' style='width:100%'><div class='csRow'></div>";
 }
 JSrun = function() {
+    //Easter Egg
+    if(document.getElementById("JSprogram").value.trim() == "MEOW") {
+	document.getElementById("csCheats").style.display = "block";
+	return;
+    }
+
     var str;
     alreadyDrawing = false;
     KnitShopXPosition = 0;
@@ -554,7 +578,7 @@ keyUp = function(event){
 <style>td {background:white; vertical-align:top; border:1px solid black; padding:2px 10px}
 pre {margin:0}
 table {border-collapse:collapse; table-layout:fixed}
-body {background: #f5daa4; font-family:Arial}
+body {background: #f5da35; font-family:Arial}
 textarea {font-family:Lucida console}
 </style>
 </head>
@@ -592,7 +616,7 @@ textarea {font-family:Lucida console}
   <p>Remember that you can switch colors anytime by adding <span class="csCode">setColor(...);</span> into your program. Let's use that ability to make a pattern.</p>
   <p>Knit two lines, the first row with 4 white stitches then 4 red ones, and the second row with 4 red stitches then 4 white ones. On second thought, free your mind and use any two colors you like, just make sure the pattern comes out 4-and-4 on each line, alternating which color comes first. The result should look like this:</p>
   <img src="<%= asset_path('level1.4_goal.png') %>"  />
-  <p>You may have noticed that the robot only recognizes a handful of colors, and it uses black whenever it's not sure. In the next level, we're going to show you how to use any color you want!</p>
+  <p>You may have noticed that the robot only recognizes a handful of colors, and it uses white whenever it's not sure. In the next level, we're going to show you how to use any color you want!</p>
 </div>
 <div class="csDialog" id="dialog15" title="Level 1.5: Millions of Colors">
   <p>Have you been feeling inhibited in your artistic expression by your robot's limited color range? Worry no more, because now it's time to learn how you can make your robot knit in any color you can imagine. Instead of giving a color name to the <span class="csCode">setColor();</span> command, you can use a so-called 'hexidecimal color code' (just 'hex' for short), like this: <span class="csCode">setColor(#D4AF37);</span></p>
@@ -643,7 +667,7 @@ Goal
 </td>
 
 <td rowspan=1 style="width:20%; background:white;">
- Tabs with saved patterns
+<img src="<%= asset_path('knitpatterns.png'); %>" id="csKnitPatterns" >
 </td>
 </tr>
 
@@ -660,19 +684,21 @@ Goal
 </div>
 </form>
 
-Cheats: <select id="JSexamples" onchange="JSselect()">
-<option value="cheats" selected>Cheats </option>
-<option value ="knitone">Knit One</option>
-<option value ="knitthree" >Knit Three</option>
-<option value="knitpurpleline">Knit Purple Line</option>
-<option value="knittworedlines">Knit Two Red Lines</option>
-<option value="knit2x8pattern">Knit 2x8 Pattern</option>
-<option value="knitcheckers">Knit Checkers</option>
-<option value="knitfunctioncheckers">Knit Function Checkers</option>
-<option value="knitdiagonal">Knit Diagonal</option>
-<option value="knitstripes">Knit Stripes</option>
+<span id="csCheats">
+ Cheats: <select id="JSexamples" onchange="JSselect()">
+  <option value="cheats" selected>Cheats </option>
+  <option value ="knitone">Knit One</option>
+  <option value ="knitthree" >Knit Three</option>
+  <option value="knitpurpleline">Knit Purple Line</option>
+  <option value="knittworedlines">Knit Two Red Lines</option>
+  <option value="knit2x8pattern">Knit 2x8 Pattern</option>
+  <option value="knit4x8lines">Knit 4x8 Lines</option>
+  <option value="knitcheckers">Knit Checkers</option>
+  <option value="knitfunctioncheckers">Knit Function Checkers</option>
+  <option value="knitdiagonal">Knit Diagonal</option>
+  <option value="knitstripes">Knit Stripes</option>
 </select>
-
+</span>
 </td>
 <script type="text/javascript">
 // Allow me a little script here to give action to my radio buttons.
@@ -789,7 +815,7 @@ a.x is 3, a["x"] is 3, a.s() is 5
 <textarea id="knitone" style="display:none">
 // Knit a single purple stitch
 
-setColor(160,32,240);
+setColor("purple");
 stitch();
 
 </textarea>
@@ -799,9 +825,9 @@ stitch();
 
 setColor("red");
 stitch();
-setColor(0,255,0);
+setColor("#00ff00");
 stitch();
-setColor(0,0,255);
+setColor("blue");
 stitch();
 
 
@@ -818,7 +844,7 @@ stitch(8);
 <textarea id="knittworedlines" style="display:none">
 // Knit two red lines of 8 stitches each.
 
-setColor("red");
+setColor("#ff0000");
 stitch(8);
 newRow();
 stitch(8);
@@ -836,6 +862,24 @@ newRow();
 stitch(4);
 setColor("blue");
 stitch(4);
+
+</textarea>
+
+<textarea id="knit4x8lines" style="display:none">
+//Knit a pattern 4x8 with each line differently colored
+
+setColor("#981ba2");
+stitch(8);
+newRow();
+setColor("#292d3f");
+stitch(8);
+newRow();
+setColor("#ec8484");
+stitch(8);
+newRow();
+setColor("#a8948b");
+stitch(8);
+newRow();
 
 </textarea>
 

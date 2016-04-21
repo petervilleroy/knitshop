@@ -26,8 +26,8 @@
 }
 
 #splashpng {
-	position: absolute;
-	left: 0px;
-	top: 0px;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
 	z-index: -1;
 }
