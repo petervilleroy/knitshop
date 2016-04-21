@@ -242,6 +242,7 @@ function drawQueue() {
 		        }
 		        if(!lvlCompleted) {
 		           // output something in the hint field
+			   $( "#dialogFail" ).dialog( "open" ); 
 			   var ran = Math.random();
 			   ran = Math.floor(ran*100 % csSnarkyRemarks.length);
 			   $( "#csComments" ).html(csSnarkyRemarks[ran]);
@@ -563,6 +564,9 @@ keyUp = function(event){
       $( "#dialog15" ).dialog( "open" );
     });
 
+    $( "#openerSBX" ).click(function() {
+      $( "#csLevelGoal").html("<p>Sandbox - open play<br/> What will <b>you</b> make?</p>");
+    });
 
     $('#noIndColor').colorpicker({
 	displayIndicator: false,
@@ -624,9 +628,21 @@ textarea {font-family:Lucida console}
   <p>To complete this level, knit four lines of 8 stitches each, and use a different color for each line. The result should look something like this:</p>
   <img src="<%= asset_path('level1.5_goal.png') %>"  />
 </div>
+<div class="csDialog" id="dialog20" title="Level 2.0: Open for Business!">
+  <p>Now you know everything you need to open your Knitting Shop! As customers come in with different requests, we'll teach you new tricks to make your programs easier to write, more re-usable in later levels, and the scarves more complex and beautiful.</p>
+  <p>Oh, here's your very first customer now!</p>
+  <img src="<%= asset_path('level2.0_avatar.png') %>" />
+  <p>Patty: "Hi, what a cool shop you have here! Can you make me a scarf, too? Just a small one, 3 stitches wide and 3 rows long, but can you checker it for me? My favorite colors are Violet and Gold, like this:</p>
+  <img src="<%= asset_path('level2.0_goal.png') %>"  />
+  <p>Hint: you can use these hex codes for Patty's favorite colors: Violet "#8A2BE2", Gold "#D4AF37" </p>
+</div>
 
 <div class="csDialog" id="dialogEND" title="CONGRATULATIONS!">
   <p>You have completed all levels!!!<br/> Continue free play in the sandbox level, and check back in soon because we add levels and new features all the time.</p>
+</div>
+
+<div class="csDialog" id="dialogFail" title="Try Again">
+  <p> That wasn't quite right. Review the Level Goal and Hints, and then give it another try.</p>
 </div>
 
 <table width="100%" align="center">
@@ -634,12 +650,15 @@ textarea {font-family:Lucida console}
 <tr>
 <td rowspan=3 style="width:10%; background:none;">Level Selection
 <br/>
+<button class="csDiaBtn" id="openerSBX"><img src="<%= asset_path('sandbox.png'); %>"></button>
 <button class="csDiaBtn" id="opener10">1.0</button>
 <button class="csDiaBtn" id="opener11" disabled="true">1.1</button>
 <button class="csDiaBtn" id="opener12" disabled="true">1.2</button>
 <button class="csDiaBtn" id="opener13" disabled="true">1.3</button>
 <button class="csDiaBtn" id="opener14" disabled="true">1.4</button>
 <button class="csDiaBtn" id="opener15" disabled="true">1.5</button>
+<button class="csDiaBtn" id="opener20" disabled="true">2.0</button>
+
 </td>
 
 <td rowspan=3 style="height:4in; width:50%; padding:1px">
@@ -667,6 +686,7 @@ Goal
 
 <td rowspan=1 style="width:20%; background:white;">
 <img src="<%= asset_path('knitpatterns.png'); %>" id="csKnitPatterns" >
+<div class="csKnitPatterns">(Coming Soon: save your favorite solutions and compare with others)</div>
 </td>
 </tr>
 
@@ -692,6 +712,7 @@ Goal
   <option value="knittworedlines">Knit Two Red Lines</option>
   <option value="knit2x8pattern">Knit 2x8 Pattern</option>
   <option value="knit4x8lines">Knit 4x8 Lines</option>
+  <option value="knitPattysFavorite">Knit Patty\'s Favorite</option>
   <option value="knitcheckers">Knit Checkers</option>
   <option value="knitfunctioncheckers">Knit Function Checkers</option>
   <option value="knitdiagonal">Knit Diagonal</option>
@@ -881,7 +902,30 @@ stitch(8);
 newRow();
 
 </textarea>
+<textarea id="knitpattysfavorite" style="display:none">
+//Knit a checkered pattern 3x3 in Patty's favorite colors
 
+setColor("#8A2BE2");
+stitch();
+setColor("#D4AF37");
+stitch();
+setColor("#8A2BE2");
+stitch();
+newRow();
+setColor("#D4AF37");
+stitch();
+setColor("#8A2BE2");
+stitch();
+setColor("#D4AF37");
+stitch();
+newRow();
+setColor("#8A2BE2");
+stitch();
+setColor("#D4AF37");
+stitch();
+setColor("#8A2BE2");
+stitch();
+</textarea>
 <textarea id="knitcheckers" style="display:none">
 // Knit a checkered pattern
 
