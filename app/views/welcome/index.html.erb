@@ -459,6 +459,7 @@ csTestLevelCompleted = function() {
            return returnval;
            break;
 	case 6:
+	case 7:
 	   var csRows = $(".csRow").length;
            var csRowLength = 0;
            var returnval = true;
@@ -515,6 +516,10 @@ csAdvanceLevel = function() {
 	   $("#opener20").click();
 	   break;
 	case 6:
+	   $("#opener21").button("enable");
+	   $("#opener21").click();
+	   break;
+	case 7:
 	   //congratulate user on winning the game?
 	   $( "#dialogEND" ).dialog( "open" );
 	   break;
@@ -589,14 +594,19 @@ keyUp = function(event){
       $( "#dialog14" ).dialog( "open" );
     });
     $( "#opener15" ).click(function() {
-      $( "#csLevelGoal").html("<p>Knit four lines, 8 stitches each, in 4 different colors.</p>Hint:<br/><div class='csCode'>setColor(#1fbc23);<br/>...<br/>...<br/>...</div>");
+      $( "#csLevelGoal").html("<p>Knit four lines, 8 stitches each, in 4 different colors.</p>Hint:<br/><div class='csCode'>setColor(\"#1fbc23\");<br/>...<br/>...<br/>...</div>");
       csCurrentLevel = 5;
       $( "#dialog15" ).dialog( "open" );
     });
     $( "#opener20" ).click(function() {
-      $( "#csLevelGoal").html("<p>Knit 3 lines, 3 stitches each, with alternating violet and gold colors.</p>Hint:<br/><div class='csCode'>setColor(#8A2BE2);<br/>stitch();<br/>setColor(#D4AF37);<br/>stitch();<br/>...</div>");
+      $( "#csLevelGoal").html("<p>Knit 3 lines, 3 stitches each, with alternating violet and gold colors.</p>Hint:<br/><div class='csCode'>setColor(\"#8A2BE2\");<br/>stitch();<br/>setColor(\"#D4AF37\");<br/>stitch();<br/>...</div>");
       csCurrentLevel = 6;
       $( "#dialog20" ).dialog( "open" );
+    });
+    $( "#opener21" ).click(function() {
+      $( "#csLevelGoal").html("<p>Knit 3 lines, 3 stitches each, with alternating violet and gold colors. User variables to store the color names.</p>Hint:<br/><div class='csCode'>var violet = \"#8A2BE2\";<br/>var gold = \"#D4AF37\";<br/>setColor(violet);<br/>stitch();<br/>setColor(gold);<br/>stitch();<br/>...</div>");
+      csCurrentLevel = 7;
+      $( "#dialog21" ).dialog( "open" );
     });
 
     $( "#openerSBX" ).click(function() {
@@ -671,6 +681,14 @@ textarea {font-family:Lucida console}
   <img src="<%= asset_path('level2.0_goal.png') %>"  />
   <p>Hint: you can use these hex codes for Patty's favorite colors: Violet "#8A2BE2", Gold "#D4AF37" </p>
 </div>
+<div class="csDialog" id="dialog21" title="Level 2.1: Introducing Variables">
+  <p>The code we've used so far to customize the knitting colors is kind of difficult to read. It's easy to forget which hex code stands for which color, and that can make the code confusing to look at and work with. Wouldn't it be easier if you could assign your own name to each hex code for easier use?</p>
+  <p>The good news is: you can!</p>
+  <p>By using a tool called variables, you can save any hex code under a name you want. We can define a variable and assign it a hex code like this: <span class="csCode">var myColor = "#3D8F25";</span> and then use it in the code like this: <span class="csCode">setColor(myColor);</span></p>
+  <p>Say, there's nobody in the shop anyway; how about you do Patty's scarf again, but this time make the code more readable by declaring two variables, violet and gold, in the beginning and using those instead of the hex codes!</p>
+  <img src="<%= asset_path('level2.0_goal.png') %>"  />
+  <p>Hint: when you use a variable instead of a hex code, leave away the quotation marks (") or you'll get something unexpected.</p>
+</div>
 
 <div class="csDialog" id="dialogEND" title="CONGRATULATIONS!">
   <p>You have completed all levels!!!<br/> Continue free play in the sandbox level, and check back in soon because we add levels and new features all the time.</p>
@@ -693,6 +711,7 @@ textarea {font-family:Lucida console}
 <button class="csDiaBtn" id="opener14" disabled="true">1.4</button>
 <button class="csDiaBtn" id="opener15" disabled="true">1.5</button>
 <button class="csDiaBtn" id="opener20" disabled="true">2.0</button>
+<button class="csDiaBtn" id="opener21" disabled="true">2.1</button>
 
 </td>
 
