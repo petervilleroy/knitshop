@@ -553,6 +553,11 @@ keyUp = function(event){
         effect: "explode",
         duration: 1000
       },
+	  buttons: [ {
+		text: "Okay",
+		click: function() { $(this).dialog("close");}
+	   }
+	  ],
       width: 500,
     });
     $( ".csDiaBtn" ).button();
