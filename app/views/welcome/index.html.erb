@@ -635,12 +635,12 @@ textarea {font-family:Lucida console}
 <h1>
   <a href="http://playcodestitch.com">CodeStitch</a>
 </h1>
-<div class="csDialog" id="dialog10" title="Level 1.0: Getting to Know Your Robot" style="width:400">
-  <p>We'll start with the basics, and before you know it your knitting shop will be open for business. First 
-     things first, let's learn how to make a single stitch in a color of your choice. The way codeStitch works is that you type in commands and hit the go button, then the robot will create a product given the commands you provide. Each knit stitch will look something like this:</p>
+<div class="csDialog" id="dialog10" title="Level 1.0: Your Very Own Knitting Shop" style="width:400">
+  <p>Congratulations on founding your very own knitting shop. You've got a store all set up with a knitting robot to make scarves, sweaters, socks, and anything else you can think of: you just need to learn to program the robot! </p>
+<p>We'll start with the basics, and before you know it your knitting shop will be open for business. First things first, let's learn how to make a single stitch in a color of your choice. The way codeStitch works is that you type in commands and hit the go button, then the robot will create a product given the commands you provide. Each knit stitch will look something like this:</p>
   <img src="<%= asset_path('stitch_semitrans.png') %>"  />
   <p>You can make the robot do this by using two simple commands. The first one is <span class="csCode">setColor();</span> You can put the name
-     of a color in between the '()' and the robot will get ready to knit in that color, like this: <span class="csCode">setColor("red");</span></p>
+     of a color in between the '()' and the robot will get ready to knit in that color, like this: <span class="csCode">setColor("red");</span> By the way, those quotation marks are importnat, so don't leave them out!</p>
   <p>After you've chosen a color, you need to tell the robot to make a stitch. Later, we'll combine lots of stitches to make scarves in elaborate colors and patterns, but for now let's just start with one stitch. The command is easy to remember: <span class="csCode">stitch();</span> Go ahead and try it out, and don't forget to end each line with a semi-colon (it looks like this- ; )
 </div>
 <div class="csDialog" id="dialog11" title="Level 1.1: Stitching in Multi-Color">
@@ -682,10 +682,10 @@ textarea {font-family:Lucida console}
   <p>Hint: you can use these hex codes for Patty's favorite colors: Violet "#8A2BE2", Gold "#D4AF37" </p>
 </div>
 <div class="csDialog" id="dialog21" title="Level 2.1: Introducing Variables">
-  <p>The code we've used so far to customize the knitting colors is kind of difficult to read. It's easy to forget which hex code stands for which color, and that can make the code confusing to look at and work with. Wouldn't it be easier if you could assign your own name to each hex code for easier use?</p>
+  <p>The code we've used so far to customize the knitting colors is kind of difficult to read. It's easy to forget which hex code stands for which color, and that can make the code confusing to look at and work with, right?. Wouldn't it be easier if you could assign your own name to each hex code for easier use?</p>
   <p>The good news is: you can!</p>
   <p>By using a tool called variables, you can save any hex code under a name you want. We can define a variable and assign it a hex code like this: <span class="csCode">var myColor = "#3D8F25";</span> and then use it in the code like this: <span class="csCode">setColor(myColor);</span></p>
-  <p>Say, there's nobody in the shop anyway; how about you do Patty's scarf again, but this time make the code more readable by declaring two variables, violet and gold, in the beginning and using those instead of the hex codes!</p>
+  <p>Say, there's nobody in the shop anyway; how about you do Patty's scarf again, but this time make the code more readable by declaring two variables, violet and gold, in the beginning and using those names instead of the hex codes!</p>
   <img src="<%= asset_path('level2.0_goal.png') %>"  />
   <p>Hint: when you use a variable instead of a hex code, leave away the quotation marks (") or you'll get something unexpected.</p>
 </div>
