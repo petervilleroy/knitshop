@@ -458,6 +458,27 @@ csTestLevelCompleted = function() {
 
            return returnval;
            break;
+	case 6:
+	   var csRows = $(".csRow").length;
+           var csRowLength = 0;
+           var returnval = true;
+           // Check that the result is 3x3
+           if(csRows < 3) return false;
+           $(".csRow").each(function(index) {
+                if(this.children.length != 3 && index < 3) returnval=false;
+           });
+           // Check for alternating stitch colors 
+           var colorA, colorB;
+           $(".csStitch").each(function(index) {
+              var currentStitchColor = this.style["background-color"];
+	      if (index == 0) colorA = currentStitchColor;
+	      if (index % 2 == 0 && currentStitchColor != colorA) returnval = false;
+	      if (index ==1) colorB = currentStitchColor; 
+	      if (index % 2 == 1 && currentStitchColor != colorB) returnval = false;
+	   });
+	   if(colorA != "rgb(138, 43, 226)" || colorB != "rgb(212, 175, 55)") returnval = false;
+	   return returnval;
+	   break;
    }
    return false;
 }
@@ -490,6 +511,10 @@ csAdvanceLevel = function() {
 	   $("#opener15").click();
 	   break;
 	case 5:
+	   $("#opener20").button("enable");
+	   $("#opener20").click();
+	   break;
+	case 6:
 	   //congratulate user on winning the game?
 	   $( "#dialogEND" ).dialog( "open" );
 	   break;
@@ -562,6 +587,11 @@ keyUp = function(event){
       $( "#csLevelGoal").html("<p>Knit four lines, 8 stitches each, in 4 different colors.</p>Hint:<br/><div class='csCode'>setColor(#1fbc23);<br/>...<br/>...<br/>...</div>");
       csCurrentLevel = 5;
       $( "#dialog15" ).dialog( "open" );
+    });
+    $( "#opener20" ).click(function() {
+      $( "#csLevelGoal").html("<p>Knit 3 lines, 3 stitches each, with alternating violet and gold colors.</p>Hint:<br/><div class='csCode'>setColor(#8A2BE2);<br/>stitch();<br/>setColor(#D4AF37);<br/>stitch();<br/>...</div>");
+      csCurrentLevel = 6;
+      $( "#dialog20" ).dialog( "open" );
     });
 
     $( "#openerSBX" ).click(function() {
@@ -712,7 +742,7 @@ Goal
   <option value="knittworedlines">Knit Two Red Lines</option>
   <option value="knit2x8pattern">Knit 2x8 Pattern</option>
   <option value="knit4x8lines">Knit 4x8 Lines</option>
-  <option value="knitPattysFavorite">Knit Patty\'s Favorite</option>
+  <option value="knitpattysfavorite">Knit Patty's Favorite</option>
   <option value="knitcheckers">Knit Checkers</option>
   <option value="knitfunctioncheckers">Knit Function Checkers</option>
   <option value="knitdiagonal">Knit Diagonal</option>
@@ -747,7 +777,7 @@ Goal
 </table>
 
 
-<div>Super experimental color picker feature: </br><input id="noIndColor"></input></div>
+<div>Color picker for quick Hex Code lookup: </br><input id="noIndColor"></input></div>
 
 <table hidden="true">
 <tr>
