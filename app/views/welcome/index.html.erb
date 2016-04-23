@@ -570,6 +570,7 @@ keyUp = function(event){
     $( "#knitnowbutton" ).button();
     $( "#opener10" ).click(function() {
       csCurrentLevel = 0;
+      setCurrentLevel(0);
       $( "#csLevelGoal").html("<p>Make a single stitch in any color</p>Hint:<br/><div class='csCode'>setColor(\"purple\");<br/>stitch();</div>");
       $( "#dialog10" ).dialog( "open" );
     });

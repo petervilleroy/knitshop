@@ -9,6 +9,7 @@ JQueryUI 1.11.4
 Ruby 2.2.4
 Rails 4.2
 PostGRESQL 9.1 (https://devcenter.heroku.com/articles/heroku-postgresql#local-setup)
+further reading (note to self) : youtube.com/watch?v=zQJtlvlNunw
 =======
 # evol-colorpicker
 
