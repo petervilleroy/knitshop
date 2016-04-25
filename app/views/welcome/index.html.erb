@@ -436,7 +436,7 @@ csTestLevelCompleted = function() {
            var csRows = $(".csRow").length;
            var csRowLength = 0;
            var returnval = true;
-           // Check that the result is 2x8
+           // Check that the result is 4x8
 	   if(csRows < 4) return false;
            $(".csRow").each(function(index) {
                 if(this.children.length != 8 && index < 4) returnval=false;
@@ -461,11 +461,11 @@ csTestLevelCompleted = function() {
 	case 6:
 	case 7:
 	   var csRows = $(".csRow").length;
-           var csRowLength = 0;
-           var returnval = true;
+       var csRowLength = 0;
+       var returnval = true;
            // Check that the result is 3x3
-           if(csRows < 3) return false;
-           $(".csRow").each(function(index) {
+       if(csRows < 3) return false;
+       $(".csRow").each(function(index) {
                 if(this.children.length != 3 && index < 3) returnval=false;
            });
            // Check for alternating stitch colors 
@@ -478,6 +478,24 @@ csTestLevelCompleted = function() {
 	      if (index % 2 == 1 && currentStitchColor != colorB) returnval = false;
 	   });
 	   if(colorA != "rgb(138, 43, 226)" || colorB != "rgb(212, 175, 55)") returnval = false;
+	   return returnval;
+	   break;
+	case 8:
+	   var csRows = $(".csRow").length;
+       var csRowLength = 0;
+       var returnval = true;
+           // Check that the result is 4x4
+       if(csRows < 4) return false;
+       $(".csRow").each(function(index) {
+                if(this.children.length != 4 && index < 4) returnval=false;
+       });
+           // Check that all stitches are pink 
+       
+       $(".csStitch").each(function(index) {
+          var currentStitchColor = this.style["background-color"];
+	      if (currentStitchColor != "rgb(255, 192, 203)") returnval = false;
+	   });
+	   
 	   return returnval;
 	   break;
    }
@@ -521,6 +539,10 @@ csAdvanceLevel = function() {
 	   $("#opener21").click();
 	   break;
 	case 7:
+	   $("#opener22").button("enable");
+	   $("#opener22").click();
+	   break;
+	case 8:
 	   //congratulate user on winning the game?
 	   $( "#dialogEND" ).dialog( "open" );
 	   break;
@@ -629,7 +651,12 @@ var getCurrentLevelButton = function(levelIndex) {
       csCurrentLevel = 7;
       $( "#dialog21" ).dialog( "open" );
     });
-
+    $( "#opener22" ).click(function() {
+      $( "#csLevelGoal").html("<p>Knit 4 lines, 4 stitches wide, in pink. Use variables to store the color and the width of the lines.</p>Hint:<br/><div class='csCode'>var pink = \"#FFC0CB\";<br/>var lineWidth = 4;<br/>setColor(pink);<br/>stitch(lineWidth);<br/>...<br/></div>");
+      csCurrentLevel = 8;
+      $( "#dialog22" ).dialog( "open" );
+    });
+    
     $( "#openerSBX" ).click(function() {
       $( "#csLevelGoal").html("<p>Sandbox - open play<br/> What will <b>you</b> make?</p>");
     });
@@ -707,6 +734,16 @@ textarea {font-family:Lucida console}
   <img src="<%= asset_path('level2.0_goal.png') %>"  />
   <p>Hint: when you use a variable instead of a hex code, leave away the quotation marks (") or you'll get something unexpected.</p>
 </div>
+<div class="csDialog" id="dialog22" title="Level 2.2: More Variables">
+  <p>Variables serve a lot of purposes in programming. You can save different things in a variable, like words/text (we did that in level2.1), numbers, and many other things as well. When you save text in a variable, you use quotations in the declaration command; when you save a number, the quotes aren't necessary:
+     <br/><span class="csCode">var myFavoriteColor = "#FFC0CB";<br/>var lineWidth = 8;</span></p>
+  <p>As you've probably noticed, variable names cannot contain spaces, so we use capitals to make them more readable. Also, the variable names are case sensitive, so if you don't type them exactly the way they look in the declaration, your robot won't recognize or use them properly.</p>
+  <p>Hey, here comes your next customer. Maybe you'll get a chance to use variables again now!</p>
+  <img src="<%= asset_path('level2.2_avatar.png') %>" />
+  <p>Susan: "Hello there. Wow, a fully automated knitting shop, what a great idea! I'd like a pink square, 4x4, can you do that?</p>
+  <img src="<%= asset_path('level2.2_goal.png') %>"  />
+  <p>Hint: Save the hex code for pink (#FFC0CB) in a variable, and save the number of stitches in a line, too.</p>
+</div>
 
 <div class="csDialog" id="dialogEND" title="CONGRATULATIONS!">
   <p>You have completed all levels!!!<br/> Continue free play in the sandbox level, and check back in soon because we add levels and new features all the time.</p>
@@ -730,6 +767,7 @@ textarea {font-family:Lucida console}
 <button class="csDiaBtn" id="opener15" disabled="true">1.5</button>
 <button class="csDiaBtn" id="opener20" disabled="true">2.0</button>
 <button class="csDiaBtn" id="opener21" disabled="true">2.1</button>
+<button class="csDiaBtn" id="opener22" disabled="true">2.2</button>
 
 </td>
 
