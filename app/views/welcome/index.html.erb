@@ -505,7 +505,7 @@ csTestLevelCompleted = function() {
            // Check that the result is 4x8
        if(csRows < 4) return false;
        $(".csRow").each(function(index) {
-                if(this.children.length != 4 && index < 8) returnval=false;
+                if(this.children.length != 8 && index < 4) returnval=false;
        });
            // Check that all stitches are pink 
        $(".csStitch").each(function(index) {
@@ -859,6 +859,7 @@ Goal
   <option value="knit4x8lines">Knit 4x8 Lines</option>
   <option value="knitpattysfavorite">Knit Patty's Favorite</option>
   <option value="knitsusanssquare">Knit Susan's Pink Square</option>
+  <option value="knitsusanssquare4x8">Knit Susan's Pink Rectangle</option>
   <option value="knitcheckers">Knit Checkers</option>
   <option value="knitfunctioncheckers">Knit Function Checkers</option>
   <option value="knitdiagonal">Knit Diagonal</option>
@@ -1107,6 +1108,21 @@ newRow();
 stitch(lineWidth);
     
 </textarea>
+
+<textarea id="knitsusanssquare4x8" style="display:none">
+var pink = "#FFC0CB";
+var lineWidth = 8;
+setColor(pink);
+stitch(lineWidth);
+newRow();
+stitch(lineWidth);
+newRow();
+stitch(lineWidth);
+newRow();
+stitch(lineWidth);
+    
+</textarea>
+
 <textarea id="knitfunctioncheckers" style="display:none">
 // Knit a fancy checkered pattern
 
