@@ -498,6 +498,22 @@ csTestLevelCompleted = function() {
 	   
 	   return returnval;
 	   break;
+	case 9:
+	   var csRows = $(".csRow").length;
+       var csRowLength = 0;
+       var returnval = true;
+           // Check that the result is 4x8
+       if(csRows < 4) return false;
+       $(".csRow").each(function(index) {
+                if(this.children.length != 4 && index < 8) returnval=false;
+       });
+           // Check that all stitches are pink 
+       $(".csStitch").each(function(index) {
+          var currentStitchColor = this.style["background-color"];
+	      if (currentStitchColor != "rgb(255, 192, 203)") returnval = false;
+	   });
+	   return returnval;
+	   break;
    }
    return false;
 }
@@ -543,6 +559,10 @@ csAdvanceLevel = function() {
 	   $("#opener22").click();
 	   break;
 	case 8:
+	   $("#opener23").button("enable");
+	   $("#opener23").click();
+	   break;
+	case 9:
 	   //congratulate user on winning the game?
 	   $( "#dialogEND" ).dialog( "open" );
 	   break;
@@ -656,6 +676,11 @@ var getCurrentLevelButton = function(levelIndex) {
       csCurrentLevel = 8;
       $( "#dialog22" ).dialog( "open" );
     });
+    $( "#opener23" ).click(function() {
+      $( "#csLevelGoal").html("<p>Knit 4 lines, 8 stitches wide, in pink. Use variables to store the color and the width of the lines.</p>Hint:<br/><div class='csCode'>var pink = \"#FFC0CB\";<br/>var lineWidth = 8;<br/>setColor(pink);<br/>stitch(lineWidth);<br/>...<br/></div>");
+      csCurrentLevel = 9;
+      $( "#dialog23" ).dialog( "open" );
+    });
     
     $( "#openerSBX" ).click(function() {
       $( "#csLevelGoal").html("<p>Sandbox - open play<br/> What will <b>you</b> make?</p>");
@@ -735,7 +760,7 @@ textarea {font-family:Lucida console}
   <p>Hint: when you use a variable instead of a hex code, leave away the quotation marks (") or you'll get something unexpected.</p>
 </div>
 <div class="csDialog" id="dialog22" title="Level 2.2: More Variables">
-  <p>Variables serve a lot of purposes in programming. You can save different things in a variable, like words/text (we did that in level2.1), numbers, and many other things as well. When you save text in a variable, you use quotations in the declaration command; when you save a number, the quotes aren't necessary:
+  <p>Variables serve a lot of purposes in programming. You can save different things in a variable, like words/text (we did that in level 2.1), numbers, and many other things as well. When you save text in a variable, you use quotations in the declaration command; when you save a number, the quotes aren't necessary:
      <br/><span class="csCode">var myFavoriteColor = "#FFC0CB";<br/>var lineWidth = 8;</span></p>
   <p>As you've probably noticed, variable names cannot contain spaces, so we use capitals to make them more readable. Also, the variable names are case sensitive, so if you don't type them exactly the way they look in the declaration, your robot won't recognize or use them properly.</p>
   <p>Hey, here comes your next customer. Maybe you'll get a chance to use variables again now!</p>
@@ -743,6 +768,15 @@ textarea {font-family:Lucida console}
   <p>Susan: "Hello there. Wow, a fully automated knitting shop, what a great idea! I'd like a pink square, 4x4, can you do that?</p>
   <img src="<%= asset_path('level2.2_goal.png') %>"  />
   <p>Hint: Save the hex code for pink (#FFC0CB) in a variable, and save the number of stitches in a line, too.</p>
+</div>
+<div class="csDialog" id="dialog23" title="Level 2.3: Re-using Variables">
+  <p>You may be looking at your code for Susan's square and wondering why using variables is necessary. After all, instead of writing <span class="csCode"><br/>var lineWidth = 4;<br/>stitch(lineWidth);<br/></span> you could have just written <span class="csCode">stitch(4);</span> right?</p>
+  <p>Well, there are a couple of reasons we use variables even though they might make the code a little bigger. One reason is <b>re-usability</b>. Look at your solution to the last level again. If we wanted to make the same scarf, but with 8 stitches instead of 4 per line, we could use the same code, and only replace a single number in the declaration command.</p>
+  <p>What do you know, here comes Susan again!</p>
+  <img src="<%= asset_path('level2.2_avatar.png') %>" />
+  <p>Susan: "Hi again - I just love that pink square you made for me! I couldn't resist the urge to come back and order another one. Can you make it just a bit different this time? I'd like it to be 4 lines with 8 stitches each, and of course in that lovely pink again, like this:</p>
+  <img src="<%= asset_path('level2.3_goal.png') %>"  />
+  <p>Hint: Take advantage of your nice, re-usable code, and quickly fulfill Susan's request by changing the definition of lineWidth.</p>
 </div>
 
 <div class="csDialog" id="dialogEND" title="CONGRATULATIONS!">
@@ -768,6 +802,7 @@ textarea {font-family:Lucida console}
 <button class="csDiaBtn" id="opener20" disabled="true">2.0</button>
 <button class="csDiaBtn" id="opener21" disabled="true">2.1</button>
 <button class="csDiaBtn" id="opener22" disabled="true">2.2</button>
+<button class="csDiaBtn" id="opener23" disabled="true">2.2</button>
 
 </td>
 
@@ -823,6 +858,7 @@ Goal
   <option value="knit2x8pattern">Knit 2x8 Pattern</option>
   <option value="knit4x8lines">Knit 4x8 Lines</option>
   <option value="knitpattysfavorite">Knit Patty's Favorite</option>
+  <option value="knitsusanssquare">Knit Susan's Pink Square</option>
   <option value="knitcheckers">Knit Checkers</option>
   <option value="knitfunctioncheckers">Knit Function Checkers</option>
   <option value="knitdiagonal">Knit Diagonal</option>
@@ -1058,6 +1094,19 @@ for(a=0;a<11;a++) {
 
 </textarea>
 
+<textarea id="knitsusanssquare" style="display:none">
+var pink = "#FFC0CB";
+var lineWidth = 4;
+setColor(pink);
+stitch(lineWidth);
+newRow();
+stitch(lineWidth);
+newRow();
+stitch(lineWidth);
+newRow();
+stitch(lineWidth);
+    
+</textarea>
 <textarea id="knitfunctioncheckers" style="display:none">
 // Knit a fancy checkered pattern
 
