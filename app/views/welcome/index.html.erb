@@ -514,6 +514,10 @@ csTestLevelCompleted = function() {
 	   });
 	   return returnval;
 	   break;
+	
+	//Sandbox is Level 999
+	case 999:
+	    return true;
    }
    return false;
 }
@@ -566,6 +570,11 @@ csAdvanceLevel = function() {
 	   //congratulate user on winning the game?
 	   $( "#dialogEND" ).dialog( "open" );
 	   break;
+	
+	//Sandbox Level
+	case 999:
+	    //do nothing for now
+	    break;
    }
    //csCurrentLevel += 1;
    
@@ -684,6 +693,7 @@ var getCurrentLevelButton = function(levelIndex) {
     
     $( "#openerSBX" ).click(function() {
       $( "#csLevelGoal").html("<p>Sandbox - open play<br/> What will <b>you</b> make?</p>");
+      $csCurrentLevel = 999;
     });
 
     $('#noIndColor').colorpicker({
