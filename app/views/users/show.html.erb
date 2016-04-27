@@ -1,0 +1,42 @@
+<p>
+  <strong>First name:</strong>
+  <%= @user.first_name %>
+</p>
+
+<p>
+  <strong>Last name:</strong>
+  <%= @user.last_name %>
+</p>
+
+<p>
+  <strong>Email:</strong>
+  <%= @user.email %>
+</p>
+
+<p>
+  <strong>Age:</strong>
+  <%= @user.age %>
+</p>
+
+<p>
+  <strong>Gender:</strong>
+  <%= @user.gender %>
+</p>
+
+<p>
+  <strong>Currentlevel:</strong>
+  <%= @user.currentLevel %>
+</p>
+
+<p>
+  <strong>Lastlogin:</strong>
+  <%= @user.lastLogin %>
+</p>
+
+<p>
+  <strong>Locked:</strong>
+  <%= @user.locked %>
+</p>
+
+<%= link_to 'Edit', edit_user_path(@user) %> |
+<%= link_to 'Back', users_path %>
