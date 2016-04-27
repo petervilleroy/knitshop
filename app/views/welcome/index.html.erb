@@ -320,11 +320,17 @@ JSrun = function() {
     //Easter Egg
     if(document.getElementById("JSprogram").value.trim() == "MEOW") {
 	document.getElementById("csCheats").style.display = "block";
+        ga('set', 'page', '/csMEOW');
+        ga('send', 'pageview');
 	return;
     }
     // Notify Google Analytics of user activity each time the user hits "GO"
     // Find definition of this function in codeStitch.js
-    ga('create', 'UA-76776475-1', '/cs');
+
+    //Google says do not create new trackers in Single Page Apps, so this is commented out.
+    //ga('create', 'UA-76776475-1', 'auto');
+    var csGAPageName = "/csLVL"+csCurrentLevel;
+    ga('set', 'page', csGAPageName);
     ga('send', 'pageview');
  
 
