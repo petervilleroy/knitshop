@@ -322,6 +322,11 @@ JSrun = function() {
 	document.getElementById("csCheats").style.display = "block";
 	return;
     }
+    // Notify Google Analytics of user activity each time the user hits "GO"
+    // Find definition of this function in codeStitch.js
+    ga('create', 'UA-76776475-1', 'auto');
+    ga('send', 'pageview');
+ 
 
     var str;
     alreadyDrawing = false;
