@@ -935,6 +935,7 @@ Goal
   <option value="knitpattysfavorite">Knit Patty's Favorite</option>
   <option value="knitsusanssquare">Knit Susan's Pink Square</option>
   <option value="knitsusanssquare4x8">Knit Susan's Pink Rectangle</option>
+  <option value="knitrobertasdiag">Knit Roberta's Diagonal</option>
   <option value="knitcheckers">Knit Checkers</option>
   <option value="knitfunctioncheckers">Knit Function Checkers</option>
   <option value="knitdiagonal">Knit Diagonal</option>
@@ -1148,6 +1149,34 @@ stitch();
 setColor("#8A2BE2");
 stitch();
 </textarea>
+<textarea id="knitrobertasdiag" style="display:none">
+var lineWidth = 4;
+var blueStitches = 1;
+setColor("blue");
+stitch(blueStitches);
+setColor("white");
+stitch(lineWidth - blueStitches);
+newRow();
+blueStitches = blueStitches + 1; //now blueStitches is equal to 2
+setColor("blue");
+stitch(blueStitches);
+setColor("white");
+stitch(lineWidth - blueStitches);
+newRow();
+blueStitches = blueStitches + 1;
+setColor("blue");
+stitch(blueStitches);
+setColor("white");
+stitch(lineWidth - blueStitches);
+newRow();
+blueStitches = blueStitches + 1;
+setColor("blue");
+stitch(blueStitches);
+setColor("white");
+stitch(lineWidth - blueStitches);
+blueStitches = blueStitches + 1;
+</textarea>
+
 <textarea id="knitcheckers" style="display:none">
 // Knit a checkered pattern
 
