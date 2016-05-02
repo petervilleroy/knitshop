@@ -527,6 +527,40 @@ csTestLevelCompleted = function() {
 	   break;
 	
 	//Sandbox is Level 999
+	case 10:
+           var csRows = $(".csRow").length;
+           var csRowLength = 0;
+           var returnval = true;
+	   var blueStitches1 = 0;
+	   var blueStitches2 = 0;
+	   var whiteStitch = false;
+           // Check that the result is 4x4
+           if(csRows < 4) return false;
+           $(".csRow").each(function(index) {
+                if(this.children.length != 4 && index < 4) returnval=false;
+           });
+           // Check for the diagonal pattern 
+           var colorA = "rgb(0, 0, 255)";
+	   var colorB = "rgb(255, 255, 255)";
+	   $(".csStitch").each(function(index) {
+              var currentStitchColor = this.style["background-color"];
+	      if (index == 4 || index == 8 || index == 12) {
+		//was the previous line conform to the diagonal?
+	        if(blueStitches2 <= blueStitches1 && blueStitches2 > 0) return false;
+                //get ready for the new line
+		blueStitches1 = blueStitches2;
+	        blueStitches2 = 0;
+		whiteStitch = false;
+		
+	      }
+              if(whiteStitch && currentStitchColor != colorB) return false;
+              if(currentStitchColor == colorA && !whiteStitch) blueStitches2 += 1;
+              if(currentStitchColor == colorB) whiteStitch = true;
+
+           });
+           return true;
+
+	   break;
 	case 999:
 	    return true;
    }
@@ -578,6 +612,10 @@ csAdvanceLevel = function() {
 	   $("#opener23").click();
 	   break;
 	case 9:
+	   $("#opener24").button("enable");
+           $("#opener24").click();
+	   break;
+	case 10:
 	   //congratulate user on winning the game?
 	   $( "#dialogEND" ).dialog( "open" );
 	   break;
@@ -701,6 +739,12 @@ var getCurrentLevelButton = function(levelIndex) {
       csCurrentLevel = 9;
       $( "#dialog23" ).dialog( "open" );
     });
+    $( "#opener24" ).click(function() {
+      $( "#csLevelGoal").html("<p>Knit 4 lines, 4 stitches wide, in two colors with a diagonal pattern. Use one variable to store the total line width, and another variable to store the number of stitches to be blue on each line.</p>Hint:<br/><div class='csCode'>var lineWidth = 4;<br/>var blueStitches = 1;<br/>setColor(\"blue\");<br/>stitch(blueStitches);<br/>setColor(\"white\");<br/>stitch(lineWidth - blueStitches);<br/>newRow();<br/>blueStitches = blueStitches + 1; //now blueStitches is equal to 2<br/>...<br/></div>");
+      csCurrentLevel = 10;
+      $( "#dialog24" ).dialog( "open" );
+    });
+
     
     $( "#openerSBX" ).click(function() {
       $( "#csLevelGoal").html("<p>Sandbox - open play<br/> What will <b>you</b> make?</p>");
@@ -799,6 +843,15 @@ textarea {font-family:Lucida console}
   <img src="<%= asset_path('level2.3_goal.png') %>"  />
   <p>Hint: Take advantage of your nice, re-usable code, and quickly fulfill Susan's request by changing the definition of lineWidth.</p>
 </div>
+<div class="csDialog" id="dialog24" title="Level 2.4: Variables can do math">
+  <p>Let's take the usefulness of variables to another level - this time by using them to do some math. After you have declared a variable, you can use it just like you would any other number or word in your program. For example, these snippets of code do the same thing:<span class="csCode"><br/>var lineWidth = 4;<br/>stitch(lineWidth + 2);  // knits 6 stitches<br/><br/>var justTwo = 2;<br/>stitch(lineWidth + justTwo);  //knits 6 stitches, too<br/><br/>stitch(6);    //also knits 6 stitches<br/></span></p>
+  <p>You can also change the value of a variable after declaring it. Consider this line:<span class="csCode"><br/>lineWidth = lineWidth + 2;  // increases the value by 2 <br/></span>After that line of code, the variable <span class="csCode">lineWidth</span> will have a new value for the rest of the program, namely its previous value plus 2. Starting to get the hang of it?.</p>
+  <p>I think you're going to get a chance to practice right now:</p>
+  <img src="<%= asset_path('level2.4_avatar.png') %>" />
+  <p>Roberta: "I heard about your shop and just had to drop in - Wow, is that really a knitting robot!?! Amazing, but how good are you at programming it? Can you make me a scarf with a diagonal pattern? I'd like it 4 rows by 4 stitches each, blue and white in a diagonal. You're up to that, right?</p>
+  <img src="<%= asset_path('level2.4_goal.png') %>"  />
+  <p>Hint: Each line in Roberta's scarf will need a blue stitch followed by some white stitches, and the number of blue stitches will be bigger in each line (and the number of white stitches will be smaller). See if you can do it once without reading the hint, and show Roberta that you've mastered the use of variables!</p>
+</div>
 
 <div class="csDialog" id="dialogEND" title="CONGRATULATIONS!">
   <p>You have completed all levels!!!<br/> Continue free play in the sandbox level, and check back in soon because we add levels and new features all the time.</p>
@@ -824,6 +877,7 @@ textarea {font-family:Lucida console}
 <button class="csDiaBtn" id="opener21" disabled="true">2.1</button>
 <button class="csDiaBtn" id="opener22" disabled="true">2.2</button>
 <button class="csDiaBtn" id="opener23" disabled="true">2.3</button>
+<button class="csDiaBtn" id="opener24" disabled="true">2.4</button>
 
 </td>
 
@@ -881,6 +935,7 @@ Goal
   <option value="knitpattysfavorite">Knit Patty's Favorite</option>
   <option value="knitsusanssquare">Knit Susan's Pink Square</option>
   <option value="knitsusanssquare4x8">Knit Susan's Pink Rectangle</option>
+  <option value="knitrobertasdiag">Knit Roberta's Diagonal</option>
   <option value="knitcheckers">Knit Checkers</option>
   <option value="knitfunctioncheckers">Knit Function Checkers</option>
   <option value="knitdiagonal">Knit Diagonal</option>
@@ -1094,6 +1149,34 @@ stitch();
 setColor("#8A2BE2");
 stitch();
 </textarea>
+<textarea id="knitrobertasdiag" style="display:none">
+var lineWidth = 4;
+var blueStitches = 1;
+setColor("blue");
+stitch(blueStitches);
+setColor("white");
+stitch(lineWidth - blueStitches);
+newRow();
+blueStitches = blueStitches + 1; //now blueStitches is equal to 2
+setColor("blue");
+stitch(blueStitches);
+setColor("white");
+stitch(lineWidth - blueStitches);
+newRow();
+blueStitches = blueStitches + 1;
+setColor("blue");
+stitch(blueStitches);
+setColor("white");
+stitch(lineWidth - blueStitches);
+newRow();
+blueStitches = blueStitches + 1;
+setColor("blue");
+stitch(blueStitches);
+setColor("white");
+stitch(lineWidth - blueStitches);
+blueStitches = blueStitches + 1;
+</textarea>
+
 <textarea id="knitcheckers" style="display:none">
 // Knit a checkered pattern
 
