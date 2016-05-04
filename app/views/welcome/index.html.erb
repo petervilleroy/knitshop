@@ -409,6 +409,7 @@ csTestLevelCompleted = function() {
 	   var csRowLength = 0;
 	   var returnval = true;
 	   // Check that the result is 2x8
+	   if(csRows < 2) return false;
 	   $(".csRow").each(function(index) {
 		if(this.children.length != 8 && index < 2) returnval=false;
 	   });
