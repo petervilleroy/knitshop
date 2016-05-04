@@ -1182,21 +1182,20 @@ blueStitches = blueStitches + 1;
 
 for(a=0;a<11;a++) {
   for(b=0;b<5;b++) {
-    setColor(0,255,0);
+    setColor("#f5da35");
     stitch();
-    setColor(255,0,0);
+    setColor("#9123d5");
     stitch();
   }
   newRow();
   for(b=0;b<5;b++) {
-    setColor(255,0,0);
+    setColor("#9123d5");
     stitch();
-    setColor(0,255,0);
+    setColor("#f5da35");
     stitch();
   }
   newRow();
 }
-
 </textarea>
 
 <textarea id="knitsusanssquare" style="display:none">
@@ -1254,9 +1253,9 @@ for(a=0;a<5;a++) {
 
 var i=0;
 for(a=0;a<35;a++) {
-  setColor(0,255,0);
+  setColor("#f5da35");
   stitch(i/3);
-  setColor(255,0,0);
+  setColor("#9123d5");
   stitch(12-i/3);
   newRow();
   i++;
