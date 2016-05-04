@@ -369,6 +369,7 @@ csTestLevelCompleted = function() {
 	   var csRows = $(".csRow").length;
 	   var csRowLength = 0;
 	   $(".csRow").each(function(index) {csRowLength = this.children.length;});
+	   //check that result is 1x1
 	   if ( csRows == 1 && csRowLength == 1) {
 		return true;
 	   }
@@ -377,7 +378,8 @@ csTestLevelCompleted = function() {
 	   var csRows = $(".csRow").length;
            var csRowLength = 0;
            $(".csRow").each(function(index) {csRowLength = this.children.length;});
-           if ( csRows == 1 && csRowLength == 3) {
+           //check that result is 1x3
+	   if ( csRows == 1 && csRowLength == 3) {
                 //TODO: don't forget to check the color value!!!
 		var csColorArray = "";
 		$(".csStitch").each(function(index) {
@@ -394,6 +396,7 @@ csTestLevelCompleted = function() {
 	   var csRows = $(".csRow").length;
 	   var csRowLength = 0;
 	   $(".csRow").each(function(index) {csRowLength = this.children.length;});
+	   //check that the result is 1x8
 	   if ( csRows == 1 && csRowLength == 8) {
 		//TODO: don't forget to check the color value!!!
 		var returnval = true;
@@ -412,6 +415,7 @@ csTestLevelCompleted = function() {
 	   if(csRows < 2) return false;
 	   $(".csRow").each(function(index) {
 		if(this.children.length != 8 && index < 2) returnval=false;
+		if(this.children.length > 0 && index >=2) returnval=false;
 	   });
 	   // Check for red stitches only
                 
@@ -430,6 +434,7 @@ csTestLevelCompleted = function() {
 	   if(csRows < 2) return false;
            $(".csRow").each(function(index) {
                 if(this.children.length != 8 && index < 2) returnval=false;
+		if(this.children.length > 0 && index >=2) returnval=false;
            });
            // Check for alternating stitch colors 
            var colorA, colorB;
@@ -452,6 +457,7 @@ csTestLevelCompleted = function() {
 	   if(csRows < 4) return false;
            $(".csRow").each(function(index) {
                 if(this.children.length != 8 && index < 4) returnval=false;
+		if(this.children.length > 0 && index >=4) returnval=false;
            });
            // Check for alternating stitch colors 
            var colorA, colorB, colorC, colorD;
@@ -479,6 +485,7 @@ csTestLevelCompleted = function() {
        if(csRows < 3) return false;
        $(".csRow").each(function(index) {
                 if(this.children.length != 3 && index < 3) returnval=false;
+		if(this.children.length > 0 && index >=3) returnval=false;
            });
            // Check for alternating stitch colors 
            var colorA, colorB;
@@ -500,6 +507,7 @@ csTestLevelCompleted = function() {
        if(csRows < 4) return false;
        $(".csRow").each(function(index) {
                 if(this.children.length != 4 && index < 4) returnval=false;
+		if(this.children.length > 0 && index >=4) returnval=false;
        });
            // Check that all stitches are pink 
        
@@ -518,6 +526,7 @@ csTestLevelCompleted = function() {
        if(csRows < 4) return false;
        $(".csRow").each(function(index) {
                 if(this.children.length != 8 && index < 4) returnval=false;
+		if(this.children.length > 0 && index >=4) returnval=false;
        });
            // Check that all stitches are pink 
        $(".csStitch").each(function(index) {
@@ -539,6 +548,7 @@ csTestLevelCompleted = function() {
            if(csRows < 4) return false;
            $(".csRow").each(function(index) {
                 if(this.children.length != 4 && index < 4) returnval=false;
+		if(this.children.length > 0 && index >=4) returnval=false;
            });
            // Check for the diagonal pattern 
            var colorA = "rgb(0, 0, 255)";
@@ -562,6 +572,8 @@ csTestLevelCompleted = function() {
            return true;
 
 	   break;
+
+	//sandbox is level 999
 	case 999:
 	    return true;
    }
