@@ -369,6 +369,7 @@ csTestLevelCompleted = function() {
 	   var csRows = $(".csRow").length;
 	   var csRowLength = 0;
 	   $(".csRow").each(function(index) {csRowLength = this.children.length;});
+	   //check that result is 1x1
 	   if ( csRows == 1 && csRowLength == 1) {
 		return true;
 	   }
@@ -377,7 +378,8 @@ csTestLevelCompleted = function() {
 	   var csRows = $(".csRow").length;
            var csRowLength = 0;
            $(".csRow").each(function(index) {csRowLength = this.children.length;});
-           if ( csRows == 1 && csRowLength == 3) {
+           //check that result is 1x3
+	   if ( csRows == 1 && csRowLength == 3) {
                 //TODO: don't forget to check the color value!!!
 		var csColorArray = "";
 		$(".csStitch").each(function(index) {
@@ -394,6 +396,7 @@ csTestLevelCompleted = function() {
 	   var csRows = $(".csRow").length;
 	   var csRowLength = 0;
 	   $(".csRow").each(function(index) {csRowLength = this.children.length;});
+	   //check that the result is 1x8
 	   if ( csRows == 1 && csRowLength == 8) {
 		//TODO: don't forget to check the color value!!!
 		var returnval = true;
@@ -412,6 +415,7 @@ csTestLevelCompleted = function() {
 	   if(csRows < 2) return false;
 	   $(".csRow").each(function(index) {
 		if(this.children.length != 8 && index < 2) returnval=false;
+		if(this.children.length > 0 && index >=2) returnval=false;
 	   });
 	   // Check for red stitches only
                 
@@ -430,6 +434,7 @@ csTestLevelCompleted = function() {
 	   if(csRows < 2) return false;
            $(".csRow").each(function(index) {
                 if(this.children.length != 8 && index < 2) returnval=false;
+		if(this.children.length > 0 && index >=2) returnval=false;
            });
            // Check for alternating stitch colors 
            var colorA, colorB;
@@ -452,6 +457,7 @@ csTestLevelCompleted = function() {
 	   if(csRows < 4) return false;
            $(".csRow").each(function(index) {
                 if(this.children.length != 8 && index < 4) returnval=false;
+		if(this.children.length > 0 && index >=4) returnval=false;
            });
            // Check for alternating stitch colors 
            var colorA, colorB, colorC, colorD;
@@ -479,6 +485,7 @@ csTestLevelCompleted = function() {
        if(csRows < 3) return false;
        $(".csRow").each(function(index) {
                 if(this.children.length != 3 && index < 3) returnval=false;
+		if(this.children.length > 0 && index >=3) returnval=false;
            });
            // Check for alternating stitch colors 
            var colorA, colorB;
@@ -500,6 +507,7 @@ csTestLevelCompleted = function() {
        if(csRows < 4) return false;
        $(".csRow").each(function(index) {
                 if(this.children.length != 4 && index < 4) returnval=false;
+		if(this.children.length > 0 && index >=4) returnval=false;
        });
            // Check that all stitches are pink 
        
@@ -518,6 +526,7 @@ csTestLevelCompleted = function() {
        if(csRows < 4) return false;
        $(".csRow").each(function(index) {
                 if(this.children.length != 8 && index < 4) returnval=false;
+		if(this.children.length > 0 && index >=4) returnval=false;
        });
            // Check that all stitches are pink 
        $(".csStitch").each(function(index) {
@@ -539,6 +548,7 @@ csTestLevelCompleted = function() {
            if(csRows < 4) return false;
            $(".csRow").each(function(index) {
                 if(this.children.length != 4 && index < 4) returnval=false;
+		if(this.children.length > 0 && index >=4) returnval=false;
            });
            // Check for the diagonal pattern 
            var colorA = "rgb(0, 0, 255)";
@@ -562,6 +572,8 @@ csTestLevelCompleted = function() {
            return true;
 
 	   break;
+
+	//sandbox is level 999
 	case 999:
 	    return true;
    }
@@ -787,7 +799,7 @@ textarea {font-family:Lucida console}
 </div>
 <div class="csDialog" id="dialog12" title="Level 1.2: Stitch a whole line">
   <p>This is easy, right? And it's about to get even easier, because coding is all about reducing mundane repetition and making the robot work for you, instead of the other way around. Now, once we've set a color, we can make the robot knit many stitches at once by adding an 'argument' to the stitch command, like this: <span class="csCode">stitch(3);</span> which will knit three stitches instead of just one.</p>
-  <p>Now you try it. To complete this level, knit 8 red stitches in a line, like this:</p>
+  <p>Now you try it. To complete this level, knit 8 purple stitches in a line, like this:</p>
   <img src="<%= asset_path('level1.2_goal.png') %>"  />
  
 </div>
@@ -827,7 +839,7 @@ textarea {font-family:Lucida console}
 </div>
 <div class="csDialog" id="dialog22" title="Level 2.2: More Variables">
   <p>Variables serve a lot of purposes in programming. You can save different things in a variable, like words/text (we did that in level 2.1), numbers, and many other things as well. When you save text in a variable, you use quotations in the declaration command; when you save a number, the quotes aren't necessary:
-     <br/><span class="csCode">var myFavoriteColor = "#FFC0CB";<br/>var lineWidth = 8;</span></p>
+     <br/><span class="csCode">var myFavoriteColor = "#FFC0CB";<br/>var lineWidth = 4;</span></p>
   <p>As you've probably noticed, variable names cannot contain spaces, so we use capitals to make them more readable. Also, the variable names are case sensitive, so if you don't type them exactly the way they look in the declaration, your robot won't recognize or use them properly.</p>
   <p>Hey, here comes your next customer. Maybe you'll get a chance to use variables again now!</p>
   <img src="<%= asset_path('level2.2_avatar.png') %>" />
