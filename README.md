@@ -21,3 +21,4 @@ https://www.youtube.com/watch?v=zQJtlvlNunw
 <br/>Authorization
 https://www.youtube.com/watch?v=NmAGd9ak3f4
 
+<br/>Pattern PNG's, is it possible?<br/> What are the possibilities to capture and save images of the patterns created in the sandbox? It's pretty lame to share your creations as anything but pictures. further reading: http://jsfiddle.net/6FZkk/1/

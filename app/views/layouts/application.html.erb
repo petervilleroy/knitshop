@@ -8,6 +8,11 @@
 </head>
 <body>
 
+<div class="csHeaderTable" width="100%" >
+<h1>
+  <a href="http://playcodestitch.com">CodeStitch</a>
+</h1>
+ <span align="right" style="background: none; vertical-align: top;">
  <div id="user_header">
   <% if current_user %>
     Welcome, <%= current_user.first_name %>.
@@ -23,8 +28,10 @@
     <p><%= value %></p>
   <% end %>
  <% end %>
-<%= yield %>
+ </span>
+</div>
 
+<%= yield %>
 </body>
 </html>
 
