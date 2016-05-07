@@ -7,6 +7,7 @@ class User < ActiveRecord::Base
             format: {
                with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i
             }
+  validates :password, length: { minimum: 3 }
   def to_s
     "#{first_name}"
   end
