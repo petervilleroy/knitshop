@@ -1,5 +1,28 @@
 <h1>New User</h1>
 
-<%= render 'form' %>
+    <%= form_for(@user) do |f| %>
+      <%= f.label :first_name %>
+      <%= f.text_field :first_name %>
+<br/>
+      <%= f.label :last_name %>
+      <%= f.text_field :last_name %>
+<br/>
+      <%= f.label :age %>
+      <%= f.text_field :age %> This should be a radio select button
+<br/>
+      <%= f.label :gender %>
+      <%= f.text_field :gender %>
+<br/>
+      <%= f.label :email %>
+      <%= f.email_field :email %>
+<br/>
+      <%= f.label :password %>
+      <%= f.password_field :password %>
+<br/>
+      <%= f.label :password_confirmation, "Confirmation" %>
+      <%= f.password_field :password_confirmation %>
+<br/>
+      <%= f.submit "Create my account", class: "btn btn-primary" %>
+    <% end %>
 
 <%= link_to 'Back', users_path %>
