@@ -13,3 +13,10 @@
  *= require_tree .
  *= require_self
  */
+body {background: #f5da35;
+    }
+
+.csHeaderTable {
+	width: 100%;
+	background: none;
+}

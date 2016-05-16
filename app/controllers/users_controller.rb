@@ -1,5 +1,8 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :edit, :update, :destroy]
+  before_action :logged_in_user, only: [:show, :edit, :update]
+  before_action :correct_user,   only: [:show, :edit, :update]
+  before_action :admin_user, only: [:index, :destroy]
 
   # GET /users
   # GET /users.json
@@ -19,6 +22,7 @@ class UsersController < ApplicationController
 
   # GET /users/1/edit
   def edit
+    @user = User.find(params[:id])
   end
 
   # POST /users
@@ -70,6 +74,27 @@ class UsersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def user_params
-      params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation, :age, :gender, :currentLevel, :lastLogin, :locked)
+      params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation, :age, :gender, :currentLevel, :lastLogin)
+    end
+
+ # Confirms a logged-in user.
+    def logged_in_user
+      if current_user.nil?
+        #flash[:danger] = "Please log in."
+        redirect_to login_url, notice: 'Please log in.'
+      end
+    end
+
+ # Confirms the user logged in is authorized to see content
+    def correct_user
+      @user = User.find(params[:id])
+      @role = current_user.role
+      redirect_to('/cs') unless @user == current_user || @role == 'admin'
+    end
+
+ # Confirms logged in as an administrator
+    def admin_user
+      @role = current_user.role
+      redirect_to('/cs') unless @role == 'admin'
     end
 end
