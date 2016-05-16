@@ -16,6 +16,7 @@
  <div id="user_header">
   <% if current_user %>
     Welcome, <%= current_user.first_name %>.
+    <%= link_to "Account", edit_user_path(current_user) %>
     <%= link_to "Log Out", logout_path %>
   <% else %>
     <%= link_to "Sign Up", signup_path %> or
