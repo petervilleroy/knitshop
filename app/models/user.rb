@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-  has_many :solutions dependent: :destroy
+  has_many :solutions
   attr_accessor :remember_token
   has_secure_password
   before_save { self.email = email.downcase }
