@@ -37,6 +37,7 @@ var knitspeed = 200;
 var csCurrentLevel = 0;
 var csLevelsCompleted = [];
 var csLevels = [1.0,1.1];
+var connectionString = "postgres://csuser@localhost:5432/db/development";
 var csSnarkyRemarks = ["This is nice, but it's not what I ordered.",
 	"Yuck, that looks like a baby knitted it, and then a dog ate it!",
 	"This would be fine, if I had asked for something completely different.",
@@ -238,6 +239,17 @@ function drawQueue() {
 			//we've completed drawing the whole queue, now test for level completion
                         var lvlCompleted = csTestLevelCompleted();
 		        if(lvlCompleted) {
+			   //save the solution under this user's collection of solutions
+			   var solutionString = escape(document.getElementById("JSprogram").value);
+			   var csrfToken = $('#csrf-token').val();
+		           //we're going to do this the AJAX way so our game
+			   //remains a single-page application.
+			   //var xhttp = new XMLHttpRequest();
+			   //xhttp.open("POST", "/solutions", true);
+			   //xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			   //xhttp.send("content="+solutionString+"&level="+csCurrentLevel);
+ 			   //console.log("Inserted into DB, I hope. Ran xhttp.send(content="+solutionString+"&level="+csCurrentLevel+");");	
+			   $.ajax("/solutions", {type: "POST", async: true, data: {content: solutionString, level: csCurrentLevel }})
 		           csAdvanceLevel();
 		        }
 		        if(!lvlCompleted) {
