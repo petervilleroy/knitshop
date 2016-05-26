@@ -37,7 +37,8 @@ var knitspeed = 200;
 var csCurrentLevel = 0;
 var csLevelsCompleted = [];
 var csLevels = [1.0,1.1];
-var connectionString = "postgres://csuser@localhost:5432/db/development";
+var csMySolution = "";
+var csHerSolution = "";
 var csSnarkyRemarks = ["This is nice, but it's not what I ordered.",
 	"Yuck, that looks like a baby knitted it, and then a dog ate it!",
 	"This would be fine, if I had asked for something completely different.",
@@ -239,17 +240,14 @@ function drawQueue() {
 			//we've completed drawing the whole queue, now test for level completion
                         var lvlCompleted = csTestLevelCompleted();
 		        if(lvlCompleted) {
-			   //save the solution under this user's collection of solutions
-			   var solutionString = escape(document.getElementById("JSprogram").value);
-			   var csrfToken = $('#csrf-token').val();
+			   if( $('#current_user').length > 0 ) {
+				//save the solution under this user's collection of solutions
+				var solutionString = escape(document.getElementById("JSprogram").value);
+				var csrfToken = $('#csrf-token').val();
 		           //we're going to do this the AJAX way so our game
 			   //remains a single-page application.
-			   //var xhttp = new XMLHttpRequest();
-			   //xhttp.open("POST", "/solutions", true);
-			   //xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-			   //xhttp.send("content="+solutionString+"&level="+csCurrentLevel);
- 			   //console.log("Inserted into DB, I hope. Ran xhttp.send(content="+solutionString+"&level="+csCurrentLevel+");");	
-			   $.ajax("/solutions", {type: "POST", async: true, data: {content: solutionString, level: csCurrentLevel }})
+				$.ajax("/solutions", {type: "POST", async: true, data: {content: solutionString, level: csCurrentLevel }})
+			   }
 		           csAdvanceLevel();
 		        }
 		        if(!lvlCompleted) {
@@ -600,18 +598,31 @@ csAdvanceLevel = function() {
    switch (csCurrentLevel) {
 	case 0:
 	   //$("#opener11").prop('disabled', false);
+	   csMySolution = document.getElementById("JSprogram").value;
+
 	   $("#opener11").button("enable");
 	   $("#opener11").click();
+           if( $("#current_user" ).length > 0) {
+		//csMySolution = document.getElementById("JSprogram").value;
+		$("#dialogCompareLeft").html("<textarea>"+csMySolution+"</textarea>");
+		$("#dialogCOMPARE").dialog( "open" );
+	   }
 	   break;
 	case 1:
 	   //$("#opener12").prop('disabled', false);
 	   $("#opener12").button("enable");
 	   $("#opener12").click();
-	   break;
+	   if( $("#current_user" ).length > 0) {
+                $("#dialogCOMPARE").dialog( "open" );
+           }
+           break;
 	case 2:
 	   $("#opener13").button("enable");
 	   $("#opener13").click();
-	   break;
+	   if( $("#current_user" ).length > 0) {
+                $("#dialogCOMPARE").dialog( "open" );
+           }
+           break;
         case 3:
            $("#opener14").button("enable");
            $("#opener14").click();
@@ -873,6 +884,16 @@ textarea {font-family:Lucida console}
   <p>Roberta: "I heard about your shop and just had to drop in - Wow, is that really a knitting robot!?! Amazing, but how good are you at programming it? Can you make me a scarf with a diagonal pattern? I'd like it 4 rows by 4 stitches each, blue and white in a diagonal. You're up to that, right?</p>
   <img src="<%= asset_path('level2.4_goal.png') %>"  />
   <p>Hint: Each line in Roberta's scarf will need a blue stitch followed by some white stitches, and the number of blue stitches will be bigger in each line (and the number of white stitches will be smaller). See if you can do it once without reading the hint, and show Roberta that you've mastered the use of variables!</p>
+</div>
+
+<div class="csDialog" id="dialogCOMPARE" title="That's Right!">
+  <p>You did it!<br/> Your code did the trick. Now before moving on, be sure to compare your solution (left) with the solution of another player (right). Remember there's no right or wrong, but seeing other people's work could help inspire you!</p>
+  <table>
+    <tr>
+	<td><div id="dialogCompareLeft"></div></td>
+	<td><div id="dialogCompareRight"></div></td>
+    </tr>
+  </table>
 </div>
 
 <div class="csDialog" id="dialogEND" title="CONGRATULATIONS!">
