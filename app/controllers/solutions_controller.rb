@@ -18,7 +18,21 @@ class SolutionsController < ApplicationController
 
   # GET /solutions
   def index
-    @solutions = Solution.all
+    #@solutions = Solution.all
+    #@user = User.find(params[:user])
+    @user = current_user
+    @level = params[:level]
+    #don't find this users' solutions, find others for same level
+    @solutions = Solution.where("user_id != ? AND level = ?", @user.id, @level).take(125)
+#Solution.find(user_id not @user.id, level = @level)
+    #Randomly choose one, and return it
+    @sol = @solutions[Random.rand(@solutions.size)]
+    respond_to do |format|
+      format.html { render @sol }
+      format.json { render json: @sol }
+    end
+
+
   end
 
   # GET /solutions/1
