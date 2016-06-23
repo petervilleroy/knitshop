@@ -604,12 +604,19 @@ csAdvanceLevel = function() {
 	   $("#opener11").click();
            if( $("#current_user" ).length > 0) {
 		//AJAX call to retrieve compare solution
-		$.ajax({url: "/solutions", async: true, data: {level: csCurrentLevel-1 }, datatype: "json"}).done( 
-			function( data ) {$("#dialogCompareRight").html("<textarea style=\"width: 100%; height: 4in\">"+data+"</textarea>")}
+		//Note that calling /solutions will return an html formatted
+                //representation of the solution, but calling /solutions.json
+		//will return an object of type Solution.
+		$.ajax({url: "/solutions.json", async: true, data: {level: csCurrentLevel-1 }, datatype: "json"}).done( 
+			function( data ) {$("#dialogCompareRight").html("<h3>"+data.first_name +"\'s Solution:</h3><textarea style=\"width: 100%; height: 4in\">"+unescape(data.content)+"</textarea>" + 
+
+           "<p>And now for some other fun stuff: <ul><li>" + 
+                  "Gender: "+ data.gender + "</li><li>" +
+                  "Age range: " + data.age    + "</li></ul></p>")}
 		);
 
 		//csMySolution = document.getElementById("JSprogram").value;
-		$("#dialogCompareLeft").html("<textarea style=\"width: 100%; height: 4in\">"+csMySolution+"</textarea>");
+		$("#dialogCompareLeft").html("<h3>Your Solution:</h3><textarea style=\"width: 100%; height: 4in\">"+csMySolution+"</textarea>");
 		$("#dialogCOMPARE").dialog( "open" );
 	   }
 	   break;

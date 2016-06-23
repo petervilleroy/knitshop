@@ -23,10 +23,23 @@ class SolutionsController < ApplicationController
     @user = current_user
     @level = params[:level]
     #don't find this users' solutions, find others for same level
-    @solutions = Solution.where("user_id != ? AND level = ?", @user.id, @level).take(125)
-#Solution.find(user_id not @user.id, level = @level)
+    #@solutions = Solution.where("user_id != ? AND level = ?", @user.id, @level).take(125) ---- This fancy Ruby select doesn't work because it returns an object lacking the fields of 'user', i.e. @sol.first_name doesn't exist. Resolution is to query by SQL and get a more flexible object as a result.
+    @solutions = Solution.find_by_sql("SELECT * from users INNER JOIN solutions ON users.id = solutions.user_id WHERE solutions.user_id != #{@user.id} AND level = #{@level} ").take(125)
+
     #Randomly choose one, and return it
     @sol = @solutions[Random.rand(@solutions.size)]
+    #@soluser = User.find(@sol.user_id)
+    #@sol.first_name = @soluser.first_name
+    #@sol.gender = @soluser.gender
+    #@sol.age = @soluser.age
+
+    #Now purge sensitive data before responding
+    @sol.password_digest = "<hidden>"
+    @sol.last_name = "<hidden>"
+    @sol.email = "<hidden>"
+    @sol.role = "<hidden>"
+    @sol.remember_digest = "<hidden>"
+    
     respond_to do |format|
       format.html { render @sol }
       format.json { render json: @sol }
