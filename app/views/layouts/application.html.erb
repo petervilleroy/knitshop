@@ -18,8 +18,9 @@
     Welcome, <%= current_user.first_name %>.
     <%= link_to "Account", edit_user_path(current_user) %>
     <%= link_to "Log Out", logout_path %>
-    <span id="current_user" style="display:none"><%= current_user.first_name %>
-    </span>
+    <span id="current_user" style="display:none"><%= current_user.first_name %></span>
+    <span id="current_user_age" style="display:none"><%= current_user.age %></span>
+    <span id="current_user_gender" style="display:none"><%= current_user.gender %></span>
   <% else %>
     <%= link_to "Sign Up", signup_path %> or
     <%= link_to "Log In", login_path %>
