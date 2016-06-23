@@ -7,11 +7,17 @@
       <%= f.label :last_name %>
       <%= f.text_field :last_name %>
 <br/>
-      <%= f.label :age %>
-      <%= f.text_field :age %> This should be a radio select button
+      <%= f.label :age %><br>
+      <%= f.radio_button( :age, "0") %>Under 10  |
+      <%= f.radio_button( :age, "1") %>10-13  |
+      <%= f.radio_button( :age, "2") %>14-18  |
+      <%= f.radio_button( :age, "3") %>Over 18
+
 <br/>
-      <%= f.label :gender %>
-      <%= f.text_field :gender %>
+      <%= f.label :gender %><br>
+      <%= f.radio_button( :gender, "f") %>Female  |
+      <%= f.radio_button( :gender, "m") %>Male
+
 <br/>
       <%= f.label :email %>
       <%= f.email_field :email %>
@@ -24,5 +30,4 @@
 <br/>
       <%= f.submit "Create my account", class: "btn btn-primary" %>
     <% end %>
-
 <%= link_to 'Back', users_path %>
