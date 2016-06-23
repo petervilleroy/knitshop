@@ -251,6 +251,11 @@ function drawQueue() {
 		           csAdvanceLevel();
 		        }
 		        if(!lvlCompleted) {
+
+			   //Save the attempt for future reference
+			   var solutionString = escape(document.getElementById("JSprogram").value);
+			   $.ajax("/attempts", {type: "POST", async: true, data: {content: solutionString, level: csCurrentLevel }})
+
 		           // output something in the hint field
 			   $( "#dialogFail" ).dialog( "open" ); 
 			   var ran = Math.random();
@@ -360,6 +365,10 @@ JSrun = function() {
         }
     } catch(e) {
         str = e.name+" at line "+(e.lineNumber-56)+": "+e.message;
+        //AJAX call to insert failed attempt
+	var solutionString = escape(document.getElementById("JSprogram").value);
+        $.ajax("/attempts", {type: "POST", async: true, data: {content: solutionString, level: csCurrentLevel }})
+
     }
     //var tnode = document.getElementById("JStiming");
     //tnode.innerHTML = ""+(new Date().getTime()-d)/1000;
@@ -589,6 +598,10 @@ csTestLevelCompleted = function() {
    }
    return false;
 }
+
+addToPatterns = function(sol_id) {
+	$.ajax({url: "/patterns", async: true, type: "POST", data: {solution_id: sol_id}});
+ };
 csAdvanceLevel = function() {
    // move current level to the next one given a list of all levels
    csLevelsCompleted[csLevelsCompleted.length] = csLevels[csCurrentLevel];
@@ -599,7 +612,7 @@ csAdvanceLevel = function() {
 	case 0:
 	   //$("#opener11").prop('disabled', false);
 	   csMySolution = document.getElementById("JSprogram").value;
-	   csHerSolution = "";
+	   //csHerSolution = "";
 	   $("#opener11").button("enable");
 	   $("#opener11").click();
            if( $("#current_user" ).length > 0) {
@@ -608,15 +621,14 @@ csAdvanceLevel = function() {
                 //representation of the solution, but calling /solutions.json
 		//will return an object of type Solution.
 		$.ajax({url: "/solutions.json", async: true, data: {level: csCurrentLevel-1 }, datatype: "json"}).done( 
-			function( data ) {$("#dialogCompareRight").html("<h3>"+data.first_name +"\'s Solution:</h3><textarea style=\"width: 100%; height: 4in\">"+unescape(data.content)+"</textarea>" + 
+			function( data ) {$("#dialogCompareRight").html("<h3>"+data.first_name +"\'s Solution:</h3><a id=\"addPattern\" title=\"Click to save in your Patterns Drawer\" href=# onclick=\"addToPatterns("+data.id+");return false;\">Save in Patterns</a><textarea style=\"width: 100%; height: 4in\">"+unescape(data.content)+"</textarea>" + 
 
            "<p>And now for some other fun stuff: <ul><li>" + 
                   "Gender: "+ data.gender + "</li><li>" +
                   "Age range: " + data.age    + "</li></ul></p>")}
 		);
 
-		//csMySolution = document.getElementById("JSprogram").value;
-		$("#dialogCompareLeft").html("<h3>Your Solution:</h3><textarea style=\"width: 100%; height: 4in\">"+csMySolution+"</textarea>");
+		$("#dialogCompareLeft").html("<h3>Your Solution:</h3><a id=\"addMyPattern\" title=\"Click to save in your Patterns Drawer\" href=# onclick=\"addToPatterns(0);return false;\">Save in Patterns</a><textarea style=\"width: 100%; height: 4in\">"+csMySolution+"</textarea>");
 		$("#dialogCOMPARE").dialog( "open" );
 	   }
 	   break;
