@@ -604,6 +604,24 @@ csTestLevelCompleted = function() {
 addToPatterns = function(sol_id) {
 	$.ajax({url: "/patterns", async: true, type: "POST", data: {solution_id: sol_id}});
  };
+saveSolution = function(level_number) {
+        var solutionString = escape(document.getElementById("JSprogram").value);
+        $.ajax("/solutions", {type: "POST", async: true, data: {content: solutionString, level: level_number }})
+
+};
+csPresentAlternateSolution = function() {
+                //AJAX call to retrieve compare solution
+                //Note that calling /solutions will return an html formatted
+                //representation of the solution, but calling /solutions.json
+                //will return an object of type Solution.
+                $.ajax({url: "/solutions.json", async: true, data: {level: csCurrentLevel-1 }, datatype: "json"}).done( 
+                        function( data ) {$("#dialogCompareRight").html("<h3>"+data.first_name +"\'s Solution:</h3><a id=\"addPattern\" title=\"Click to save in your Patterns Drawer\" href=# onclick=\"addToPatterns("+data.id+");return false;\">Save in Patterns</a><textarea style=\"width: 100%; height: 4in\">"+unescape(data.content)+"</textarea>")}
+                );
+
+                $("#dialogCompareLeft").html("<h3>Your Solution:</h3><a id=\"addMyPattern\" title=\"Click to save in your Patterns Drawer\" href=# onclick=\"addToPatterns(0);return false;\">Save in Patterns</a><textarea style=\"width: 100%; height: 4in\">"+csMySolution+"</textarea>");
+                $("#dialogCOMPARE").dialog( "open" );
+
+}
 csAdvanceLevel = function() {
    // move current level to the next one given a list of all levels
    csLevelsCompleted[csLevelsCompleted.length] = csLevels[csCurrentLevel];
@@ -618,65 +636,73 @@ csAdvanceLevel = function() {
 	   $("#opener11").button("enable");
 	   $("#opener11").click();
            if( $("#current_user" ).length > 0) {
-		//AJAX call to retrieve compare solution
-		//Note that calling /solutions will return an html formatted
-                //representation of the solution, but calling /solutions.json
-		//will return an object of type Solution.
-		$.ajax({url: "/solutions.json", async: true, data: {level: csCurrentLevel-1 }, datatype: "json"}).done( 
-			function( data ) {$("#dialogCompareRight").html("<h3>"+data.first_name +"\'s Solution:</h3><a id=\"addPattern\" title=\"Click to save in your Patterns Drawer\" href=# onclick=\"addToPatterns("+data.id+");return false;\">Save in Patterns</a><textarea style=\"width: 100%; height: 4in\">"+unescape(data.content)+"</textarea>" + 
-
-           "<p>And now for some other fun stuff: <ul><li>" + 
-                  "Gender: "+ data.gender + "</li><li>" +
-                  "Age range: " + data.age    + "</li></ul></p>")}
-		);
-
-		$("#dialogCompareLeft").html("<h3>Your Solution:</h3><a id=\"addMyPattern\" title=\"Click to save in your Patterns Drawer\" href=# onclick=\"addToPatterns(0);return false;\">Save in Patterns</a><textarea style=\"width: 100%; height: 4in\">"+csMySolution+"</textarea>");
-		$("#dialogCOMPARE").dialog( "open" );
-	   }
+	     csPresentAlternateSolution();
+           }
 	   break;
 	case 1:
 	   //$("#opener12").prop('disabled', false);
 	   $("#opener12").button("enable");
 	   $("#opener12").click();
-	   if( $("#current_user" ).length > 0) {
-                $("#dialogCOMPARE").dialog( "open" );
+           if( $("#current_user" ).length > 0) {
+             csPresentAlternateSolution();
            }
            break;
 	case 2:
 	   $("#opener13").button("enable");
 	   $("#opener13").click();
 	   if( $("#current_user" ).length > 0) {
-                $("#dialogCOMPARE").dialog( "open" );
+             csPresentAlternateSolution();
            }
            break;
         case 3:
            $("#opener14").button("enable");
            $("#opener14").click();
+           if( $("#current_user" ).length > 0) {
+             csPresentAlternateSolution();
+           }
            break;
 	case 4:
 	   $("#opener15").button("enable");
 	   $("#opener15").click();
-	   break;
+	   if( $("#current_user" ).length > 0) {
+             csPresentAlternateSolution();
+           }
+           break;
 	case 5:
 	   $("#opener20").button("enable");
 	   $("#opener20").click();
-	   break;
+	   if( $("#current_user" ).length > 0) {
+             csPresentAlternateSolution();
+           }
+           break;
 	case 6:
 	   $("#opener21").button("enable");
 	   $("#opener21").click();
-	   break;
+	   if( $("#current_user" ).length > 0) {
+             csPresentAlternateSolution();
+           }
+           break;
 	case 7:
 	   $("#opener22").button("enable");
 	   $("#opener22").click();
-	   break;
+	   if( $("#current_user" ).length > 0) {
+             csPresentAlternateSolution();
+           }
+           break;
 	case 8:
 	   $("#opener23").button("enable");
 	   $("#opener23").click();
-	   break;
+	   if( $("#current_user" ).length > 0) {
+             csPresentAlternateSolution();
+           }
+           break;
 	case 9:
 	   $("#opener24").button("enable");
            $("#opener24").click();
-	   break;
+	   if( $("#current_user" ).length > 0) {
+             csPresentAlternateSolution();
+           }
+           break;
 	case 10:
 	   //congratulate user on winning the game?
 	   $( "#dialogEND" ).dialog( "open" );
@@ -759,6 +785,24 @@ var getCurrentLevelButton = function(levelIndex) {
       width: 1000,
       height: 700,
     });
+    $( "#dialogPATTERNS" ).dialog({
+      autoOpen: false,
+      show: {
+        effect: "blind",
+        duration: 1000
+      },
+      hide: {
+        effect: "explode",
+        duration: 1000
+      },
+          buttons: [ {
+                text: "Okay",
+                click: function() { $(this).dialog("close");}
+           }
+          ],
+      width: 1000,
+    });
+
 
     $( ".csDiaBtn" ).button();
     for (btnIndex=0; btnIndex <= getCookie("csLvl"); btnIndex++) {
@@ -835,11 +879,14 @@ var getCurrentLevelButton = function(levelIndex) {
 	    var newPatternRow = document.createElement("tr");
             var newPatternName = document.createElement("td");
             var newPatternContent = document.createElement("td");
+	    var newTextarea = document.createElement("textarea");
+            newTextarea.setAttribute("style", "width: 100%;");
 
             var csNode = document.createTextNode("User: " +data[index].user_id + ", Level: "+data[index].level);
             newPatternName.appendChild(csNode);
             csNode = document.createTextNode(unescape(data[index].content));
-            newPatternContent.appendChild(csNode);
+            newPatternContent.appendChild(newTextarea);
+	    newTextarea.appendChild(csNode);
             //var stitchnode = document.createElement("img");
         //stitchnode.setAttribute("src", "//public/images/stitch_semitrans.png");
 	    newPatternRow.appendChild(newPatternName);
@@ -855,6 +902,12 @@ var getCurrentLevelButton = function(levelIndex) {
     $( "#openerSBX" ).click(function() {
       $( "#csLevelGoal").html("<p>Sandbox - open play<br/> What will <b>you</b> make?</p>");
       csCurrentLevel = 999;
+
+      if( $("#current_user" ).length > 0) {
+	// First save this solution under the User's ID...
+	// Second, add a pattern link to the solution just saved.
+        $( "#csLevelGoal").html("<p>Sandbox - open play<br/> What will <b>you</b> make?</p><a id=\"addSBXPattern\" title=\"Click to save in your Patterns Drawer\" href=# onclick=\"addToPatterns(0);return false;\">Save in Patterns</a>");
+      }
     });
 
     $('#noIndColor').colorpicker({
@@ -966,7 +1019,7 @@ textarea {font-family:Lucida console}
   </table>
 </div>
 
-<div class="csDialog" id="dialogPATTERNS" title="Your Patterns Drawer">
+<div class="csDialog" id="dialogPATTERNS" title="Your Patterns Drawer" style="width: 800;">
   <p>These are solutions you've saved for later use. Copy pieces into your next projects and learn from other peoples' solutions!</p>
   <table id="patternsTable" style="width: 100%">
     <tr>
