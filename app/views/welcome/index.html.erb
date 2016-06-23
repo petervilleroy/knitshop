@@ -251,11 +251,11 @@ function drawQueue() {
 		           csAdvanceLevel();
 		        }
 		        if(!lvlCompleted) {
-
+                          if( $('#current_user').length > 0 ) {
 			   //Save the attempt for future reference
 			   var solutionString = escape(document.getElementById("JSprogram").value);
 			   $.ajax("/attempts", {type: "POST", async: true, data: {content: solutionString, level: csCurrentLevel }})
-
+                          }
 		           // output something in the hint field
 			   $( "#dialogFail" ).dialog( "open" ); 
 			   var ran = Math.random();
@@ -365,9 +365,11 @@ JSrun = function() {
         }
     } catch(e) {
         str = e.name+" at line "+(e.lineNumber-56)+": "+e.message;
-        //AJAX call to insert failed attempt
-	var solutionString = escape(document.getElementById("JSprogram").value);
-        $.ajax("/attempts", {type: "POST", async: true, data: {content: solutionString, level: csCurrentLevel }})
+        if( $("#current_user" ).length > 0) {
+          //AJAX call to insert failed attempt
+	  var solutionString = escape(document.getElementById("JSprogram").value);
+          $.ajax("/attempts", {type: "POST", async: true, data: {content: solutionString, level: csCurrentLevel }})
+        }
 
     }
     //var tnode = document.getElementById("JStiming");
