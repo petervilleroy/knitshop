@@ -37,6 +37,13 @@
   <strong>Locked:</strong>
   <%= @user.locked %>
 </p>
-
+  <div class="solutions">
+    <% if @user.solutions.any? %>
+      <h3>Solutions (<%= @user.solutions.count %>)</h3>
+      <ol class="microposts">
+        <%= render @solutions %>
+      </ol>
+    <% end %>
+  </div>
 <%= link_to 'Edit', edit_user_path(@user) %> |
 <%= link_to 'Back', users_path %>

@@ -37,6 +37,8 @@ var knitspeed = 200;
 var csCurrentLevel = 0;
 var csLevelsCompleted = [];
 var csLevels = [1.0,1.1];
+var csMySolution = "";
+var csHerSolution = "";
 var csSnarkyRemarks = ["This is nice, but it's not what I ordered.",
 	"Yuck, that looks like a baby knitted it, and then a dog ate it!",
 	"This would be fine, if I had asked for something completely different.",
@@ -238,9 +240,22 @@ function drawQueue() {
 			//we've completed drawing the whole queue, now test for level completion
                         var lvlCompleted = csTestLevelCompleted();
 		        if(lvlCompleted) {
+			   if( $('#current_user').length > 0 ) {
+				//save the solution under this user's collection of solutions
+				var solutionString = escape(document.getElementById("JSprogram").value);
+				var csrfToken = $('#csrf-token').val();
+		           //we're going to do this the AJAX way so our game
+			   //remains a single-page application.
+				$.ajax("/solutions", {type: "POST", async: true, data: {content: solutionString, level: csCurrentLevel }})
+			   }
 		           csAdvanceLevel();
 		        }
 		        if(!lvlCompleted) {
+                          if( $('#current_user').length > 0 ) {
+			   //Save the attempt for future reference
+			   var solutionString = escape(document.getElementById("JSprogram").value);
+			   $.ajax("/attempts", {type: "POST", async: true, data: {content: solutionString, level: csCurrentLevel }})
+                          }
 		           // output something in the hint field
 			   $( "#dialogFail" ).dialog( "open" ); 
 			   var ran = Math.random();
@@ -350,6 +365,12 @@ JSrun = function() {
         }
     } catch(e) {
         str = e.name+" at line "+(e.lineNumber-56)+": "+e.message;
+        if( $("#current_user" ).length > 0) {
+          //AJAX call to insert failed attempt
+	  var solutionString = escape(document.getElementById("JSprogram").value);
+          $.ajax("/attempts", {type: "POST", async: true, data: {content: solutionString, level: csCurrentLevel }})
+        }
+
     }
     //var tnode = document.getElementById("JStiming");
     //tnode.innerHTML = ""+(new Date().getTime()-d)/1000;
@@ -579,6 +600,28 @@ csTestLevelCompleted = function() {
    }
    return false;
 }
+
+addToPatterns = function(sol_id) {
+	$.ajax({url: "/patterns", async: true, type: "POST", data: {solution_id: sol_id}});
+ };
+saveSolution = function(level_number) {
+        var solutionString = escape(document.getElementById("JSprogram").value);
+        $.ajax("/solutions", {type: "POST", async: true, data: {content: solutionString, level: level_number }})
+
+};
+csPresentAlternateSolution = function() {
+                //AJAX call to retrieve compare solution
+                //Note that calling /solutions will return an html formatted
+                //representation of the solution, but calling /solutions.json
+                //will return an object of type Solution.
+                $.ajax({url: "/solutions.json", async: true, data: {level: csCurrentLevel-1 }, datatype: "json"}).done( 
+                        function( data ) {$("#dialogCompareRight").html("<h3>"+data.first_name +"\'s Solution:</h3><a id=\"addPattern\" title=\"Click to save in your Patterns Drawer\" href=# onclick=\"addToPatterns("+data.id+");return false;\">Save in Patterns</a><textarea style=\"width: 100%; height: 4in\">"+unescape(data.content)+"</textarea>")}
+                );
+
+                $("#dialogCompareLeft").html("<h3>Your Solution:</h3><a id=\"addMyPattern\" title=\"Click to save in your Patterns Drawer\" href=# onclick=\"addToPatterns(0);return false;\">Save in Patterns</a><textarea style=\"width: 100%; height: 4in\">"+csMySolution+"</textarea>");
+                $("#dialogCOMPARE").dialog( "open" );
+
+}
 csAdvanceLevel = function() {
    // move current level to the next one given a list of all levels
    csLevelsCompleted[csLevelsCompleted.length] = csLevels[csCurrentLevel];
@@ -588,46 +631,78 @@ csAdvanceLevel = function() {
    switch (csCurrentLevel) {
 	case 0:
 	   //$("#opener11").prop('disabled', false);
+	   csMySolution = document.getElementById("JSprogram").value;
+	   //csHerSolution = "";
 	   $("#opener11").button("enable");
 	   $("#opener11").click();
+           if( $("#current_user" ).length > 0) {
+	     csPresentAlternateSolution();
+           }
 	   break;
 	case 1:
 	   //$("#opener12").prop('disabled', false);
 	   $("#opener12").button("enable");
 	   $("#opener12").click();
-	   break;
+           if( $("#current_user" ).length > 0) {
+             csPresentAlternateSolution();
+           }
+           break;
 	case 2:
 	   $("#opener13").button("enable");
 	   $("#opener13").click();
-	   break;
+	   if( $("#current_user" ).length > 0) {
+             csPresentAlternateSolution();
+           }
+           break;
         case 3:
            $("#opener14").button("enable");
            $("#opener14").click();
+           if( $("#current_user" ).length > 0) {
+             csPresentAlternateSolution();
+           }
            break;
 	case 4:
 	   $("#opener15").button("enable");
 	   $("#opener15").click();
-	   break;
+	   if( $("#current_user" ).length > 0) {
+             csPresentAlternateSolution();
+           }
+           break;
 	case 5:
 	   $("#opener20").button("enable");
 	   $("#opener20").click();
-	   break;
+	   if( $("#current_user" ).length > 0) {
+             csPresentAlternateSolution();
+           }
+           break;
 	case 6:
 	   $("#opener21").button("enable");
 	   $("#opener21").click();
-	   break;
+	   if( $("#current_user" ).length > 0) {
+             csPresentAlternateSolution();
+           }
+           break;
 	case 7:
 	   $("#opener22").button("enable");
 	   $("#opener22").click();
-	   break;
+	   if( $("#current_user" ).length > 0) {
+             csPresentAlternateSolution();
+           }
+           break;
 	case 8:
 	   $("#opener23").button("enable");
 	   $("#opener23").click();
-	   break;
+	   if( $("#current_user" ).length > 0) {
+             csPresentAlternateSolution();
+           }
+           break;
 	case 9:
 	   $("#opener24").button("enable");
            $("#opener24").click();
-	   break;
+	   if( $("#current_user" ).length > 0) {
+             csPresentAlternateSolution();
+           }
+           break;
 	case 10:
 	   //congratulate user on winning the game?
 	   $( "#dialogEND" ).dialog( "open" );
@@ -692,6 +767,43 @@ var getCurrentLevelButton = function(levelIndex) {
 	  ],
       width: 500,
     });
+    $( "#dialogCOMPARE" ).dialog({
+      autoOpen: false,
+      show: {
+        effect: "blind",
+        duration: 1000
+      },
+      hide: {
+        effect: "explode",
+        duration: 1000
+      },
+          buttons: [ {
+                text: "Okay",
+                click: function() { $(this).dialog("close");}
+           }
+          ],
+      width: 1000,
+      height: 700,
+    });
+    $( "#dialogPATTERNS" ).dialog({
+      autoOpen: false,
+      show: {
+        effect: "blind",
+        duration: 1000
+      },
+      hide: {
+        effect: "explode",
+        duration: 1000
+      },
+          buttons: [ {
+                text: "Okay",
+                click: function() { $(this).dialog("close");}
+           }
+          ],
+      width: 1000,
+    });
+
+
     $( ".csDiaBtn" ).button();
     for (btnIndex=0; btnIndex <= getCookie("csLvl"); btnIndex++) {
 	enablebutton = getCurrentLevelButton(btnIndex);
@@ -757,11 +869,45 @@ var getCurrentLevelButton = function(levelIndex) {
       csCurrentLevel = 10;
       $( "#dialog24" ).dialog( "open" );
     });
+    $( "#csKnitPatterns" ).on('click', function() {
+      //Fill the patternsTable with content via AJAX query
+      $.ajax({url: "/patterns.json", async: true, datatype: "json"}).done( 
+	function(data) {
+          //for each pattern in data, make a table row showing user and content
+ 	 if(data.length > 0) { $( "#patternsTable").html(""); }
+         $.each(data,  function(index) {
+	    var newPatternRow = document.createElement("tr");
+            var newPatternName = document.createElement("td");
+            var newPatternContent = document.createElement("td");
+	    var newTextarea = document.createElement("textarea");
+            newTextarea.setAttribute("style", "width: 100%;");
 
+            var csNode = document.createTextNode("User: " +data[index].user_id + ", Level: "+data[index].level);
+            newPatternName.appendChild(csNode);
+            csNode = document.createTextNode(unescape(data[index].content));
+            newPatternContent.appendChild(newTextarea);
+	    newTextarea.appendChild(csNode);
+            //var stitchnode = document.createElement("img");
+        //stitchnode.setAttribute("src", "//public/images/stitch_semitrans.png");
+	    newPatternRow.appendChild(newPatternName);
+	    newPatternRow.appendChild(newPatternContent);
+	    $( "#patternsTable" ).append(newPatternRow);
+	 });
+
+        }
+      ); //end of ajax call. 
+      $( "#dialogPATTERNS" ).dialog( "open" );
+    });
     
     $( "#openerSBX" ).click(function() {
       $( "#csLevelGoal").html("<p>Sandbox - open play<br/> What will <b>you</b> make?</p>");
       csCurrentLevel = 999;
+
+      if( $("#current_user" ).length > 0) {
+	// First save this solution under the User's ID...
+	// Second, add a pattern link to the solution just saved.
+        $( "#csLevelGoal").html("<p>Sandbox - open play<br/> What will <b>you</b> make?</p><a id=\"addSBXPattern\" title=\"Click to save in your Patterns Drawer\" href=# onclick=\"addToPatterns(0);return false;\">Save in Patterns</a>");
+      }
     });
 
     $('#noIndColor').colorpicker({
@@ -780,9 +926,6 @@ textarea {font-family:Lucida console}
 </style>
 </head>
 <body onload="JSrun()"><!-- onpaste="return false;"-->
-<h1>
-  <a href="http://playcodestitch.com">CodeStitch</a>
-</h1>
 <div class="csDialog" id="dialog10" title="Level 1.0: Your Very Own Knitting Shop" style="width:400">
   <p>Congratulations on founding your very own knitting shop. You've got a store all set up with a knitting robot to make scarves, sweaters, socks, and anything else you can think of: you just need to learn to program the robot! </p>
 <p>We'll start with the basics, and before you know it your knitting shop will be open for business. First things first, let's learn how to make a single stitch in a color of your choice. The way codeStitch works is that you type in commands and hit the go button, then the robot will create a product given the commands you provide. Each knit stitch will look something like this:</p>
@@ -866,6 +1009,26 @@ textarea {font-family:Lucida console}
   <p>Hint: Each line in Roberta's scarf will need a blue stitch followed by some white stitches, and the number of blue stitches will be bigger in each line (and the number of white stitches will be smaller). See if you can do it once without reading the hint, and show Roberta that you've mastered the use of variables!</p>
 </div>
 
+<div class="csDialog" id="dialogCOMPARE" title="That's Right!">
+  <p>You did it!<br/> Your code did the trick. Now before moving on, be sure to compare your solution (left) with the solution of another player (right). Remember there's no right or wrong, but seeing other people's work could help inspire you!</p>
+  <table style="width: 100%">
+    <tr>
+	<td><div id="dialogCompareLeft" width="100%"></div></td>
+	<td><div id="dialogCompareRight" width="100%"></div></td>
+    </tr>
+  </table>
+</div>
+
+<div class="csDialog" id="dialogPATTERNS" title="Your Patterns Drawer" style="width: 800;">
+  <p>These are solutions you've saved for later use. Copy pieces into your next projects and learn from other peoples' solutions!</p>
+  <table id="patternsTable" style="width: 100%">
+    <tr>
+        <td><div>You haven't saved any solutions here yet.</div></td>
+    </tr>
+  </table>
+</div>
+
+
 <div class="csDialog" id="dialogEND" title="CONGRATULATIONS!">
   <p>You have completed all levels!!!<br/> Continue free play in the sandbox level, and check back in soon because we add levels and new features all the time.</p>
 </div>
@@ -919,7 +1082,7 @@ Goal
 
 <td rowspan=1 style="width:20%; background:white;">
 <img src="<%= asset_path('knitpatterns.png'); %>" id="csKnitPatterns" >
-<div class="csKnitPatterns">(Coming Soon: save your favorite solutions and compare with others)</div>
+<div class="csKnitPatterns">(Click the image to see the solutions you've saved and reuse them)</div>
 </td>
 </tr>
 
@@ -1300,6 +1463,5 @@ knitWholeLine("white");
 April 2016, at 
 <a href="http://tc.columbia.edu/">Teachers College, Columbia University</a>
 </div>
-
 </body>
 </html>

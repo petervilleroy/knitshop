@@ -8,7 +8,36 @@
 </head>
 <body>
 
+<div class="csHeaderTable" width="100%" >
+<h1>
+  <a href="http://playcodestitch.com">CodeStitch</a>
+</h1>
+ <span align="right" style="background: none; vertical-align: top;">
+ <div id="user_header">
+  <% if current_user %>
+    Welcome, <%= current_user.first_name %>.
+    <%= link_to "Account", edit_user_path(current_user) %>
+    <%= link_to "Log Out", logout_path %>
+    <span id="current_user" style="display:none"><%= current_user.first_name %>
+    </span>
+  <% else %>
+    <%= link_to "Sign Up", signup_path %> or
+    <%= link_to "Log In", login_path %>
+  <% end %>
+ </div>
+
+ <% flash.each do |key, value| %>
+  <%= content_tag(:div, class: "alert alert-#{key}") do %>
+    <p><%= value %></p>
+  <% end %>
+ <% end %>
+ </span>
+</div>
+
 <%= yield %>
+<div id="DEBUG">
+<%= debug(params) if Rails.env.development? %>
+</div>
 
 </body>
 </html>
