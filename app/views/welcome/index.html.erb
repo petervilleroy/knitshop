@@ -709,6 +709,9 @@ csAdvanceLevel = function() {
 	case 10:
 	   //congratulate user on winning the game?
 	   $( "#dialogEND" ).dialog( "open" );
+           if( $("#current_user" ).length > 0) {
+             csPresentAlternateSolution();
+           }
 	   break;
 	
 	//Sandbox Level
