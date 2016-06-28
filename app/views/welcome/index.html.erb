@@ -614,6 +614,9 @@ csPresentAlternateSolution = function() {
                 //Note that calling /solutions will return an html formatted
                 //representation of the solution, but calling /solutions.json
                 //will return an object of type Solution.
+
+		csMySolution = document.getElementById("JSprogram").value;
+
                 $.ajax({url: "/solutions.json", async: true, data: {level: csCurrentLevel-1 }, datatype: "json"}).done( 
                         function( data ) {$("#dialogCompareRight").html("<h3>"+data.first_name +"\'s Solution:</h3><a id=\"addPattern\" title=\"Click to save in your Patterns Drawer\" href=# onclick=\"addToPatterns("+data.id+");return false;\">Save in Patterns</a><textarea style=\"width: 100%; height: 4in\">"+unescape(data.content)+"</textarea>")}
                 );
