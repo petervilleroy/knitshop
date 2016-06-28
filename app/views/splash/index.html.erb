@@ -6,10 +6,10 @@
       <input type="radio" class="goplayinput" id="radio2" name="gender" value="m"><label class="goplaylabel" for="radio2">Male</label>
     </div>
     <div id="agebuttonset">
-      <input type="radio" class="goplayinput" id="radio3" name="age" value="3"><label class="goplaylabel" for="radio3">Under 10</label>
-      <input type="radio" class="goplayinput" id="radio4" name="age" value="4"><label class="goplaylabel" for="radio4">10-13</label>
-      <input type="radio" class="goplayinput" id="radio5" name="age" value="5"><label class="goplaylabel" for="radio5">14-18</label>
-      <input type="radio" class="goplayinput" id="radio6" name="age" value="6"><label class="goplaylabel" for="radio6">Over 18</label>
+      <input type="radio" class="goplayinput" id="radio3" name="age" value="0"><label class="goplaylabel" for="radio3">Under 10</label>
+      <input type="radio" class="goplayinput" id="radio4" name="age" value="1"><label class="goplaylabel" for="radio4">10-13</label>
+      <input type="radio" class="goplayinput" id="radio5" name="age" value="2"><label class="goplaylabel" for="radio5">14-18</label>
+      <input type="radio" class="goplayinput" id="radio6" name="age" value="3"><label class="goplaylabel" for="radio6">Over 18</label>
     </div> 
     <br/>
     <input class="goplaybtn" type="submit" disabled="true" value="Play Now" />
@@ -19,7 +19,6 @@
 
 <script>
   $(function() {
-	//TODO: the above button is set to 'get', but consider using 'post' in order to save form values.
 	$( "#genderbuttonset" ).buttonset();
 	$( "#agebuttonset" ).buttonset();
 	$( ".goplaybtn" ).button();
@@ -44,4 +43,21 @@
 	
 });
 
+  $(document).ready(function(){
+        if( $('#current_user').length > 0 ) {
+           var csGender = $('#current_user_gender').text();
+           if(csGender == 'f') { $( "#radio1" ).click();}
+           if(csGender == 'm') { $( "#radio2" ).click();}
+	   var csAgeGroup = $('#current_user_age').text();
+           if(csAgeGroup == '0') { $( "#radio3" ).click();}
+           if(csAgeGroup == '1') { $( "#radio4" ).click(); }
+           if(csAgeGroup == '2') { $( "#radio5" ).click();}
+           if(csAgeGroup == '3') { $( "#radio6" ).click(); }
+
+        }
+	var genderChecked = ($('input[name=gender]:checked').size() > 0);
+        var ageChecked = ($('input[name=age]:checked').size() > 0);
+
+	if( genderChecked && ageChecked) $( ".goplaybtn").button("enable");
+});
 </script>

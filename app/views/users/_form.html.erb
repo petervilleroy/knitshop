@@ -33,12 +33,18 @@
   </div>
   <div class="field">
     <%= f.label :age %><br>
-    <%= f.text_field :age %>
-  </div>
+    <%= f.radio_button( :age, "0") %>Under 10  |
+    <%= f.radio_button( :age, "1") %>10-13  |
+    <%= f.radio_button( :age, "2") %>14-18  |
+    <%= f.radio_button( :age, "3") %>Over 18  
+    <br>
+</div>
   <div class="field">
     <%= f.label :gender %><br>
-    <%= f.text_field :gender %>
-  </div>
+    <%= f.radio_button( :gender, "f") %>Female  |
+    <%= f.radio_button( :gender, "m") %>Male
+    <br> 
+</div>
   <div class="field">
     <%= f.label :currentLevel %><br>
     <%= f.text_field :currentLevel %>
@@ -54,4 +60,5 @@
   <div class="actions">
     <%= f.submit %>
   </div>
+
 <% end %>
