@@ -377,7 +377,7 @@ JSrun = function() {
     if (str != undefined) {outnode.value += str;}
 }
 csTestLevelCompleted = function() {
-   //TODO: think of a clever, visual-based test for level completion.
+   //A clever, visual-based test for level completion.
    /*
    Begin brainstorming rant. each row is a div class=csRow, so counting
    rows is a good start. $(".csRow").length will count them up, and
@@ -639,7 +639,7 @@ csAdvanceLevel = function() {
 	   $("#opener11").button("enable");
 	   $("#opener11").click();
            if( $("#current_user" ).length > 0) {
-	     csPresentAlternateSolution();
+	     //csPresentAlternateSolution();
            }
 	   break;
 	case 1:
@@ -647,14 +647,14 @@ csAdvanceLevel = function() {
 	   $("#opener12").button("enable");
 	   $("#opener12").click();
            if( $("#current_user" ).length > 0) {
-             csPresentAlternateSolution();
+             //csPresentAlternateSolution();
            }
            break;
 	case 2:
 	   $("#opener13").button("enable");
 	   $("#opener13").click();
 	   if( $("#current_user" ).length > 0) {
-             csPresentAlternateSolution();
+             //csPresentAlternateSolution();
            }
            break;
         case 3:
@@ -735,9 +735,12 @@ keyUp = function(event){
 //General TODO's
 - Look up the pixel width on an ipad in portrait mode and make the <tr> containing the code and output
   add up to that width. No messing with percentages, make this explicit.
-- must implement game flow and level logic.
+X must implement game flow and level logic.
 - come up with at least 12 levels of incremental difficulty.
-- find some way to animate the knitting instead of immediately showing the result.
+X find some way to animate the knitting instead of immediately showing the result.
+- Show user name instead of user ID in the patterns box next to saved solutions.
+- Show thumbnail images of patterns next to their code in the patterns box.
+
 */
 
 var getCurrentLevelButton = function(levelIndex) {
