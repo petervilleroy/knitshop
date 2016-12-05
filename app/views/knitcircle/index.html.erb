@@ -27,6 +27,7 @@ var KnitShopStitchHeight=18;
 var KnitShopStitchWidth=30;
 var stitches = [];
 var alreadyDrawing;
+var KnitShopXPosition,KnitShopYPosition;
 var ksr,ksg,ksb;
 var ksColor;
 var knitspeed = 200;
@@ -188,13 +189,25 @@ function drawQueue() {
 		}
 		setTimeout(drawStitches, knitspeed);
 	},knitspeed); //end of first setTimeout call
+  var c = document.getElementById("html5canvas");
+  var tmppng = c.toDataURL('image/png');
+  var tmpimage = document.getElementById("thumbnail");
+  tmpimage.setAttribute("src",tmppng);
 }
 function draw(rgb) {
     //var ctx=document.getElementById("canvas").getContext('2d'); 
     //ctx.fillStyle = 'rgba('+ksr+','+ksg+','+ksb+',1)';
     //window.requestAnimationFrame(draw);
-	
-	var easel = document.getElementById("canvas").lastChild;
+	var c = document.getElementById("html5canvas");
+  var ctx = c.getContext("2d");
+  var img = document.getElementById("stitchpng");
+  //ctx.moveTo(KnitShopXPosition,KnitShopYPosition);
+  ctx.fillStyle=rgb;
+  ctx.fillRect(KnitShopXPosition,KnitShopYPosition,KnitShopStitchWidth,KnitShopStitchHeight)
+  ctx.drawImage(img,KnitShopXPosition,KnitShopYPosition,KnitShopStitchWidth,KnitShopStitchHeight);
+  KnitShopXPosition+=KnitShopStitchWidth;
+
+	/*var easel = document.getElementById("canvas").lastChild.lastChild;
 	//at this point, easel is the last div under canvas.
 	var stitchnode = document.createElement("img");
 	//stitchnode.setAttribute("src", "//public/images/stitch_semitrans.png");
@@ -204,21 +217,24 @@ function draw(rgb) {
 	//stitchnode.setAttribute("height", "23");
 	//stitchnode.setAttribute("width","38");
 	easel.appendChild(stitchnode);
-	
+	*/
 	//desired resulting node: <img src="stitch.jpg" height="40" width="40" />
 }
 function drawNewRow() {
-	var canvas = document.getElementById("canvas");
+	/*var canvas = document.getElementById("canvas");
 	var node = document.createElement("div");
 	node.setAttribute("class","csRow");
-	canvas.appendChild(node);
+	canvas.appendChild(node); */
+  KnitShopXPosition=0;
+  KnitShopYPosition += KnitShopStitchHeight;
 }
 function drawBlankStitch() {
-	var easel = document.getElementById("canvas").lastChild;
+	KnitShopXPosition += KnitShopStitchWidth;
+  /*var easel = document.getElementById("canvas").lastChild;
 	var stitchnode = document.createElement("img");
 	stitchnode.setAttribute("src", " <%= asset_path('stitch_blank.png')  %> ");
 	stitchnode.setAttribute("style", "vertical-align:top; width:"+KnitShopStitchWidth+"px; height:"+KnitShopStitchHeight+"px;");
-	easel.appendChild(stitchnode);
+	easel.appendChild(stitchnode); */
 }
 
 
@@ -235,10 +251,10 @@ KSWait = function(KnitShopms){
 }
 //TODO: define the size of the canvas, or query it, and add as numbers below
 clearCanvas = function() {
-    //var ctx=document.getElementById("canvas").getContext('2d');
-    //ctx.clearRect(0,0,500,700);
-	var canvas = document.getElementById("canvas");
-	canvas.innerHTML = "<img class='csKnittingNeedle' src='<%= asset_path('woodknitneedle.png') %>' style='width:100%'><div class='csRow'></div>";
+  KnitShopXPosition = 0;
+  KnitShopYPosition = 0;
+  //var canvas = document.getElementById("canvas");
+	//canvas.innerHTML = "<img class='csKnittingNeedle' src='<%= asset_path('woodknitneedle.png') %>' style='width:100%'><div class='csRow'></div>";
 }
 JSrun = function() {
     //Easter Egg
@@ -503,8 +519,10 @@ Goal
 <div id="canvas" width="500" height="700" data-url="<%= asset_path('stitch_semitrans.png') %>">
   BIG TO-DO: make this div element a CANVAS a-la HTML5
   <img class="csKnittingNeedle" src="<%= asset_path('woodknitneedle.png') %>" style="width:100%">
-  <div class="csRow">
-  </div>
+  <canvas id="html5canvas" width="500" height="600">
+    <div class="csRow">
+    </div>
+  </canvas>
 </div>
 </td>
 
@@ -582,7 +600,8 @@ Goal
 </td>
 </tr>
 </table>
-
+<img src= "<%= asset_path('stitch_semitrans.png')  %>" id="stitchpng" hidden="true">
+<img id="thumbnail" src= "<%= asset_path('stitch_semitrans.png')  %>" >
 
 <div>Color picker for quick Hex Code lookup: </br><input id="noIndColor"></input></div>
 
