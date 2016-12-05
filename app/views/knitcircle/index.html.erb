@@ -189,10 +189,7 @@ function drawQueue() {
 		}
 		setTimeout(drawStitches, knitspeed);
 	},knitspeed); //end of first setTimeout call
-  var c = document.getElementById("html5canvas");
-  var tmppng = c.toDataURL('image/png');
-  var tmpimage = document.getElementById("thumbnail");
-  tmpimage.setAttribute("src",tmppng);
+  
 }
 function draw(rgb) {
     //var ctx=document.getElementById("canvas").getContext('2d'); 
@@ -207,6 +204,9 @@ function draw(rgb) {
   ctx.drawImage(img,KnitShopXPosition,KnitShopYPosition,KnitShopStitchWidth,KnitShopStitchHeight);
   KnitShopXPosition+=KnitShopStitchWidth;
 
+  var tmppng = c.toDataURL('png');
+  var tmpimage = document.getElementById("thumbnail");
+  tmpimage.setAttribute("src",tmppng);
 	/*var easel = document.getElementById("canvas").lastChild.lastChild;
 	//at this point, easel is the last div under canvas.
 	var stitchnode = document.createElement("img");
