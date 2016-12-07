@@ -65,6 +65,7 @@ var csCurrentLevel = 0;
 var csLevelsCompleted = [];
 var csMySolution = "";
 var csHerSolution = "";
+var kcThumbnail;
 
 JSoutput = function(a) {
     var str = "["
@@ -233,9 +234,13 @@ function draw(rgb) {
     ctx.drawImage(img,KnitShopXPosition,KnitShopYPosition,KnitShopStitchWidth,KnitShopStitchHeight);
     KnitShopXPosition+=KnitShopStitchWidth;
 
+    /*
+    // DEBUG: constantly write out a png version of the canvas.
     var tmppng = c.toDataURL('png');
     var tmpimage = document.getElementById("thumbnail");
-    tmpimage.setAttribute("src",tmppng);
+    tmpimage.setAttribute("src",tmppng);*/
+
+    //cropImageFromCanvas(ctx, c);
 	
 }
 function drawNewRow() {
@@ -445,6 +450,7 @@ var getCurrentLevelButton = function(levelIndex) {
 	$( enablebutton).button("enable");
 	csCurrentLevel = btnIndex;
     }
+    $( ".kcSaveThumbnail" ).button();
     
     $( "#radioset" ).buttonset();
     $( "#knitnowbutton" ).button();
@@ -490,6 +496,13 @@ var getCurrentLevelButton = function(levelIndex) {
         $( "#csLevelGoal").html("<p>Sandbox - open play<br/> What will <b>you</b> make?</p><a id=\"addSBXPattern\" title=\"Click to save in your Patterns Drawer\" href=# onclick=\"addToPatterns(0);return false;\">Save in Patterns</a>");
       }
     });
+    $( "#kcSave" ).click(function() {
+        var c = document.getElementById("html5canvas");
+        var ctx = c.getContext("2d");
+        cropImageFromCanvas(ctx, c);
+        alert("Saved to your patterns box.");
+        
+    });
 
     $('#noIndColor').colorpicker({
 	displayIndicator: false,
@@ -498,3 +511,47 @@ var getCurrentLevelButton = function(levelIndex) {
     });
     $( enablebutton ).click();
   });
+
+function cropImageFromCanvas(ctx, canvas) {
+    var origCanvasWidth = canvas.width;
+    var origCanvasHeight = canvas.height;
+    var w = canvas.width,
+    h = canvas.height,
+    pix = {x:[], y:[]},
+    imageData = ctx.getImageData(0,0,canvas.width,canvas.height),
+    x, y, index;
+
+    for (y = 0; y < h; y++) {
+        for (x = 0; x < w; x++) {
+            index = (y * w + x) * 4;
+            if (imageData.data[index+3] > 0) {
+
+                pix.x.push(x);
+                pix.y.push(y);
+
+            }   
+        }
+    }
+    pix.x.sort(function(a,b){return a-b});
+    pix.y.sort(function(a,b){return a-b});
+    var n = pix.x.length-1;
+
+    w = pix.x[n] - pix.x[0];
+    h = pix.y[n] - pix.y[0];
+    var cut = ctx.getImageData(pix.x[0], pix.y[0], w, h);
+
+    canvas.width = w;
+    canvas.height = h;
+    ctx.putImageData(cut, 0, 0);
+
+    kcThumbnail = canvas.toDataURL();
+    //return canvas size to what it was before
+    canvas.width = origCanvasWidth;
+    canvas.height = origCanvasHeight;
+    ctx.putImageData(cut, 0, 0);
+
+    //Do something with this cropped thumbnail
+    var tmpimage = document.getElementById("thumbnail");
+    tmpimage.setAttribute("src",kcThumbnail);
+
+};
