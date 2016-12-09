@@ -24,7 +24,8 @@
 <td rowspan=3 style="width:10%; background:none;">Level Selection
 <br/>
 <button class="csDiaBtn" id="openerSBX"><img src="<%= asset_path('sandbox.png'); %>"></button>
-<button class="kcSaveThumbnail" id="kcSave">SAVE</button>
+<button class="kcSaveThumbnail" id="kcSave">SAVE for later</button>
+<button class="kcPublish" id="kcPublish">Share to Community</button>
 </td>
 
 <td rowspan=3 style="height:4in; width:50%; padding:1px">
@@ -34,7 +35,6 @@ Goal
 <br/>
 <hr/>
 <div id="canvas" width="500" height="700" data-url="<%= asset_path('stitch_semitrans.png') %>">
-  BIG TO-DO: make this div element a CANVAS a-la HTML5
   <img class="csKnittingNeedle" src="<%= asset_path('woodknitneedle.png') %>" style="width:100%">
   <canvas id="html5canvas" width="500" height="700">
     <div class="csRow">
@@ -56,6 +56,7 @@ Goal
 <td rowspan=1 style="width:20%; background:white;">
 <img src="<%= asset_path('knitpatterns.png'); %>" id="csKnitPatterns" >
 <div class="csKnitPatterns">(Click the image to see the solutions you've saved and reuse them)</div>
+<div class="csKnitPatterns"><br><hr><a href="/knitcircle/community">Click here to visit the community and see shared artifacts.</a></div>
 </td>
 </tr>
 

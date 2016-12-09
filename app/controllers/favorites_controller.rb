@@ -1,5 +1,5 @@
 class FavoritesController < ApplicationController
-def new
+  def new
     @favorite = Favorite.new
   end
 

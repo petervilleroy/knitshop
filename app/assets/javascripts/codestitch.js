@@ -19,11 +19,30 @@ function setCookie(cname, cvalue, exdays) {
     var expires = "expires="+ d.toUTCString();
     document.cookie = cname + "=" + cvalue + "; " + expires;
 }
-
+function destroyCookie(cname) {
+    var d = new Date();
+    d.setTime(10);
+    document.cookie = cname + "=abc;path=/knitcircle;expires="+d.toUTCString();
+}
 function setCurrentLevel(cs_lvl) {
     csCurrentLevel = cs_lvl;
     setCookie("csLevel", cs_lvl, 7300); //20 years
 }
+function putCodeIntoCookie() {
+    setCookie('kcTempCode', escape($( '#kcArtifactCode' ).text())+";path=/knitcircle", 1);
+};
+function restoreCookieCode() {
+    //alert("Debug: current cookies: "+document.cookie);
+    var tmpCode = getCookie('kcTempCode');
+    if (tmpCode) {
+        var codeField = document.getElementById("JSprogram");
+        if (codeField) {
+            codeField.innerText = unescape(tmpCode);
+        }
+        //TODO: destroy the cookie
+        destroyCookie('kcTempCode');
+    }
+};
 
 //Google Analytics
 (function (i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -340,6 +359,7 @@ csPresentAlternateSolution = function() {
                 //Note that calling /solutions will return an html formatted
                 //representation of the solution, but calling /solutions.json
                 //will return an object of type Solution.
+        //TODO: show a loading gif while the ajax call is executing     
 
 		csMySolution = document.getElementById("JSprogram").value;
 
@@ -387,6 +407,11 @@ var getCurrentLevelButton = function(levelIndex) {
 }
 
   //This script will run once upon loading the page
+  $( document ).ready( function() {
+      restoreCookieCode();
+    }   
+  ) 
+      
   //The following is JQuery UI scripting for User Interface effects
   $(function() {
     var enablebutton;
@@ -451,7 +476,7 @@ var getCurrentLevelButton = function(levelIndex) {
 	csCurrentLevel = btnIndex;
     }
     $( ".kcSaveThumbnail" ).button();
-    
+    $( ".kcPublish" ).button();
     $( "#radioset" ).buttonset();
     $( "#knitnowbutton" ).button();
     
@@ -499,10 +524,29 @@ var getCurrentLevelButton = function(levelIndex) {
     $( "#kcSave" ).click(function() {
         var c = document.getElementById("html5canvas");
         var ctx = c.getContext("2d");
-        cropImageFromCanvas(ctx, c);
-        alert("Saved to your patterns box.");
+        var thumbnail = cropImageFromCanvas(ctx, c);
+        alert("Saved as a draft.");
         
     });
+    $( "#kcPublish" ).click(function() {
+        var c = document.getElementById("html5canvas");
+        var ctx = c.getContext("2d");
+        var thumbnail = cropImageFromCanvas(ctx, c);
+        var artifactCode = escape(document.getElementById("JSprogram").value);
+		var usrname = $('#uname').text();
+
+        //AJAX push code and thumbnail into new Artifact owned by user
+        $.ajax("/artifacts", {type: "POST", async: true, data: {code: artifactCode, thumbnail: cropImageFromCanvas(ctx, c), uname: usrname }});
+			   
+        alert("Published to the Knitcircle community.");
+    });
+    $( "#edit_button" ).button();
+    $( "#edit_button" ).click(function() {
+        putCodeIntoCookie();
+        alert("You're being redirected to the main page with this code.");
+        window.location = '/knitcircle';
+    });
+
 
     $('#noIndColor').colorpicker({
 	displayIndicator: false,
@@ -553,5 +597,5 @@ function cropImageFromCanvas(ctx, canvas) {
     //Do something with this cropped thumbnail
     var tmpimage = document.getElementById("thumbnail");
     tmpimage.setAttribute("src",kcThumbnail);
-
+    return kcThumbnail;
 };

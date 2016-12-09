@@ -1,14 +1,13 @@
-class CreateFavorites < ActiveRecord::Migration
+class CreateArtifacts < ActiveRecord::Migration
   def change
-    create_table :favorites do |t|
+    create_table :artifacts do |t|
       t.text :thumbnail
       t.text :code
       t.references :user, index: true
-      t.integer :author
       t.text :image
 
       t.timestamps null: false
     end
-    add_foreign_key :favorites, :users
+    add_foreign_key :artifacts, :users
   end
 end
