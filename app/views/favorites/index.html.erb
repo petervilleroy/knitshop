@@ -1,0 +1,24 @@
+<h1>My Favorite Patterns</h1>
+<%= link_to 'Back', '/knitcircle' %>
+<table>
+  <thead>
+    <tr>
+      <th>Thumbnail</th>
+      <th>Created By</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @favorites.each do |favorite| %>
+      <tr>
+        <td><%= image_tag(favorite.artifact.thumbnail) %></td>
+        <td><%= favorite.artifact.uname %></td>
+        <td>TODO: commands</td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+

@@ -1,15 +1,9 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  thumbnail: MyText
-  code: MyText
   user_id: 
-  author: 1
-  image: MyText
+  artifact: 1
 
 two:
-  thumbnail: MyText
-  code: MyText
   user_id: 
-  author: 1
-  image: MyText
+  artifact: 1
