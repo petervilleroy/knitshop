@@ -12,7 +12,7 @@
   <tbody>
     <% @favorites.each do |favorite| %>
       <tr>
-        <td><%= image_tag(favorite.artifact.thumbnail) %></td>
+        <td><%= link_to image_tag(favorite.artifact.thumbnail), favorite.artifact %></td>
         <td><%= favorite.artifact.uname %></td>
         <td>TODO: commands</td>
       </tr>
@@ -20,5 +20,26 @@
   </tbody>
 </table>
 
+<h1>My Published Artifacts</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Thumbnail</th>
+      <th>Created By</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @artifacts.each do |artifact| %>
+      <tr>
+        <td><%= link_to image_tag(artifact.thumbnail), artifact %></td>
+        <td><%= artifact.uname %></td>
+        <td>TODO: commands</td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
 <br>
 

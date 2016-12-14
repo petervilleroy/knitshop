@@ -22,14 +22,12 @@ class FavoritesController < ApplicationController
     
     #don't find this users' solutions, find others for same level
     #@solutions = Solution.where("user_id != ? AND level = ?", @user.id, @level).take(125) ---- This fancy Ruby select doesn't work because it returns an object lacking the fields of 'user', i.e. @sol.first_name doesn't exist. Resolution is to query by SQL and get a more flexible object as a result.
-    @favorites = Favorite.find_by_sql("SELECT * from users INNER JOIN favorites ON users.id = favorites.user_id WHERE favorites.user_id = #{@user.id} ").take(15)
-
+    #@favorites = Favorite.find_by_sql("SELECT * from users INNER JOIN favorites ON users.id = favorites.user_id WHERE favorites.user_id = #{@user.id} ").take(15)
+    @favorites = @user.favorites
+    @artifacts = Artifact.find_by_sql("SELECT * from users INNER JOIN artifacts ON users.id = artifacts.user_id WHERE artifacts.user_id = #{@user.id} ").take(15)
     
     
-    respond_to do |format|
-      format.html { render @favorites }
-      format.json { render json: @favorites }
-    end
+    
 
 
   end
