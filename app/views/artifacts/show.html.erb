@@ -1,0 +1,17 @@
+<p id="notice"><%= notice %></p>
+
+<%= @artifact.uname %>'s Design
+<table>
+  <tr>
+    <td><%= @artifact.image %> </td>
+    <td> Eventually a description will go here. </td>
+    <td><button id="edit_button" >Edit in KnitCircle</button></td>
+  </tr>
+  <tr>
+    <td><%= image_tag(@artifact.thumbnail) %> </td>
+    <td><span id='kcArtifactCode'><%= URI.unescape(@artifact.code) %></span></td>
+    <td><button id="save_button" >Save to Favorites</button></td>
+  </tr>
+</table>
+<span id="artifact_id" hidden="true"><%= @artifact.id %></span>
+<%= link_to 'Back', '/knitcircle/community' %>

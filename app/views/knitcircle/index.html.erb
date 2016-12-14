@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>KnitShop, a game for learning to code</title>
+
+</head>
+<body onload="JSrun()"><!-- onpaste="return false;"-->
+
+<div class="csDialog" id="dialogPATTERNS" title="Your Patterns Drawer" style="width: 800;">
+  <p>These are solutions you've saved for later use. Copy pieces into your next projects and learn from other peoples' solutions!</p>
+  <table id="patternsTable" style="width: 100%">
+    <tr>
+        <td><div>You haven't saved any solutions here yet.</div></td>
+    </tr>
+  </table>
+</div>
+
+
+
+<table width="100%" align="center">
+
+<tr>
+<td rowspan=3 style="width:10%; background:none;">Level Selection
+<br/>
+<button class="csDiaBtn" id="openerSBX"><img src="<%= asset_path('sandbox.png'); %>"></button>
+<button class="kcSaveThumbnail" id="kcSave">SAVE for later</button>
+<button class="kcPublish" id="kcPublish">Share to Community</button>
+</td>
+
+<td rowspan=3 style="height:4in; width:50%; padding:1px">
+Goal
+ <div id="csLevelGoal"></div>
+ <div id="csComments"></div>
+<br/>
+<hr/>
+<div id="canvas" width="500" height="700" data-url="<%= asset_path('stitch_semitrans.png') %>">
+  <img class="csKnittingNeedle" src="<%= asset_path('woodknitneedle.png') %>" style="width:100%">
+  <canvas id="html5canvas" width="500" height="700">
+    <div class="csRow">
+    </div>
+  </canvas>
+</div>
+</td>
+
+<td rowspan=1 id="scratchpad" width="50%" style="padding:0px; background:url('<%= asset_path('spiralnotepad.png') %>'); background-size: 100% 100%; background-repeat: no-repeat">
+<div style="background-color:transparent"><br/><br/><br/><br/></div>
+<textarea id="JSprogram" style="height:4in; width:99%; background-color:transparent; font-family: monospace; font-size: 16; font-weight: bold;" onkeyup="keyUp(event)">
+// Lines starting with two slashes are comments
+
+
+
+</textarea>
+</td>
+
+<td rowspan=1 style="width:20%; background:white;">
+<div class="csKnitPatterns"><a href="/knitcircle/favorites">Click here to see your favorites</a></div>
+<div class="csKnitPatterns"><br><hr><a href="/knitcircle/community">Click here to visit the community and see shared artifacts.</a></div>
+</td>
+</tr>
+
+<tr>
+<td colspan=3>
+
+<form>
+<input type="button" id="knitnowbutton" value=" GO " onclick="JSrun()"/>
+<div id=radioset>
+ <input type="radio" id="radio1" name="trans" value="200" checked ><label class="csRadioLabel" for="radio1">Slow</label>
+ <input type="radio" id="radio2" name="trans" value="100"  ><label class="csRadioLabel" for="radio2">Medium</label>
+ <input type="radio" id="radio3" name="trans" value="50" ><label class="csRadioLabel" for="radio3">Fast</label>
+ <input type="radio" id="radio4" name="trans" value="10" ><label class="csRadioLabel" for="radio4">Instant</label>
+</div>
+</form>
+
+<span id="csCheats">
+ Cheats: <select id="JSexamples" onchange="JSselect()">
+  <option value="cheats" selected>Cheats </option>
+  <option value ="knitone">Knit One</option>
+  <option value ="knitthree" >Knit Three</option>
+  <option value="knitpurpleline">Knit Purple Line</option>
+  <option value="knittworedlines">Knit Two Red Lines</option>
+  <option value="knit2x8pattern">Knit 2x8 Pattern</option>
+  <option value="knit4x8lines">Knit 4x8 Lines</option>
+  <option value="knitpattysfavorite">Knit Patty's Favorite</option>
+  <option value="knitsusanssquare">Knit Susan's Pink Square</option>
+  <option value="knitsusanssquare4x8">Knit Susan's Pink Rectangle</option>
+  <option value="knitrobertasdiag">Knit Roberta's Diagonal</option>
+  <option value="knitcheckers">Knit Checkers</option>
+  <option value="knitfunctioncheckers">Knit Function Checkers</option>
+  <option value="knitdiagonal">Knit Diagonal</option>
+  <option value="knitstripes">Knit Stripes</option>
+</select>
+</span>
+</td>
+<script type="text/javascript">
+// Allow me a little script here to give action to my radio buttons.
+// wrapped as a function to remove from global namespace
+(function() {
+    
+    // onclick vs. onchange
+    var radiobutton = document.getElementsByName("trans");
+    for (var i=0, len=radiobutton.length; i<len; i++) {
+        
+        radiobutton[i].onchange = function() {
+            knitspeed = this.value;
+        };
+    }
+    
+}());
+</script>
+
+</tr>
+<tr>
+<td colspan=3 width="100%" style="padding:0px">
+<textarea id="JSoutput" value="Output will appear here in case of errors." style="height:1.5in; width:99%; font-family: monospace; font-size: 16;">
+</textarea>
+</td>
+</tr>
+</table>
+<img src= "<%= asset_path('stitch_semitrans.png')  %>" id="stitchpng" hidden="true">
+<img id="thumbnail" >
+
+<div>Color picker for quick Hex Code lookup: </br><input id="noIndColor"></input></div>
+
+
+<textarea id="knitone" style="display:none">
+// Knit a single purple stitch
+
+setColor("purple");
+stitch();
+
+</textarea>
+
+<textarea id="knitthree" style="display:none">
+// Knit three stitches in different colors
+
+setColor("red");
+stitch();
+setColor("#00ff00");
+stitch();
+setColor("blue");
+stitch();
+
+
+</textarea>
+
+<textarea id="knitpurpleline" style="display:none">
+// Knit a line of 8 purple stitches
+
+setColor("purple");
+stitch(8);
+
+</textarea>
+
+<textarea id="knittworedlines" style="display:none">
+// Knit two red lines of 8 stitches each.
+
+setColor("#ff0000");
+stitch(8);
+newRow();
+stitch(8);
+
+</textarea>
+
+<textarea id="knit2x8pattern" style="display:none">
+// Knit a pattern Ax4-Bx4/Bx4-Ax4
+
+setColor("blue");
+stitch(4);
+setColor("orange");
+stitch(4);
+newRow();
+stitch(4);
+setColor("blue");
+stitch(4);
+
+</textarea>
+
+<textarea id="knit4x8lines" style="display:none">
+//Knit a pattern 4x8 with each line differently colored
+
+setColor("#981ba2");
+stitch(8);
+newRow();
+setColor("#292d3f");
+stitch(8);
+newRow();
+setColor("#ec8484");
+stitch(8);
+newRow();
+setColor("#a8948b");
+stitch(8);
+newRow();
+
+</textarea>
+<textarea id="knitpattysfavorite" style="display:none">
+//Knit a checkered pattern 3x3 in Patty's favorite colors
+
+setColor("#8A2BE2");
+stitch();
+setColor("#D4AF37");
+stitch();
+setColor("#8A2BE2");
+stitch();
+newRow();
+setColor("#D4AF37");
+stitch();
+setColor("#8A2BE2");
+stitch();
+setColor("#D4AF37");
+stitch();
+newRow();
+setColor("#8A2BE2");
+stitch();
+setColor("#D4AF37");
+stitch();
+setColor("#8A2BE2");
+stitch();
+</textarea>
+<textarea id="knitrobertasdiag" style="display:none">
+var lineWidth = 4;
+var blueStitches = 1;
+setColor("blue");
+stitch(blueStitches);
+setColor("white");
+stitch(lineWidth - blueStitches);
+newRow();
+blueStitches = blueStitches + 1; //now blueStitches is equal to 2
+setColor("blue");
+stitch(blueStitches);
+setColor("white");
+stitch(lineWidth - blueStitches);
+newRow();
+blueStitches = blueStitches + 1;
+setColor("blue");
+stitch(blueStitches);
+setColor("white");
+stitch(lineWidth - blueStitches);
+newRow();
+blueStitches = blueStitches + 1;
+setColor("blue");
+stitch(blueStitches);
+setColor("white");
+stitch(lineWidth - blueStitches);
+blueStitches = blueStitches + 1;
+</textarea>
+
+<textarea id="knitcheckers" style="display:none">
+// Knit a checkered pattern
+
+for(a=0;a<11;a++) {
+  for(b=0;b<5;b++) {
+    setColor("#f5da35");
+    stitch();
+    setColor("#9123d5");
+    stitch();
+  }
+  newRow();
+  for(b=0;b<5;b++) {
+    setColor("#9123d5");
+    stitch();
+    setColor("#f5da35");
+    stitch();
+  }
+  newRow();
+}
+</textarea>
+
+<textarea id="knitsusanssquare" style="display:none">
+var pink = "#FFC0CB";
+var lineWidth = 4;
+setColor(pink);
+stitch(lineWidth);
+newRow();
+stitch(lineWidth);
+newRow();
+stitch(lineWidth);
+newRow();
+stitch(lineWidth);
+    
+</textarea>
+
+<textarea id="knitsusanssquare4x8" style="display:none">
+var pink = "#FFC0CB";
+var lineWidth = 8;
+setColor(pink);
+stitch(lineWidth);
+newRow();
+stitch(lineWidth);
+newRow();
+stitch(lineWidth);
+newRow();
+stitch(lineWidth);
+    
+</textarea>
+
+<textarea id="knitfunctioncheckers" style="display:none">
+// Knit a fancy checkered pattern
+
+function myLine(a,b) {
+  for(ind=0;ind<3;ind++) {
+    setColor(a);
+    stitch(2);
+    setColor(b);
+    stitch(2);
+  }
+  newRow();
+}
+for(a=0;a<5;a++) {
+  myLine('green', 'red');
+  myLine('green', 'red');
+  myLine('red', 'green');
+  myLine('red', 'green');
+
+}
+
+</textarea>
+
+<textarea id="knitdiagonal" style="display:none">
+// Knit a diagonal pattern
+
+var i=0;
+for(a=0;a<35;a++) {
+  setColor("#f5da35");
+  stitch(i/3);
+  setColor("#9123d5");
+  stitch(12-i/3);
+  newRow();
+  i++;
+}
+</textarea>
+
+<textarea id="knitstripes" style="display:none">
+// Use a function to knit stripes
+
+knitWholeLine = function(color) {
+  
+  setColor(color);
+  stitch(10);
+  newRow();
+}
+
+for(i=0;i<7;i++){
+knitWholeLine("blue");
+knitWholeLine("red");
+knitWholeLine("white");
+}
+</textarea>
+
+
+<hr/>
+
+<div align="center">
+<a href="http://playcodestitch.com">CodeStitch </a> - Designed by Marleen Villeroy, 
+April 2016, at 
+<a href="http://tc.columbia.edu/">Teachers College, Columbia University</a>
+</div>
+</body>
+</html>

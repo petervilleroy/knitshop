@@ -11,10 +11,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160623060922) do
+ActiveRecord::Schema.define(version: 20161209210541) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "artifacts", force: :cascade do |t|
+    t.text     "thumbnail"
+    t.text     "code"
+    t.integer  "user_id"
+    t.text     "image"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string   "uname"
+  end
+
+  add_index "artifacts", ["user_id"], name: "index_artifacts_on_user_id", using: :btree
 
   create_table "attempts", force: :cascade do |t|
     t.integer  "user_id"
@@ -25,6 +37,25 @@ ActiveRecord::Schema.define(version: 20160623060922) do
   end
 
   add_index "attempts", ["user_id"], name: "index_attempts_on_user_id", using: :btree
+
+  create_table "drafts", force: :cascade do |t|
+    t.text     "code"
+    t.integer  "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "drafts", ["user_id"], name: "index_drafts_on_user_id", using: :btree
+
+  create_table "favorites", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "artifact_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "favorites", ["artifact_id"], name: "index_favorites_on_artifact_id", using: :btree
+  add_index "favorites", ["user_id"], name: "index_favorites_on_user_id", using: :btree
 
   create_table "patterns", force: :cascade do |t|
     t.integer  "user_id"
@@ -64,7 +95,9 @@ ActiveRecord::Schema.define(version: 20160623060922) do
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
 
+  add_foreign_key "artifacts", "users"
   add_foreign_key "attempts", "users"
+  add_foreign_key "drafts", "users"
   add_foreign_key "patterns", "users"
   add_foreign_key "solutions", "users"
 end

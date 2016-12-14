@@ -1,0 +1,7 @@
+<li id="favorite-<%= favorite.id %>">
+  <span class="user"><%= link_to favorite.user.first_name, favorite.user %></span>
+  <span class="content"><%= favorite.artifact.code %></span> 
+  <span class="timestamp">
+    Posted <%= time_ago_in_words(favorite.created_at) %> ago.
+  </span>
+</li>

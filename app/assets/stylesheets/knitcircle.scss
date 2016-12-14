@@ -1,0 +1,23 @@
+// Place all the styles related to the knitcircle controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+td {
+	background:white;
+	vertical-align:top; 
+	border:1px solid black; 
+	padding:2px 10px
+}
+pre {
+	margin:0
+}
+table {
+	border-collapse:collapse; 
+	table-layout:fixed
+}
+body {
+	background: #f5da35; 
+	font-family:Arial
+}
+textarea {
+	font-family:Lucida console
+}

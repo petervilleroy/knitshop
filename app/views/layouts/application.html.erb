@@ -15,7 +15,7 @@
  <span align="right" style="background: none; vertical-align: top;">
  <div id="user_header">
   <% if current_user %>
-    Welcome, <%= current_user.first_name %>.
+    Welcome, <span id="uname"><%= current_user.first_name %></span>.
     <%= link_to "Account", edit_user_path(current_user) %>
     <%= link_to "Log Out", logout_path %>
     <span id="current_user" style="display:none"><%= current_user.first_name %></span>
