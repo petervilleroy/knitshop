@@ -4,7 +4,7 @@ class FavoritesController < ApplicationController
   end
 
   def create
-    @favorite = current_user.favorites.new(artifact: params[:artifact])
+    @favorite = current_user.favorites.new(artifact: Artifact.find(params[:artifact]))
     respond_to do |format|
       @favorite.save
       format.html { redirect_to root_url }

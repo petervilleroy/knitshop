@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   resources :patterns, only: [:create, :index, :show]
   resources :artifacts, only: [:create, :show]
   resources :favorites, only: [:create, :index]
+
   get 'signup', to: 'users#new', as: 'signup'
   get 'login', to: 'sessions#new', as: 'login'
   get 'logout', to: 'sessions#destroy', as: 'logout'
@@ -21,7 +22,8 @@ Rails.application.routes.draw do
   get 'cs' => 'welcome#index'
   get 'knitcircle' => 'knitcircle#index'
   get 'knitcircle/community' => 'community#index'
-
+  get 'knitcircle/favorites' => 'favorites#index'
+  
   # Example of named route that can be invoked with purchase_url(id: product.id)
   #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
 

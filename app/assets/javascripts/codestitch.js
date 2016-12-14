@@ -546,6 +546,14 @@ var getCurrentLevelButton = function(levelIndex) {
         alert("You're being redirected to the main page with this code.");
         window.location = '/knitcircle';
     });
+    $( "#save_button" ).button();
+    $( "#save_button" ).click(function() {
+        var artifactID = $( "#artifact_id").text();
+        artifactID = parseInt(artifactID);
+        $.ajax("/favorites", {type: "POST", async: true, data: {artifact: artifactID}});
+        alert("Successfully added to favorites.");
+        window.location = '/knitcircle/favorites';
+    });
 
 
     $('#noIndColor').colorpicker({

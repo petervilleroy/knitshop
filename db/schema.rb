@@ -49,11 +49,12 @@ ActiveRecord::Schema.define(version: 20161209210541) do
 
   create_table "favorites", force: :cascade do |t|
     t.integer  "user_id"
-    t.integer  "artifact"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.integer  "artifact_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
   end
 
+  add_index "favorites", ["artifact_id"], name: "index_favorites_on_artifact_id", using: :btree
   add_index "favorites", ["user_id"], name: "index_favorites_on_user_id", using: :btree
 
   create_table "patterns", force: :cascade do |t|
@@ -97,7 +98,6 @@ ActiveRecord::Schema.define(version: 20161209210541) do
   add_foreign_key "artifacts", "users"
   add_foreign_key "attempts", "users"
   add_foreign_key "drafts", "users"
-  add_foreign_key "favorites", "users"
   add_foreign_key "patterns", "users"
   add_foreign_key "solutions", "users"
 end
