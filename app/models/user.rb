@@ -3,6 +3,7 @@ class User < ActiveRecord::Base
   has_many :attempts
   has_many :patterns
   has_many :artifacts
+  has_many :favorites
   attr_accessor :remember_token
   has_secure_password
   before_save { self.email = email.downcase }

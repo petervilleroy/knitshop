@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161209182620) do
+ActiveRecord::Schema.define(version: 20161209210541) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -46,6 +46,15 @@ ActiveRecord::Schema.define(version: 20161209182620) do
   end
 
   add_index "drafts", ["user_id"], name: "index_drafts_on_user_id", using: :btree
+
+  create_table "favorites", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "artifact"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "favorites", ["user_id"], name: "index_favorites_on_user_id", using: :btree
 
   create_table "patterns", force: :cascade do |t|
     t.integer  "user_id"
@@ -88,6 +97,7 @@ ActiveRecord::Schema.define(version: 20161209182620) do
   add_foreign_key "artifacts", "users"
   add_foreign_key "attempts", "users"
   add_foreign_key "drafts", "users"
+  add_foreign_key "favorites", "users"
   add_foreign_key "patterns", "users"
   add_foreign_key "solutions", "users"
 end
