@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161209210541) do
+ActiveRecord::Schema.define(version: 20161215034902) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,9 +21,14 @@ ActiveRecord::Schema.define(version: 20161209210541) do
     t.text     "code"
     t.integer  "user_id"
     t.text     "image"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
     t.string   "uname"
+    t.string   "uimage_file_name"
+    t.string   "uimage_content_type"
+    t.integer  "uimage_file_size"
+    t.datetime "uimage_updated_at"
+    t.text     "description"
   end
 
   add_index "artifacts", ["user_id"], name: "index_artifacts_on_user_id", using: :btree
