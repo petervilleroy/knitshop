@@ -3,8 +3,8 @@
 <%= @artifact.uname %>'s Design
 <table>
   <tr>
-    <td><%= @artifact.image %> </td>
-    <td> Eventually a description will go here. </td>
+    <td><%= image_tag @artifact.uimage.url %> <br> <%= link_to 'Upload Image', [:edit, @artifact] %></td>
+    <td><%= @artifact.description %> <br> <%= link_to 'Edit Description', [:edit, @artifact] %> </td>
     <td><button id="edit_button" >Edit in KnitCircle</button></td>
   </tr>
   <tr>

@@ -554,7 +554,15 @@ var getCurrentLevelButton = function(levelIndex) {
         alert("Successfully added to favorites.");
         window.location = '/knitcircle/favorites';
     });
+    $( ".artUpload").button();
 
+    $( ".artDescription").button();
+
+    $( ".favPrint").button();
+
+    $( ".favDelete" ).button();
+
+    $( ".favRemove" ).button();
 
     $('#noIndColor').colorpicker({
 	displayIndicator: false,
