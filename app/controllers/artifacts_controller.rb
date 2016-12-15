@@ -70,6 +70,6 @@ class ArtifactsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def artifact_params
-      params.require(:artifact).permit(:description, :uimage)
+      params.require(:artifact).permit(:description, :uimage, :thumbnail, :code, :uname, :uimage_file_name, :uimage_content_type, :uimage_file_size, )
     end
 end
