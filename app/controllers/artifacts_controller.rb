@@ -42,8 +42,7 @@ class ArtifactsController < ApplicationController
   # PATCH/PUT /artifacts/1.json
   def update
     respond_to do |format|
-      #if @artifact.update(artifact_params)
-      if @artifact.update(params[:artifact])
+      if @artifact.update(artifact_params)
         format.html { redirect_to @artifact, notice: 'Artifact was successfully updated.' }
         format.json { render :show, status: :ok, location: @artifact }
       else
