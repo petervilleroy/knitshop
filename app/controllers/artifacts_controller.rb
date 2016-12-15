@@ -25,7 +25,7 @@ class ArtifactsController < ApplicationController
   # POST /artifacts.json
   def create
     #@artifact = Artifact.new(artifact_params)
-    @artifact = current_user.artifacts.new(code: params[:code], thumbnail: params[:thumbnail], uname: params[:uname])
+    @artifact = current_user.artifacts.new(code: params[:code], thumbnail: params[:thumbnail], uname: params[:uname], user_id: current_user.id)
     
     respond_to do |format|
       if @artifact.save
