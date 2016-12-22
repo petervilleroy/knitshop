@@ -1,4 +1,8 @@
 class FavoritesController < ApplicationController
+  before_action :set_favorite, only: [:destroy]
+  before_action :logged_in_user, only: [:index, :show, :create, :destroy, :new]
+  before_action :correct_user,   only: [:show, :edit, :update, :destroy]
+  
   def new
     @favorite = Favorite.new
   end
@@ -14,6 +18,11 @@ class FavoritesController < ApplicationController
   end
 
   def destroy
+  @favorite.destroy
+    respond_to do |format|
+      format.html { redirect_to favorites_url, notice: 'Successfully removed from favorites.' }
+      format.json { head :no_content }
+    end
   end
 
   # GET /favorites
@@ -26,10 +35,7 @@ class FavoritesController < ApplicationController
     @favorites = @user.favorites
     @artifacts = Artifact.find_by_sql("SELECT * from users INNER JOIN artifacts ON users.id = artifacts.user_id WHERE artifacts.user_id = #{@user.id} ").take(15)
     
-    
-    
-
-
+   
   end
 
   # GET /favorites/1
@@ -41,4 +47,22 @@ class FavoritesController < ApplicationController
   def favorite_params
     params.permit(:user_id)
   end
+  
+  # Set the curernt Favorite
+   def set_favorite
+     @favorite = Favorite.find(params[:id])
+   end
+  # Confirms a logged-in user.
+   def logged_in_user
+     if current_user.nil?
+       redirect_to login_url, notice: 'KnitCircle is only for logged in users. Please log in.'
+     end
+   end
+   # Confirms the user logged in is authorized to see content
+    def correct_user
+      set_favorite
+      @user = User.find(@favorite.user_id)
+      @role = current_user.role
+      redirect_to('/favorites') unless @user == current_user || @role == 'admin'
+    end
 end
