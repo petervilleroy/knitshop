@@ -61,7 +61,7 @@ class ArtifactsController < ApplicationController
     @artifact.destroy
 
     respond_to do |format|
-      format.html { redirect_to artifacts_url, notice: 'Artifact was successfully destroyed.' }
+      format.html { redirect_to favorites_url, notice: 'Artifact was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
@@ -85,7 +85,8 @@ class ArtifactsController < ApplicationController
    end
    # Confirms the user logged in is authorized to see content
     def correct_user
-      @user = User.find(params[:user_id])
+      set_artifact
+      @user = User.find(@artifact.user_id)
       @role = current_user.role
       redirect_to('/knitcircle/community') unless @user == current_user || @role == 'admin'
     end

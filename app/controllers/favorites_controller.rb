@@ -1,4 +1,5 @@
 class FavoritesController < ApplicationController
+  before_action :set_favorite, only: [:destroy]
   before_action :logged_in_user, only: [:index, :show, :create, :destroy, :new]
   before_action :correct_user,   only: [:show, :edit, :update, :destroy]
   
@@ -47,7 +48,10 @@ class FavoritesController < ApplicationController
     params.permit(:user_id)
   end
   
- 
+  # Set the curernt Favorite
+   def set_favorite
+     @favorite = Favorite.find(params[:id])
+   end
   # Confirms a logged-in user.
    def logged_in_user
      if current_user.nil?
@@ -56,7 +60,8 @@ class FavoritesController < ApplicationController
    end
    # Confirms the user logged in is authorized to see content
     def correct_user
-      @user = User.find(params[:user_id])
+      set_favorite
+      @user = User.find(@favorite.user_id)
       @role = current_user.role
       redirect_to('/favorites') unless @user == current_user || @role == 'admin'
     end
