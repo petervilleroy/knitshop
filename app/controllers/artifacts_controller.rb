@@ -1,6 +1,8 @@
 class ArtifactsController < ApplicationController
   before_action :set_artifact, only: [:show, :edit, :update, :destroy]
-
+  before_action :logged_in_user, only: [:index, :show, :create, :destroy, :new]
+  before_action :correct_user,   only: [:edit, :update, :destroy]
+  
   # GET /artifacts
   # GET /artifacts.json
   def index
@@ -71,5 +73,18 @@ class ArtifactsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def artifact_params
       params.require(:artifact).permit(:description, :uimage, :thumbnail, :code, :uname, :uimage_file_name, :uimage_content_type, :uimage_file_size, :uimage_updated_at)
+    end
+
+  # Confirms a logged-in user.
+   def logged_in_user
+     if current_user.nil?
+       redirect_to login_url, notice: 'KnitCircle is only for logged in users. Please log in.'
+     end
+   end
+   # Confirms the user logged in is authorized to see content
+    def correct_user
+      @user = User.find(params[:id])
+      @role = current_user.role
+      redirect_to('/cs') unless @user == current_user || @role == 'admin'
     end
 end
