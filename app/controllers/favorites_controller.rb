@@ -53,7 +53,6 @@ class FavoritesController < ApplicationController
     def correct_user
       @user = User.find(params[:id])
       @role = current_user.role
-      redirect_to('/cs') unless @user == current_user || @role == 'admin'
+      redirect_to('/favorites') unless @user == current_user || @role == 'admin'
     end
-end
 end

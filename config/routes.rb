@@ -3,8 +3,8 @@ Rails.application.routes.draw do
   resources :solutions, only: [:create, :index, :show]
   resources :attempts, only: [:create, :index, :show]
   resources :patterns, only: [:create, :index, :show]
-  resources :artifacts, only: [:create, :show, :edit, :update]
-  resources :favorites, only: [:create, :index]
+  resources :artifacts, only: [:create, :show, :edit, :update, :destroy]
+  resources :favorites, only: [:create, :index, :destroy]
 
   get 'signup', to: 'users#new', as: 'signup'
   get 'login', to: 'sessions#new', as: 'login'

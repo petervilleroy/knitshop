@@ -1,6 +1,6 @@
 class ArtifactsController < ApplicationController
   before_action :set_artifact, only: [:show, :edit, :update, :destroy]
-  before_action :logged_in_user, only: [:index, :show, :create, :destroy, :new]
+  before_action :logged_in_user, only: [:show, :create, :destroy, :new]
   before_action :correct_user,   only: [:edit, :update, :destroy]
   
   # GET /artifacts
@@ -85,6 +85,6 @@ class ArtifactsController < ApplicationController
     def correct_user
       @user = User.find(params[:id])
       @role = current_user.role
-      redirect_to('/cs') unless @user == current_user || @role == 'admin'
+      redirect_to('/knitcircle/community') unless @user == current_user || @role == 'admin'
     end
 end
