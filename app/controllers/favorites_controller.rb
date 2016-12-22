@@ -17,6 +17,11 @@ class FavoritesController < ApplicationController
   end
 
   def destroy
+  @favorite.destroy
+    respond_to do |format|
+      format.html { redirect_to favorites_url, notice: 'Successfully removed from favorites.' }
+      format.json { head :no_content }
+    end
   end
 
   # GET /favorites
@@ -51,7 +56,7 @@ class FavoritesController < ApplicationController
    end
    # Confirms the user logged in is authorized to see content
     def correct_user
-      @user = User.find(params[:id])
+      @user = User.find(params[:user_id])
       @role = current_user.role
       redirect_to('/favorites') unless @user == current_user || @role == 'admin'
     end

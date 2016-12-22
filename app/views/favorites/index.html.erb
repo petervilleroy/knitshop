@@ -14,7 +14,7 @@
       <tr>
         <td><%= link_to image_tag(favorite.artifact.thumbnail), favorite.artifact %></td>
         <td><%= favorite.artifact.uname %></td>
-        <td><button class="favRemove">Remove from Favorites</button><button class="favPrint">Print Pattern</button></td>
+        <td><%= button_to "Remove from Favorites", favorite, :method => :delete %> <button class="favPrint">Print Pattern</button></td>
       </tr>
     <% end %>
   </tbody>
